@@ -368,7 +368,7 @@ function setupSidebar(root) {
   return () => observer.disconnect();
 }
 
-function StudyGuideShell({ guideClass, styles, markup }) {
+function StudyGuideShell({ guideClass, styles = "", markup, children }) {
   const rootRef = useRef(null);
 
   useEffect(() => {
@@ -386,12 +386,16 @@ function StudyGuideShell({ guideClass, styles, markup }) {
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [markup]);
+  }, [markup, children]);
 
   return (
     <main className={`study-guide-page ${guideClass}`}>
       <style>{styles + integrationStyles}</style>
-      <div ref={rootRef} dangerouslySetInnerHTML={{ __html: markup }} />
+      {markup ? (
+        <div ref={rootRef} dangerouslySetInnerHTML={{ __html: markup }} />
+      ) : (
+        <div ref={rootRef}>{children}</div>
+      )}
     </main>
   );
 }
