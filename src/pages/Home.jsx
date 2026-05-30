@@ -1,13 +1,15 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useProgress } from "../context/ProgressContext";
 
 const guideCards = [
   {
     title: "Partial Derivatives",
     description:
       "Limits, continuity, gradients, tangent planes, differentials, and optimization for functions of several variables.",
-    path: "/partial-derivatives",
-    meta: "7 sections · MCQ practice · Formula review",
+    path: "/partial-derivatives/1",
+    meta: "2 parts · MCQ practice · Formula review",
     icon: "∂",
     color: "teal",
   },
@@ -15,8 +17,8 @@ const guideCards = [
     title: "Vector Calculus",
     description:
       "Vector-valued functions, line integrals, conservative fields, Green's theorem, surfaces, and surface area.",
-    path: "/vector-calculus",
-    meta: "5 modules · Worked examples · Quick reference",
+    path: "/vector-calculus/1",
+    meta: "2 parts · Worked examples · Quick reference",
     icon: "∇",
     color: "blue",
   },
@@ -40,6 +42,12 @@ const toolLinks = [
     path: "/volumecalculator",
     icon: "∬",
     desc: "Evaluate double integrals with full step-by-step",
+  },
+  {
+    label: "AI Calculus Solver",
+    path: "/ai-solver",
+    icon: "🤖",
+    desc: "Neural solver for derivatives, integrals, gradients and more",
   },
 ];
 

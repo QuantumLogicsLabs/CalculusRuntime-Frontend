@@ -346,6 +346,90 @@ select {
   color: var(--gold-2);
 }
 
+/* ── Header auth controls ───────────────────────────────────────────────── */
+.header-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header-login {
+  color: rgba(255, 250, 241, 0.8);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.header-login:hover {
+  color: var(--gold-2);
+}
+
+.header-signup {
+  background: var(--gold);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.header-signup:hover {
+  opacity: 0.85;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+}
+
+.header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.header-avatar:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+.mobile-nav-divider {
+  height: 1px;
+  background: rgba(255, 250, 241, 0.1);
+  margin: 0.4rem 0;
+}
+
+.mobile-nav-logout {
+  background: none;
+  border: none;
+  color: rgba(255, 250, 241, 0.6);
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.78rem clamp(1rem, 4vw, 3rem);
+  text-align: left;
+  width: 100%;
+  transition: color 0.15s;
+}
+
+.mobile-nav-logout:hover {
+  color: #f08080;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    Home page
    ═══════════════════════════════════════════════════════════════════════════ */

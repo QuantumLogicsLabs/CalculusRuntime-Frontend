@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
-  { to: "/partial-derivatives", label: "Partials", type: "Guide" },
-  { to: "/vector-calculus", label: "Vectors", type: "Guide" },
+  { to: "/partial-derivatives/1", label: "Partials", type: "Guide" },
+  { to: "/vector-calculus/1", label: "Vectors", type: "Guide" },
   { to: "/test", label: "Continuity", type: "Tool" },
   { to: "/extreme", label: "Extrema", type: "Tool" },
   { to: "/volumecalculator", label: "Integrals", type: "Tool" },
+  { to: "/ai-solver", label: "AI Solver", type: "Tool" },
 ];
 
 function Header({ darkMode, onToggleDark }) {
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (headerRef.current && !headerRef.current.contains(e.target)) {
@@ -24,7 +26,6 @@ function Header({ darkMode, onToggleDark }) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") setMenuOpen(false);
@@ -35,16 +36,14 @@ function Header({ darkMode, onToggleDark }) {
 
   return (
     <header className="site-header" ref={headerRef}>
-      {/* Brand */}
       <NavLink className="site-brand" to="/" onClick={() => setMenuOpen(false)}>
         <span className="brand-mark" aria-hidden="true">∂</span>
         <span className="brand-text">
-          <span>Calculus Studio</span>
+          <span>CalcVoyager</span>
           <small>Multivariable tools</small>
         </span>
       </NavLink>
 
-      {/* Desktop nav — hidden on mobile via CSS */}
       <nav className="site-nav" aria-label="Primary navigation">
         {navLinks.map(({ to, label, type }) => (
           <NavLink key={to} to={to} title={type}>
@@ -53,7 +52,6 @@ function Header({ darkMode, onToggleDark }) {
         ))}
       </nav>
 
-      {/* Right-side controls */}
       <div className="header-controls">
         <button
           className="theme-toggle"
@@ -62,6 +60,19 @@ function Header({ darkMode, onToggleDark }) {
         >
           {darkMode ? "Light" : "Dark"}
         </button>
+
+        {user ? (
+          <div className="header-user">
+            <Link to="/dashboard" className="header-avatar" title="Dashboard">
+              {user.username[0].toUpperCase()}
+            </Link>
+          </div>
+        ) : (
+          <div className="header-auth">
+            <Link to="/login" className="header-login">Sign in</Link>
+            <Link to="/signup" className="header-signup">Sign up</Link>
+          </div>
+        )}
 
         <button
           className={`hamburger${menuOpen ? " hamburger--open" : ""}`}
@@ -76,7 +87,6 @@ function Header({ darkMode, onToggleDark }) {
         </button>
       </div>
 
-      {/* Mobile drawer — rendered in DOM always, shown/hidden via CSS */}
       <nav
         id="mobile-nav"
         className={`mobile-nav${menuOpen ? " mobile-nav--open" : ""}`}
@@ -88,6 +98,20 @@ function Header({ darkMode, onToggleDark }) {
             {label}
           </NavLink>
         ))}
+        <div className="mobile-nav-divider" />
+        {user ? (
+          <>
+            <Link to="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</Link>
+            <button className="mobile-nav-logout" onClick={() => { logout(); setMenuOpen(false); }}>
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" onClick={() => setMenuOpen(false)}>Sign in</Link>
+            <Link to="/signup" onClick={() => setMenuOpen(false)}>Sign up</Link>
+          </>
+        )}
       </nav>
     </header>
   );

@@ -3482,22 +3482,128 @@ function GuideFooter() {
   );
 }
 
-function PartialDerivativesContent() {
+function GuideSidebarPart1() {
+  return (
+    <nav className="sidebar">
+      <div className="sb-brand">
+        <div className="sb-sub">Multivariable Calculus</div>
+        <div className="sb-title">Partial Derivatives · Part 1</div>
+      </div>
+      <div className="sb-group">Sections</div>
+      <a className="sb-link" href="#s141">Functions of Several Variables</a>
+      <a className="sb-link" href="#s142">Limits &amp; Continuity</a>
+      <a className="sb-link" href="#s143">Partial Derivatives</a>
+      <div className="sb-group">Reference</div>
+      <a className="sb-link" href="#summary1"><span className="sn">—</span>Key Formulas</a>
+    </nav>
+  );
+}
+
+function GuideSidebarPart2() {
+  return (
+    <nav className="sidebar">
+      <div className="sb-brand">
+        <div className="sb-sub">Multivariable Calculus</div>
+        <div className="sb-title">Partial Derivatives · Part 2</div>
+      </div>
+      <div className="sb-group">Sections</div>
+      <a className="sb-link" href="#s144">The Chain Rule</a>
+      <a className="sb-link" href="#s145">Directional Derivatives</a>
+      <a className="sb-link" href="#s146">Tangent Planes</a>
+      <a className="sb-link" href="#s147">Extreme Values</a>
+      <div className="sb-group">Reference</div>
+      <a className="sb-link" href="#summary"><span className="sn">—</span>Key Formulas</a>
+    </nav>
+  );
+}
+
+function GuideHeaderPart1() {
+  return (
+    <header className="ch-hdr">
+      <div className="ch-eye">Multivariable Calculus Study Guide · Part 1 of 2</div>
+      <h1 className="ch-title">Partial Derivatives</h1>
+      <p className="ch-sub">Functions of Several Variables, Limits, Continuity &amp; Partial Derivatives</p>
+      <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
+    </header>
+  );
+}
+
+function GuideHeaderPart2() {
+  return (
+    <header className="ch-hdr">
+      <div className="ch-eye">Multivariable Calculus Study Guide · Part 2 of 2</div>
+      <h1 className="ch-title">Partial Derivatives</h1>
+      <p className="ch-sub">Chain Rule, Directional Derivatives, Tangent Planes &amp; Extreme Values</p>
+      <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
+    </header>
+  );
+}
+
+function TableOfContentsPart1() {
+  return (
+    <nav className="toc">
+      <div className="toc-h">Contents — Part 1 of 2</div>
+      <div className="toc-grid">
+        <a className="toc-a" href="#s141">Functions of Several Variables</a>
+        <a className="toc-a" href="#s142">Limits and Continuity</a>
+        <a className="toc-a" href="#s143">Partial Derivatives</a>
+        <a className="toc-a" href="#summary1"><span className="tn">—</span>Key Formulas</a>
+      </div>
+    </nav>
+  );
+}
+
+function TableOfContentsPart2() {
+  return (
+    <nav className="toc">
+      <div className="toc-h">Contents — Part 2 of 2</div>
+      <div className="toc-grid">
+        <a className="toc-a" href="#s144">The Chain Rule</a>
+        <a className="toc-a" href="#s145">Directional Derivatives &amp; Gradient</a>
+        <a className="toc-a" href="#s146">Tangent Planes &amp; Differentials</a>
+        <a className="toc-a" href="#s147">Extreme Values &amp; Saddle Points</a>
+        <a className="toc-a" href="#summary"><span className="tn">—</span>Key Formulas</a>
+      </div>
+    </nav>
+  );
+}
+
+function PartialDerivativesContent({ part = 1 }) {
+  if (part === 1) {
+    return (
+      <>
+        <GuideSidebarPart1 />
+        <main className="main">
+          <GuideHeaderPart1 />
+          <TableOfContentsPart1 />
+          <OpeningNote />
+          <Divider />
+          <SectionS141 />
+          <QuizMcq141 />
+          <Divider />
+          <SectionS142 />
+          <QuizMcq142 />
+          <Divider />
+          <SectionS143 />
+          <Divider />
+          <QuizMcq143 />
+          <section id="summary1" className="section">
+            <div className="sec-badge">Reference</div>
+            <h2 className="sec-title">Part 1 Key Formulas</h2>
+            <p>Continue to <a href="/partial-derivatives/2" style={{color:"var(--gold)",fontWeight:600}}>Part 2</a> for Chain Rule, Directional Derivatives, Tangent Planes, and Extreme Values.</p>
+          </section>
+          <GuideFooter />
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
-      <GuideSidebar />
+      <GuideSidebarPart2 />
       <main className="main">
-        <GuideHeader />
-        <TableOfContents />
-        <OpeningNote />
-        <Divider />
-        <SectionS141 />
-        <QuizMcq141 />
-        <Divider />
-        <SectionS142 />
-        <QuizMcq142 />
-        <Divider />
-        <SectionS143 />
+        <GuideHeaderPart2 />
+        <TableOfContentsPart2 />
         <Divider />
         <SectionS144 />
         <Divider />
@@ -3508,8 +3614,6 @@ function PartialDerivativesContent() {
         <SectionS147 />
         <Divider />
         <SectionSummary />
-        <Divider />
-        <QuizMcq143 />
         <Divider />
         <QuizMcq144 />
         <Divider />
@@ -3524,10 +3628,10 @@ function PartialDerivativesContent() {
   );
 }
 
-function PartialDerivativesGuide() {
+function PartialDerivativesGuide({ part = 1 }) {
   return (
     <StudyGuideShell guideClass="partial-derivatives-guide">
-      <PartialDerivativesContent />
+      <PartialDerivativesContent part={part} />
     </StudyGuideShell>
   );
 }
