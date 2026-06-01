@@ -5,6 +5,15 @@ import { useProgress } from "../context/ProgressContext";
 
 const guideCards = [
   {
+    title: "Simple Concepts",
+    description:
+      "Plain-language notes for dimensions, quadric surfaces, partial derivatives, Taylor ideas, and double or triple integrals.",
+    path: "/simple-concepts",
+    meta: "Syllabus overview · Self-reading notes",
+    icon: "ƒ",
+    color: "gold",
+  },
+  {
     title: "Partial Derivatives",
     description:
       "Limits, continuity, gradients, tangent planes, differentials, and optimization for functions of several variables.",
@@ -223,7 +232,7 @@ function Home() {
       {/* Stats strip */}
       <div className="home-stats">
         <div className="stat-item">
-          <span className="stat-num">2</span>
+          <span className="stat-num">3</span>
           <span className="stat-label">Study Guides</span>
         </div>
         <div className="stat-divider" />

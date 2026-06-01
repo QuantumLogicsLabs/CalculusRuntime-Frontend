@@ -3,6 +3,7 @@ import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
+  { to: "/simple-concepts", label: "Concepts", type: "Guide" },
   { to: "/partial-derivatives/1", label: "Partials", type: "Guide" },
   { to: "/vector-calculus/1", label: "Vectors", type: "Guide" },
   { to: "/test", label: "Continuity", type: "Tool" },
