@@ -58,6 +58,10 @@ function Dashboard() {
 
   if (!user) return null;
 
+  const bookmarks = progress.bookmarks;
+  const quizScores = Object.entries(progress.quizScores);
+  const solverHistory = progress.solverHistory;
+
   const overallPct = stats.totalSections > 0
     ? Math.round((stats.completedCount / stats.totalSections) * 100)
     : 0;
@@ -108,6 +112,72 @@ function Dashboard() {
         </div>
       </section>
 
+      {/* Bookmarks */}
+      <section className="db-section">
+        <h2 className="db-section-title">Bookmarks</h2>
+        {bookmarks.length === 0 ? (
+          <p className="db-empty-state">No bookmarks yet</p>
+        ) : (
+          <div className="db-bookmarks">
+            {bookmarks.map((bm) => (
+              <div key={bm.id} className="db-bookmark">
+                <Link to={bm.path} className="db-bookmark-link">
+                  <span className="db-bookmark-icon">🔖</span>
+                  <span>{bm.title}</span>
+                </Link>
+                <button
+                  className="db-bookmark-remove"
+                  onClick={() => removeBookmark(bm.id)}
+                  aria-label={`Remove bookmark: ${bm.title}`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Quiz scores */}
+      <section className="db-section">
+        <h2 className="db-section-title">Quiz scores</h2>
+        {quizScores.length === 0 ? (
+          <p className="db-empty-state">Complete a quiz to see scores here.</p>
+        ) : (
+          <div className="db-quiz-scores">
+            {quizScores.map(([id, { score, total }]) => (
+              <div key={id} className="db-quiz-row">
+                <span className="db-quiz-id">{id.replace(/-/g, " ")}</span>
+                <span className="db-quiz-score">{score} / {total}</span>
+                <ProgressBar value={score} max={total} />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Solver history */}
+      <section className="db-section">
+        <h2 className="db-section-title">Solver history</h2>
+        {solverHistory.length === 0 ? (
+          <p className="db-empty-state">Use the AI solver to see your history here.</p>
+        ) : (
+          <div className="db-solver-history">
+            {solverHistory.map((entry, index) => (
+              <div key={`${entry.timestamp}-${index}`} className="db-solver-entry">
+                <div className="db-solver-input">{entry.input}</div>
+                <div className="db-solver-result">{entry.result}</div>
+                {entry.timestamp && (
+                  <time className="db-solver-time" dateTime={new Date(entry.timestamp).toISOString()}>
+                    {new Date(entry.timestamp).toLocaleString()}
+                  </time>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       {/* Curriculum */}
       <section className="db-section">
         <h2 className="db-section-title">Curriculum</h2>
@@ -153,46 +223,6 @@ function Dashboard() {
           ))}
         </div>
       </section>
-
-      {/* Bookmarks */}
-      {progress.bookmarks.length > 0 && (
-        <section className="db-section">
-          <h2 className="db-section-title">Bookmarks</h2>
-          <div className="db-bookmarks">
-            {progress.bookmarks.map((bm) => (
-              <div key={bm.id} className="db-bookmark">
-                <Link to={bm.path} className="db-bookmark-link">
-                  <span className="db-bookmark-icon">🔖</span>
-                  <span>{bm.title}</span>
-                </Link>
-                <button
-                  className="db-bookmark-remove"
-                  onClick={() => removeBookmark(bm.id)}
-                  aria-label={`Remove bookmark: ${bm.title}`}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Quiz scores */}
-      {Object.keys(progress.quizScores).length > 0 && (
-        <section className="db-section">
-          <h2 className="db-section-title">Quiz scores</h2>
-          <div className="db-quiz-scores">
-            {Object.entries(progress.quizScores).map(([id, { score, total }]) => (
-              <div key={id} className="db-quiz-row">
-                <span className="db-quiz-id">{id.replace(/-/g, " ")}</span>
-                <span className="db-quiz-score">{score} / {total}</span>
-                <ProgressBar value={score} max={total} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </main>
   );
 }
