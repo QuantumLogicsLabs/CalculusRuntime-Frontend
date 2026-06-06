@@ -342,3 +342,49 @@
 .db-quiz-row .db-progress-bar {
   grid-column: 1 / -1;
 }
+
+/* Empty states */
+.db-empty-state {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Solver history */
+.db-solver-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.db-solver-entry {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+
+.db-solver-input {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+  word-break: break-word;
+}
+
+.db-solver-result {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+  word-break: break-word;
+}
+
+.db-solver-time {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
