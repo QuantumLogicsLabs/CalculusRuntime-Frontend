@@ -25,6 +25,7 @@ import LimitsPart2 from "./pages/LimitsPart2";
 import ContinuityFinder from "./pages/ContinuityFinder";
 import ExtremeValueFunction from "./pages/ExtremeValueFinder";
 import VolumeCalculator from "./pages/VolumeCalculator";
+import DerivativeTool from "./components/DerivativeTool";
 
 function App() {
   return (
@@ -66,6 +67,8 @@ function App() {
             <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
             <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
             <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
+            <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
+            <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
           </Routes>
         </BrowserRouter>
       </ProgressProvider>

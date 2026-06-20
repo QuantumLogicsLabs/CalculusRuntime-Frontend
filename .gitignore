@@ -61,3 +61,8 @@ venv.bak/
 *.log
 *.tmp
 # Ignore data files
+
+# Data files for taylorX
+build-output.txt
+build-output-2.txt
+build-output-direct.txt
