@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { InlineMath, BlockMath } from "../components/Math";
 
 // ============================================================================
@@ -394,11 +393,6 @@ function solveDoubleIntegral(integrand, bounds, order, opts = {}) {
         innerMin = bounds.xMin; innerMax = bounds.xMax;
     }
 
-    steps.push({ title: 'Problem Setup', content: 'Evaluating the iterated integral:', formula: `∫_{${outerMin}}^{${outerMax}} ∫_{${innerMin}}^{${innerMax}} (${integrand}) d${innerVar} d${outerVar}` });
-    const outerMinVal = evalBound(outerMin);
-    const outerMaxVal = evalBound(outerMax);
-    steps.push({ title: 'Outer Bounds', content: `${outerVar} ranges from:`, formula: `[${formatBound(outerMinVal)}, ${formatBound(outerMaxVal)}]` });
-
     steps.push({
         title: 'Problem Setup',
         content: 'Evaluating the iterated integral:',
@@ -408,6 +402,7 @@ function solveDoubleIntegral(integrand, bounds, order, opts = {}) {
 
     const outerMinVal = evalBound(outerMin);
     const outerMaxVal = evalBound(outerMax);
+
     steps.push({
         title: 'Outer Bounds',
         content: `${outerVar} ranges from:`,
@@ -417,6 +412,7 @@ function solveDoubleIntegral(integrand, bounds, order, opts = {}) {
 
     const hasInf = !isFinite(outerMinVal) || !isFinite(outerMaxVal);
     const innerConst = !innerMin.includes(outerVar) && !innerMax.includes(outerVar);
+
     if (innerConst) {
         const iMin = evalBound(innerMin), iMax = evalBound(innerMax);
         steps.push({
@@ -433,14 +429,25 @@ function solveDoubleIntegral(integrand, bounds, order, opts = {}) {
             formulaLatex: `${innerVar}\\in\\left[${solverExpressionToLatex(innerMin)}, ${solverExpressionToLatex(innerMax)}\\right]`
         });
     }
+
     const analytical = getAnalyticalForm(integrand, bounds);
+    if (analytical) {
+        steps.push({
+            title: 'Analytical Solution',
+            content: 'Known closed form:',
+            formula: `Result = ${analytical}`,
+            formulaLatex: `\\text{Result} = ${analytical}`
+        });
+    }
 
-    if (analytical) steps.push({ title: 'Analytical Solution', content: 'Known closed form:', formula: `Result = ${analytical}` });
-    if (hasInf) steps.push({ title: 'Improper Integral', content: 'Using variable transformation for infinite bounds', formula: 't = x/(1-x²) mapping' });
-
-    if (analytical) steps.push({ title: 'Analytical Solution', content: 'Known closed form:', formula: `Result = ${analytical}`, formulaLatex: `\\text{Result} = ${analytical}` });
-
-    if (hasInf) steps.push({ title: 'Improper Integral', content: 'Using variable transformation for infinite bounds', formula: 't = x/(1-x²) mapping', formulaLatex: 't = \\frac{x}{1-x^2}' });
+    if (hasInf) {
+        steps.push({
+            title: 'Improper Integral',
+            content: 'Using variable transformation for infinite bounds',
+            formula: 't = x/(1-x²) mapping',
+            formulaLatex: 't = \\frac{x}{1-x^2}'
+        });
+    }
 
     let result, innerEvals = 0, outerEvals = 0;
     if (order === 'dydx') {
@@ -461,8 +468,6 @@ function solveDoubleIntegral(integrand, bounds, order, opts = {}) {
         }, outerMinVal, outerMaxVal, { oscillatory: integrand.includes('sin') || integrand.includes('cos') });
     }
 
-    steps.push({ title: 'Computation Stats', content: 'Numerical integration completed:', formula: `Evaluations: ${outerEvals} outer × ~${Math.round(innerEvals / outerEvals)} inner = ~${innerEvals.toLocaleString()} total` });
-    steps.push({ title: 'Final Result', content: 'Computed value:', formula: `${result.toFixed(12)}\n≈ ${result.toExponential(6)}` });
     steps.push({
         title: 'Computation Stats',
         content: 'Numerical integration completed:',
@@ -574,18 +579,9 @@ export default function DoubleIntegralSolver() {
 
                         {/* Integrand input */}
                         <div style={{ marginBottom: '18px' }}>
-
                             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px', color: 'var(--cv-text-primary)' }}>
                                 Integrand f(x, y)
                             </label>
-                            <input
-                                type="text"
-                                value={integrand}
-                                onChange={e => setIntegrand(e.target.value)}
-                                style={{ width: '100%', padding: '12px', fontSize: '14px', border: '2px solid var(--cv-border)', borderRadius: '10px', fontFamily: 'monospace', background: 'var(--cv-input-bg)', color: 'var(--cv-text-primary)' }}
-                            />
-
-                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px', color: CLR.text }}>Integrand f(x, y)</label>
                             <div
                                 ref={integrandFieldRef}
                                 style={{
@@ -593,7 +589,7 @@ export default function DoubleIntegralSolver() {
                                     minHeight: '46px',
                                     padding: '10px 12px',
                                     fontSize: '18px',
-                                    border: `2px solid ${CLR.border}`,
+                                    border: '2px solid var(--cv-border)',
                                     borderRadius: '10px',
                                     background: 'white'
                                 }}
@@ -607,13 +603,13 @@ export default function DoubleIntegralSolver() {
                                         integrandMathRef.current.latex(solverExpressionToLatex(e.target.value));
                                     }
                                 }}
-                                style={{ width: '100%', marginTop: '8px', padding: '9px 10px', fontSize: '12px', border: `1px solid #e5e7eb`, borderRadius: '8px', fontFamily: 'monospace', color: CLR.sub }}
+                                style={{ width: '100%', marginTop: '8px', padding: '9px 10px', fontSize: '12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontFamily: 'monospace', color: 'var(--cv-text-secondary)' }}
                             />
-                            <div style={{ marginTop: '12px', padding: '12px', background: CLR.light, border: `1px solid ${CLR.border}`, borderRadius: '10px', overflowX: 'auto' }}>
+                            <div style={{ marginTop: '12px', padding: '12px', background: 'var(--cv-bg-sunken)', border: '1px solid var(--cv-border)', borderRadius: '10px', overflowX: 'auto' }}>
                                 <LatexMath
                                     latex={integralLatex(integrand, { xMin, xMax, yMin, yMax }, order)}
                                     displayMode
-                                    style={{ color: CLR.text }}
+                                    style={{ color: 'var(--cv-text-primary)' }}
                                 />
                             </div>
                         </div>
