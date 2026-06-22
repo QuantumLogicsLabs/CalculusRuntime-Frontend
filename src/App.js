@@ -70,7 +70,7 @@ function App() {
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
               <Route path="*" element={<Layout body={<NotFound />} />} />
-            </Routes>
+            </Routes>   
           </ErrorBoundary>
         </BrowserRouter>
       </ProgressProvider>

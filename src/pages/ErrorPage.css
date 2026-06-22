@@ -53,11 +53,11 @@
 
 .error-btn {
   border: none;
-  background: var(--primary, #2c7ef5);
+  background: var(--gold);
   color: #fff;
   cursor: pointer;
 }
 
 .error-link {
-  color: var(--primary, #2c7ef5);
+  color: var(--gold);
 }
