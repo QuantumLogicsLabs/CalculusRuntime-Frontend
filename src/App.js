@@ -1,21 +1,20 @@
+import VectorFieldVisualizer from './pages/VectorFieldVisualizer';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./context/ProgressContext";
 import Layout from "./components/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
-import IntegralsPart1 from "./pages/IntegralsPart1";
-import IntegralsPart2 from "./pages/IntegralsPart2";
+import ErrorBoundary from "./components/ErrorBoundary";
 
-// Pages
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import AISolver from "./pages/AISolver";
 import NotFound from "./pages/NotFound";
-import ErrorBoundary from "./components/ErrorBoundary";
 
-// Guide parts
+import IntegralsPart1 from "./pages/IntegralsPart1";
+import IntegralsPart2 from "./pages/IntegralsPart2";
 import PartialPart1 from "./pages/PartialPart1";
 import PartialPart2 from "./pages/PartialPart2";
 import VectorPart1 from "./pages/VectorPart1";
@@ -23,7 +22,6 @@ import VectorPart2 from "./pages/VectorPart2";
 import LimitsPart1 from "./pages/LimitsPart1";
 import LimitsPart2 from "./pages/LimitsPart2";
 
-// Tools
 import ContinuityFinder from "./pages/ContinuityFinder";
 import ExtremeValueFunction from "./pages/ExtremeValueFinder";
 import VolumeCalculator from "./pages/VolumeCalculator";
@@ -37,6 +35,7 @@ function App() {
           <ErrorBoundary>
             <ScrollToTop />
             <Routes>
+              {/* Home */}
               <Route path="/" element={<Layout body={<Home />} />} />
 
               {/* Auth */}
@@ -56,28 +55,28 @@ function App() {
               <Route path="/vector-calculus" element={<Navigate to="/vector-calculus/1" replace />} />
               <Route path="/vector-calculus/1" element={<Layout body={<VectorPart1 />} />} />
               <Route path="/vector-calculus/2" element={<Layout body={<VectorPart2 />} />} />
+              <Route path="/vectorfield" element={<Layout body={<VectorFieldVisualizer />} />} />
 
               {/* Limits & Continuity */}
               <Route path="/limits-continuity" element={<Navigate to="/limits-continuity/1" replace />} />
               <Route path="/limits-continuity/1" element={<Layout body={<LimitsPart1 />} />} />
               <Route path="/limits-continuity/2" element={<Layout body={<LimitsPart2 />} />} />
 
-            {/* Multiple Integrals */}
+              {/* Multiple Integrals */}
               <Route path="/multiple-integrals" element={<Navigate to="/multiple-integrals/1" replace />} />
               <Route path="/multiple-integrals/1" element={<Layout body={<IntegralsPart1 />} />} />
               <Route path="/multiple-integrals/2" element={<Layout body={<IntegralsPart2 />} />} />
 
-            {/* Tools */}
+              {/* Tools */}
               <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
-
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
               <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
 
-            {/* Catch-all route */}
+              {/* Catch-all */}
               <Route path="*" element={<Layout body={<NotFound />} />} />
-            </Routes>   
+            </Routes>
           </ErrorBoundary>
         </BrowserRouter>
       </ProgressProvider>
