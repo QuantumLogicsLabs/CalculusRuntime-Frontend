@@ -1,4 +1,3 @@
-import VectorFieldVisualizer from './pages/VectorFieldVisualizer';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./context/ProgressContext";
@@ -26,6 +25,8 @@ import ContinuityFinder from "./pages/ContinuityFinder";
 import ExtremeValueFunction from "./pages/ExtremeValueFinder";
 import VolumeCalculator from "./pages/VolumeCalculator";
 import DerivativeTool from "./components/DerivativeTool";
+import VectorFieldVisualizer from "./pages/VectorFieldVisualizer";
+import CheatSheet from "./pages/CheatSheet";
 
 function App() {
   return (
@@ -39,40 +40,41 @@ function App() {
               <Route path="/" element={<Layout body={<Home />} />} />
 
               {/* Auth */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/login"     element={<Login />} />
+              <Route path="/signup"    element={<Signup />} />
               <Route path="/dashboard" element={<Layout body={<Dashboard />} />} />
 
               {/* AI Solver */}
               <Route path="/ai-solver" element={<Layout body={<AISolver />} />} />
 
               {/* Partial Derivatives */}
-              <Route path="/partial-derivatives" element={<Navigate to="/partial-derivatives/1" replace />} />
+              <Route path="/partial-derivatives"   element={<Navigate to="/partial-derivatives/1" replace />} />
               <Route path="/partial-derivatives/1" element={<Layout body={<PartialPart1 />} />} />
               <Route path="/partial-derivatives/2" element={<Layout body={<PartialPart2 />} />} />
 
               {/* Vector Calculus */}
-              <Route path="/vector-calculus" element={<Navigate to="/vector-calculus/1" replace />} />
+              <Route path="/vector-calculus"   element={<Navigate to="/vector-calculus/1" replace />} />
               <Route path="/vector-calculus/1" element={<Layout body={<VectorPart1 />} />} />
               <Route path="/vector-calculus/2" element={<Layout body={<VectorPart2 />} />} />
-              <Route path="/vectorfield" element={<Layout body={<VectorFieldVisualizer />} />} />
+              <Route path="/vectorfield"       element={<Layout body={<VectorFieldVisualizer />} />} />
 
               {/* Limits & Continuity */}
-              <Route path="/limits-continuity" element={<Navigate to="/limits-continuity/1" replace />} />
+              <Route path="/limits-continuity"   element={<Navigate to="/limits-continuity/1" replace />} />
               <Route path="/limits-continuity/1" element={<Layout body={<LimitsPart1 />} />} />
               <Route path="/limits-continuity/2" element={<Layout body={<LimitsPart2 />} />} />
 
               {/* Multiple Integrals */}
-              <Route path="/multiple-integrals" element={<Navigate to="/multiple-integrals/1" replace />} />
+              <Route path="/multiple-integrals"   element={<Navigate to="/multiple-integrals/1" replace />} />
               <Route path="/multiple-integrals/1" element={<Layout body={<IntegralsPart1 />} />} />
               <Route path="/multiple-integrals/2" element={<Layout body={<IntegralsPart2 />} />} />
 
               {/* Tools */}
-              <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
-              <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
-              <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
+              <Route path="/test"               element={<Layout body={<ContinuityFinder />} />} />
+              <Route path="/extreme"            element={<Layout body={<ExtremeValueFunction />} />} />
+              <Route path="/volumecalculator"   element={<Layout body={<VolumeCalculator />} />} />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
-              <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
+              <Route path="/taylorx"            element={<Layout body={<DerivativeTool />} />} />
+              <Route path="/cheatsheet"         element={<Layout body={<CheatSheet />} />} />
 
               {/* Catch-all */}
               <Route path="*" element={<Layout body={<NotFound />} />} />

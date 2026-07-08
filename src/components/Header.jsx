@@ -3,14 +3,15 @@ import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
-  { to: "/simple-concepts",      label: "Concepts", type: "Guide" },
-  { to: "/partial-derivatives/1",label: "Partials",  type: "Guide" },
-  { to: "/vector-calculus/1",    label: "Vectors",   type: "Guide" },
-  { to: "/test",                 label: "Continuity",type: "Tool"  },
-  { to: "/extreme",              label: "Extrema",   type: "Tool"  },
-  { to: "/volumecalculator",     label: "Integrals", type: "Tool"  },
-  { to: "/taylorx",              label: "TaylorX",   type: "Tool"  },
-  { to: "/ai-solver",            label: "AI Solver", type: "Tool"  },
+  { to: "/simple-concepts",       label: "Concepts",    type: "Guide" },
+  { to: "/partial-derivatives/1", label: "Partials",    type: "Guide" },
+  { to: "/vector-calculus/1",     label: "Vectors",     type: "Guide" },
+  { to: "/test",                  label: "Continuity",  type: "Tool"  },
+  { to: "/extreme",               label: "Extrema",     type: "Tool"  },
+  { to: "/volumecalculator",      label: "Integrals",   type: "Tool"  },
+  { to: "/taylorx",               label: "TaylorX",     type: "Tool"  },
+  { to: "/ai-solver",             label: "AI Solver",   type: "Tool"  },
+  { to: "/cheatsheet",            label: "Cheat Sheet", type: "Tool"  },
 ];
 
 function Header({ darkMode, onToggleDark }) {
@@ -18,7 +19,6 @@ function Header({ darkMode, onToggleDark }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef(null);
 
-  // Close menu on outside click OR Escape key — combined into one effect
   useEffect(() => {
     const handleClick = (e) => {
       if (headerRef.current && !headerRef.current.contains(e.target)) {
