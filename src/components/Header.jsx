@@ -3,15 +3,24 @@ import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
-  { to: "/simple-concepts",       label: "Concepts",    type: "Guide" },
-  { to: "/partial-derivatives/1", label: "Partials",    type: "Guide" },
-  { to: "/vector-calculus/1",     label: "Vectors",     type: "Guide" },
-  { to: "/test",                  label: "Continuity",  type: "Tool"  },
-  { to: "/extreme",               label: "Extrema",     type: "Tool"  },
-  { to: "/volumecalculator",      label: "Integrals",   type: "Tool"  },
-  { to: "/taylorx",               label: "TaylorX",     type: "Tool"  },
-  { to: "/ai-solver",             label: "AI Solver",   type: "Tool"  },
-  { to: "/cheatsheet",            label: "Cheat Sheet", type: "Tool"  },
+
+  { to: "/simple-concepts",        label: "Concepts",    type: "Guide"     },
+  { to: "/partial-derivatives/1",  label: "Partials",    type: "Guide"     },
+  { to: "/vector-calculus/1",      label: "Vectors",     type: "Guide"     },
+  { to: "/multiple-integrals/1",   label: "Integrals",   type: "Guide"     },
+  { to: "/lagrange-multipliers/1", label: "Lagrange",    type: "Guide"     },
+  { to: "/stokes-theorem/1",       label: "Stokes",      type: "Guide"     },
+  { to: "/divergence-curl/1",      label: "Divergence",  type: "Guide"     },
+
+  { to: "/test",                   label: "Continuity",  type: "Tool"      },
+  { to: "/extreme",                label: "Extrema",     type: "Tool"      },
+  { to: "/volumecalculator",       label: "Volume Calc", type: "Tool"      },
+  { to: "/taylorx",                label: "TaylorX",     type: "Tool"      },
+  { to: "/ai-solver",              label: "AI Solver",   type: "Tool"      },
+  { to: "/cheatsheet",             label: "Cheat Sheet", type: "Tool"      },
+
+  
+  { to: "/practice",               label: "Practice",    type: "Workspace" },
 ];
 
 function Header({ darkMode, onToggleDark }) {
