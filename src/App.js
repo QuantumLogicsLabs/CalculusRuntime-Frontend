@@ -69,12 +69,12 @@ function App() {
               <Route path="/multiple-integrals/2" element={<Layout body={<IntegralsPart2 />} />} />
 
               {/* Tools */}
-              <Route path="/test"               element={<Layout body={<ContinuityFinder />} />} />
-              <Route path="/extreme"            element={<Layout body={<ExtremeValueFunction />} />} />
-              <Route path="/volumecalculator"   element={<Layout body={<VolumeCalculator />} />} />
+              <Route path="/test"                  element={<Layout body={<ContinuityFinder />} />} />
+              <Route path="/extreme"               element={<Layout body={<ExtremeValueFunction />} />} />
+              <Route path="/volumecalculator"      element={<Layout body={<VolumeCalculator />} />} />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
-              <Route path="/taylorx"            element={<Layout body={<DerivativeTool />} />} />
-              <Route path="/cheatsheet"         element={<Layout body={<CheatSheet />} />} />
+              <Route path="/taylorx"               element={<Layout body={<DerivativeTool />} />} />
+              <Route path="/cheatsheet"            element={<Layout body={<CheatSheet />} />} />
 
               {/* Catch-all */}
               <Route path="*" element={<Layout body={<NotFound />} />} />
