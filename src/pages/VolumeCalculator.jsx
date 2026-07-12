@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { InlineMath, BlockMath } from "../components/Math";
+import HintButton from "../components/HintButton";
+import { useStepHints } from "../hooks/useStepHints";
 
 // ============================================================================
 // ENHANCED DOUBLE INTEGRAL SOLVER — All Complex Cases
@@ -501,9 +503,29 @@ export default function DoubleIntegralSolver() {
     const [order, setOrder] = useState('dydx');
     const [result, setResult] = useState(null);
     const [error, setError] = useState('');
-    const [showSteps] = useState(true);
     const [activeCat, setActiveCat] = useState(0);
     const [computing, setComputing] = useState(false);
+
+    const hintSteps = useMemo(() => {
+        if (!result?.steps?.length) return [];
+        return result.steps.map((step, i) => ({
+            title: `Step ${i + 1}: ${step.title}`,
+            body: step.content,
+            formula: step.formula,
+            formulaLatex: step.formulaLatex,
+        }));
+    }, [result]);
+    const hintResetKey = result
+        ? `${integrand}|${xMin}|${xMax}|${yMin}|${yMax}|${order}|${result.result}`
+        : "";
+    const {
+        visibleCount,
+        total: hintTotal,
+        visibleSteps,
+        allRevealed,
+        feedback: hintFeedback,
+        revealHint,
+    } = useStepHints(hintSteps, hintResetKey);
     const integrandFieldRef = useRef(null);
     const integrandMathRef = useRef(null);
 
@@ -653,13 +675,21 @@ export default function DoubleIntegralSolver() {
                             onClick={solve}
                             disabled={computing}
                             className={`cv-btn ${computing ? 'cv-btn--function' : 'cv-btn--equals'}`}
-                            style={{ width: '100%', fontSize: '15px', fontWeight: '700', marginBottom: '20px', borderRadius: '10px', minHeight: '52px' }}
+                            style={{ width: '100%', fontSize: '15px', fontWeight: '700', marginBottom: '12px', borderRadius: '10px', minHeight: '52px' }}
                         >
                             {computing ? 'Computing...' : '🧮 Solve Integral'}
                         </button>
 
+                        <HintButton
+                            onReveal={revealHint}
+                            visibleCount={visibleCount}
+                            total={hintTotal}
+                            feedback={hintFeedback}
+                            disabled={!result}
+                        />
+
                         {/* Presets */}
-                        <div style={{ padding: '16px', background: 'var(--cv-bg-sunken)', borderRadius: '12px', border: '1px solid var(--cv-border)' }}>
+                        <div style={{ padding: '16px', background: 'var(--cv-bg-sunken)', borderRadius: '12px', border: '1px solid var(--cv-border)', marginTop: '12px' }}>
                             <h3 style={{ margin: '0 0 12px', fontSize: '12px', fontWeight: '700', color: 'var(--cv-text-primary)', textTransform: 'uppercase' }}>
                                 Preset Problems
                             </h3>
@@ -704,24 +734,18 @@ export default function DoubleIntegralSolver() {
 
                         {result && (
                             <div>
-                                <div style={{ padding: '16px', background: 'var(--cv-accent-light)', borderRadius: '12px', marginBottom: '16px', border: '2px solid var(--cv-border)' }}>
-                                    <div style={{ fontSize: '11px', color: 'var(--cv-text-secondary)', marginBottom: '4px', fontWeight: '600' }}>RESULT</div>
-                                    <div style={{ fontSize: '2em', fontWeight: '800', color: 'var(--cv-accent)', fontFamily: 'monospace' }}>
-                                        {result.result.toFixed(10)}
+                                {visibleSteps.length === 0 && (
+                                    <div style={{ padding: '12px', background: 'var(--cv-bg-sunken)', borderRadius: '8px', marginBottom: '12px', color: 'var(--cv-text-secondary)', fontSize: '13px' }}>
+                                        Solution is ready. Press <strong>Show Me a Hint</strong> to reveal steps one at a time.
                                     </div>
-                                    {result.analytical && (
-                                        <div style={{ marginTop: '8px', padding: '8px', background: 'var(--cv-success-light)', borderRadius: '6px', fontSize: '13px', color: 'var(--cv-success)' }}>
-                                            Analytical: {result.analytical}
-                                        </div>
-                                    )}
-                                </div>
+                                )}
 
-                                {showSteps && result.steps.map((step, i) => (
+                                {visibleSteps.map((step, i) => (
                                     <div key={i} style={{ marginBottom: '12px', padding: '12px', background: 'var(--cv-bg-sunken)', borderRadius: '8px', borderLeft: '4px solid var(--cv-accent)' }}>
                                         <div style={{ fontWeight: '700', color: 'var(--cv-accent)', marginBottom: '4px', fontSize: '12px' }}>
-                                            Step {i + 1}: {step.title}
+                                            {step.title}
                                         </div>
-                                        <div style={{ fontSize: '12px', color: 'var(--cv-text-secondary)', marginBottom: '4px' }}>{step.content}</div>
+                                        <div style={{ fontSize: '12px', color: 'var(--cv-text-secondary)', marginBottom: '4px' }}>{step.body}</div>
                                         <div style={{ padding: '8px', background: 'var(--cv-bg-surface)', borderRadius: '6px', fontFamily: 'monospace', fontSize: '12px', border: '1px solid var(--cv-border)', whiteSpace: 'pre-wrap', color: 'var(--cv-text-primary)' }}>
                                             {step.formulaLatex ? (
                                                 <LatexMath latex={step.formulaLatex} displayMode />
@@ -731,6 +755,20 @@ export default function DoubleIntegralSolver() {
                                         </div>
                                     </div>
                                 ))}
+
+                                {allRevealed && (
+                                    <div style={{ padding: '16px', background: 'var(--cv-accent-light)', borderRadius: '12px', marginBottom: '16px', border: '2px solid var(--cv-border)' }}>
+                                        <div style={{ fontSize: '11px', color: 'var(--cv-text-secondary)', marginBottom: '4px', fontWeight: '600' }}>RESULT</div>
+                                        <div style={{ fontSize: '2em', fontWeight: '800', color: 'var(--cv-accent)', fontFamily: 'monospace' }}>
+                                            {result.result.toFixed(10)}
+                                        </div>
+                                        {result.analytical && (
+                                            <div style={{ marginTop: '8px', padding: '8px', background: 'var(--cv-success-light)', borderRadius: '6px', fontSize: '13px', color: 'var(--cv-success)' }}>
+                                                Analytical: {result.analytical}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )}
 
