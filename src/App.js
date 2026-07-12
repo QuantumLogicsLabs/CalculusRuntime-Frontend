@@ -36,6 +36,7 @@ import VolumeCalculator from "./pages/VolumeCalculator";
 import DerivativeTool from "./components/DerivativeTool";
 import VectorFieldVisualizer from "./pages/VectorFieldVisualizer";
 import CheatSheet from "./pages/CheatSheet";
+import Leaderboard from "./pages/Leaderboard";
 
 function App() {
   return (
@@ -107,6 +108,9 @@ function App() {
 
               {/* Practice Section */}
               <Route path="/practice"   element={<Layout body={<PractiseSection />} />} />
+
+              {/* Objective 14 — Opt-in peer leaderboard */}
+              <Route path="/leaderboard" element={<Layout body={<Leaderboard />} />} />
 
               {/* AI Personalized Study Plan */}
               <Route path="/study-plan" element={<Layout body={<PersonalizedStudyPlan />} />} />

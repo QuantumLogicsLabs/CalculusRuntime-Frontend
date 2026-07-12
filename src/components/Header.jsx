@@ -21,6 +21,7 @@ const navLinks = [
 
   
   { to: "/practice",               label: "Practice",    type: "Workspace" },
+  { to: "/leaderboard",            label: "Leaderboard", type: "Workspace" },
 ];
 
 function Header({ darkMode, onToggleDark }) {

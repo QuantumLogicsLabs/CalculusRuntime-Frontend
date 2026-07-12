@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import SubmitToLeaderboard from '../components/SubmitToLeaderboard';
+import './Leaderboard.css';
 
 // --- MASTER PROBLEM DATABASE (96 DISTINCT PROBLEM OBJECTS) ---
 const PRACTICE_PROBLEMS = [
@@ -885,6 +887,14 @@ export default function PractiseSection() {
                     <h4 className="text-xs font-black tracking-wide uppercase text-emerald-800 mb-1">💡 Solution Insight</h4>
                     <p className="text-xs text-emerald-950 leading-relaxed font-medium">{currentProblem.explanation}</p>
                   </div>
+                )}
+
+                {isSubmitted && currentProblem && (
+                  <SubmitToLeaderboard
+                    quizId={`practice-${chosenTopic}-${chosenDifficulty}`}
+                    score={score.correct}
+                    total={Math.max(score.total, 1)}
+                  />
                 )}
 
               </div>
