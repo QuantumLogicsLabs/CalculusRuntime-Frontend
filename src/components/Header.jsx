@@ -4,14 +4,10 @@ import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
 
-  { to: "/simple-concepts",        label: "Concepts",    type: "Guide",     match: "/simple-concepts" },
-  { to: "/partial-derivatives/1",  label: "Partials",    type: "Guide",     match: "/partial-derivatives" },
-  { to: "/vector-calculus/1",      label: "Vectors",     type: "Guide",     match: "/vector-calculus" },
-  { to: "/multiple-integrals/1",   label: "Integrals",   type: "Guide",     match: "/multiple-integrals" },
-  { to: "/taylor-series/1",        label: "Taylor",      type: "Guide",     match: "/taylor-series" },
-  { to: "/lagrange-multipliers/1", label: "Lagrange",    type: "Guide",     match: "/lagrange-multipliers" },
-  { to: "/stokes-theorem/1",       label: "Stokes",      type: "Guide",     match: "/stokes-theorem" },
-  { to: "/divergence-curl/1",      label: "Divergence",  type: "Guide",     match: "/divergence-curl" },
+  { to: "/courses/calculus-analytical-geometry", label: "Calc & Geometry",  type: "Course", match: "/courses/calculus-analytical-geometry" },
+  { to: "/courses/multivariable-calculus",       label: "Multivariable",    type: "Course", match: "/courses/multivariable-calculus" },
+  { to: "/courses/linear-algebra",               label: "Linear Algebra",   type: "Course", match: "/courses/linear-algebra" },
+  { to: "/courses/probability-statistics",       label: "Probability & Stats", type: "Course", match: "/courses/probability-statistics" },
 
   { to: "/test",                   label: "Continuity",  type: "Tool" },
   { to: "/extreme",                label: "Extrema",     type: "Tool" },
@@ -24,6 +20,8 @@ const navLinks = [
   { to: "/practice",               label: "Practice",    type: "Workspace" },
   { to: "/leaderboard",            label: "Leaderboard", type: "Workspace" },
 ];
+
+ 
 
 function Header({ darkMode, onToggleDark }) {
   const { user, logout } = useAuth();
