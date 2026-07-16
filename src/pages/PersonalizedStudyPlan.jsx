@@ -1,6 +1,7 @@
+
+const PersonalizedStudyPlan = () => <div style={{padding:"40px",textAlign:"center"}}><h1>Personalized Study Plan</h1><p>Coming soon...</p></div>;
 import { Link } from "react-router-dom";
 
-/** Minimal placeholder — file was empty and crashed the route. */
 function PersonalizedStudyPlan() {
   return (
     <main className="home-page">
