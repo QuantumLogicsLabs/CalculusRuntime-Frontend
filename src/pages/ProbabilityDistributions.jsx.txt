@@ -1,0 +1,120 @@
+import React, { useState } from 'react';
+import './ProbabilityDistributions.css';
+
+// Probability and Statistics Guide: Probability Distributions
+// Fill in path/meta/icon to match your courses.js entry
+
+const practiceQuestions = [
+  {
+    id: 1,
+    level: 'medium',
+    question:
+      'A fair six-sided die is rolled twice. What is the probability that the sum is 7?',
+    answer:
+      'There are 6 favorable outcomes out of 36 total outcomes (1,6),(2,5),(3,4),(4,3),(5,2),(6,1). P = 6/36 = 1/6.',
+  },
+  {
+    id: 2,
+    level: 'medium',
+    question:
+      'A random variable X follows a Binomial distribution with n = 10 and p = 0.5. What is the expected value E(X)?',
+    answer: 'For a Binomial distribution, E(X) = n·p = 10 × 0.5 = 5.',
+  },
+  {
+    id: 3,
+    level: 'hard',
+    question:
+      'The heights of adults in a population are normally distributed with mean 170 cm and standard deviation 10 cm. What is the probability that a randomly selected adult is taller than 190 cm?',
+    answer:
+      '190 cm is 2 standard deviations above the mean (z = 2). Using the standard normal table, P(Z > 2) ≈ 0.0228, so about 2.28%.',
+  },
+  {
+    id: 4,
+    level: 'hard',
+    question:
+      'Two events A and B are independent with P(A) = 0.3 and P(B) = 0.4. Find P(A ∪ B).',
+    answer:
+      'For independent events, P(A ∩ B) = P(A)·P(B) = 0.12. P(A ∪ B) = P(A) + P(B) − P(A∩B) = 0.3 + 0.4 − 0.12 = 0.58.',
+  },
+];
+
+export default function ProbabilityDistributions() {
+  const [revealed, setRevealed] = useState({});
+
+  const toggleAnswer = (id) => {
+    setRevealed((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  return (
+    <div className="guide-container">
+      <header className="guide-header">
+        <h1>Probability Distributions</h1>
+        <p className="guide-subtitle">
+          Core concepts of Probability and Statistics: random variables, distributions, and
+          expected value.
+        </p>
+      </header>
+
+      <section className="guide-section">
+        <h2>1. Basic Probability Rules</h2>
+        <p>
+          Probability measures the likelihood of an event, ranging from 0 (impossible) to 1
+          (certain). For independent events A and B: P(A ∩ B) = P(A)·P(B). For any two events:
+          P(A ∪ B) = P(A) + P(B) − P(A ∩ B).
+        </p>
+      </section>
+
+      <section className="guide-section">
+        <h2>2. Random Variables</h2>
+        <p>
+          A random variable assigns a numerical value to each outcome of a random experiment.
+          Discrete random variables take countable values (like dice rolls), while continuous
+          random variables take any value in a range (like height or time).
+        </p>
+      </section>
+
+      <section className="guide-section">
+        <h2>3. Common Distributions</h2>
+        <p>
+          The Binomial distribution models the number of successes in n independent trials with
+          success probability p. The Normal (Gaussian) distribution is a continuous, symmetric
+          bell-shaped distribution defined by its mean μ and standard deviation σ, widely used
+          to model natural phenomena.
+        </p>
+      </section>
+
+      <section className="guide-section">
+        <h2>4. Expected Value and Variance</h2>
+        <p>
+          The expected value E(X) represents the long-run average outcome of a random variable.
+          For a Binomial distribution, E(X) = n·p. Variance measures the spread of a
+          distribution around its mean.
+        </p>
+      </section>
+
+      <section className="guide-section">
+        <h2>5. The Standard Normal Distribution</h2>
+        <p>
+          Any normal distribution can be converted to the standard normal distribution (mean 0,
+          standard deviation 1) using the z-score formula: z = (x − μ) / σ. This allows
+          probabilities to be found using standard normal tables.
+        </p>
+      </section>
+
+      <section className="guide-section practice-section">
+        <h2>Practice Questions (Medium & Hard)</h2>
+        {practiceQuestions.map((q) => (
+          <div key={q.id} className={`practice-item level-${q.level}`}>
+            <p className="question">
+              <span className="badge">{q.level}</span> {q.question}
+            </p>
+            <button onClick={() => toggleAnswer(q.id)}>
+              {revealed[q.id] ? 'Hide Answer' : 'Show Answer'}
+            </button>
+            {revealed[q.id] && <p className="answer">{q.answer}</p>}
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
