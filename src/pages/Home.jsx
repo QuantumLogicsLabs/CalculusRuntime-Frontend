@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useProgress } from "../context/ProgressContext";
 
@@ -167,8 +167,12 @@ const baseItems = [
 
 function Home() {
   const [query, setQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user } = useAuth();
   const { stats } = useProgress();
+  const navigate = useNavigate();
+  const searchRef = useRef(null);
+  const isSearching = query.trim().length > 0;
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -178,12 +182,31 @@ function Home() {
         item.title?.toLowerCase().includes(q) ||
         item.description?.toLowerCase().includes(q) ||
         item.desc?.toLowerCase().includes(q) ||
-        item.label?.toLowerCase().includes(q),
+        item.label?.toLowerCase().includes(q) ||
+        item.meta?.toLowerCase().includes(q),
     );
   }, [query]);
 
   const filteredGuides = filtered.filter((i) => i.type === "guide");
   const filteredTools = filtered.filter((i) => i.type === "tool");
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      if (!searchRef.current?.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
+  }, []);
+
+  const goToFirstResult = () => {
+    const first = filtered[0];
+    if (first?.path) {
+      setIsSearchOpen(false);
+      navigate(first.path);
+    }
+  };
 
   return (
     <main className="home-page">
@@ -230,35 +253,83 @@ function Home() {
       </section>
 
       {/* Search */}
-      <div className="home-search-wrap">
-        <div className="home-search">
-          <span className="home-search-icon">⌕</span>
+      <div className="home-search-wrap" ref={searchRef}>
+        <form
+          className="home-search"
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            goToFirstResult();
+          }}
+        >
+          <span className="home-search-icon" aria-hidden="true">⌕</span>
           <input
             type="search"
             placeholder="Search guides and tools…"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setIsSearchOpen(true);
+            }}
+            onFocus={() => setIsSearchOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setIsSearchOpen(false);
+            }}
+            role="combobox"
             aria-label="Search topics and tools"
+            aria-expanded={isSearching && isSearchOpen}
+            aria-controls="home-search-results"
+            aria-autocomplete="list"
+            autoComplete="off"
           />
           {query && (
             <button
+              type="button"
               className="home-search-clear"
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                setIsSearchOpen(false);
+              }}
               aria-label="Clear search"
             >
               ×
             </button>
           )}
-        </div>
+        </form>
+        {isSearching && isSearchOpen && (
+          <div
+            id="home-search-results"
+            className="home-search-dropdown"
+            role="listbox"
+            aria-label="Search results"
+          >
+            {filtered.length === 0 ? (
+              <p className="home-search-empty">No guides or tools match “{query}”.</p>
+            ) : (
+              filtered.map((item) => (
+                <Link
+                  key={item.path}
+                  className="home-search-result"
+                  to={item.path}
+                  role="option"
+                  onClick={() => setIsSearchOpen(false)}
+                >
+                  <span className="home-search-result-icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <span className="home-search-result-copy">
+                    <strong>{item.title || item.label}</strong>
+                    <small>{item.meta || item.desc}</small>
+                  </span>
+                  <span className="home-search-result-type">{item.type}</span>
+                </Link>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       {/* No results */}
-      {filtered.length === 0 ? (
-        <div className="home-no-results">
-          <span>Nothing matched "{query}".</span>
-        </div>
-      ) : null}
-
       {/* Study Guides */}
       {filteredGuides.length > 0 && (
         <section className="guide-section" aria-labelledby="guide-heading">
