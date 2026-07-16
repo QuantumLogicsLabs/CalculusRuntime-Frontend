@@ -182,7 +182,16 @@ function Home() {
     );
   }, [query]);
 
-  const filteredGuides = filtered.filter((i) => i.type === "guide");
+  const courseCards = filtered.filter(
+  (i) =>
+    i.type === "guide" &&
+    [
+      "Calculus and Analytical Geometry",
+      "Multi Variable Calculus",
+      "Linear Algebra",
+      "Probability and Statistics",
+    ].includes(i.title)
+);
   const filteredTools = filtered.filter((i) => i.type === "tool");
 
   return (
@@ -260,12 +269,12 @@ function Home() {
       ) : null}
 
       {/* Study Guides */}
-      {filteredGuides.length > 0 && (
+      {courseCards.length > 0 && (
         <section className="guide-section" aria-labelledby="guide-heading">
           <div className="section-kicker">Study Guides</div>
           <h2 id="guide-heading">Choose a path</h2>
           <div className="guide-grid">
-            {filteredGuides.map((guide) => (
+            {courseCards.map((guide) => (
               <Link
                 className={`guide-card guide-card--${guide.color}`}
                 key={guide.path}
@@ -332,8 +341,8 @@ function Home() {
       {/* Stats strip */}
       <div className="home-stats">
         <div className="stat-item">
-          <span className="stat-num">3</span>
-          <span className="stat-label">Study Guides</span>
+          <span className="stat-num">4</span>
+          <span className="stat-label">Courses</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">

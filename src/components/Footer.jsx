@@ -17,11 +17,10 @@ function Footer() {
 
       <nav className="footer-nav" aria-label="Footer navigation">
         <NavLink to="/">Home</NavLink>
-        <NavLink to="/partial-derivatives/1">Partials</NavLink>
-        <NavLink to="/taylor-series/1">Taylor</NavLink>
-        <NavLink to="/lagrange-multipliers/1">Lagrange</NavLink>
-        <NavLink to="/divergence-curl/1">Divergence</NavLink>
-        <NavLink to="/stokes-theorem/1">Stokes</NavLink>
+        <NavLink to="/courses/calculus-analytical-geometry">Calc & Geometry</NavLink>
+        <NavLink to="/courses/multivariable-calculus">Multivariable</NavLink>
+        <NavLink to="/courses/linear-algebra">Linear Algebra</NavLink>
+        <NavLink to="/courses/probability-statistics">Probability & Stats</NavLink>
         <NavLink to="/practice">Practice</NavLink>
         <NavLink to="/ai-solver">AI Solver</NavLink>
         {user ? (
