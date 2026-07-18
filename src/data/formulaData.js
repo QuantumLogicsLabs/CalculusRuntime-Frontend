@@ -4,7 +4,7 @@
 const formulaData = {
   "partial-derivatives": {
     title: "Partial Derivatives",
-    color: "#14756f",
+    color: "#667eea",
     formulas: [
       {
         name: "First Partial Derivative (x)",
@@ -46,7 +46,7 @@ const formulaData = {
 
   "vector-calculus": {
     title: "Vector Calculus",
-    color: "#345b91",
+    color: "#f093fb",
     formulas: [
       {
         name: "Line Integral (scalar)",
@@ -88,7 +88,7 @@ const formulaData = {
 
   "limits-continuity": {
     title: "Limits & Continuity",
-    color: "#14756f",
+    color: "#4facfe",
     formulas: [
       {
         name: "Limit Definition",
@@ -120,7 +120,7 @@ const formulaData = {
 
   "multiple-integrals": {
     title: "Multiple Integrals",
-    color: "#345b91",
+    color: "#43e97b",
     formulas: [
       {
         name: "Double Integral (rectangular)",
@@ -167,7 +167,7 @@ const formulaData = {
 
   extrema: {
     title: "Extreme Values",
-    color: "#b98221",
+    color: "#fa709a",
     formulas: [
       {
         name: "Critical Point Condition",
@@ -209,7 +209,7 @@ const formulaData = {
 
   "taylor-series": {
     title: "Taylor Series",
-    color: "#b98221",
+    color: "#f6d365",
     formulas: [
       {
         name: "1-Variable Taylor Polynomial",
@@ -256,7 +256,7 @@ const formulaData = {
 
   "lagrange-multipliers": {
     title: "Lagrange Multipliers",
-    color: "#345b91",
+    color: "#a18cd1",
     formulas: [
       {
         name: "Single Constraint",
