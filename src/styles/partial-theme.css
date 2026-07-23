@@ -298,6 +298,52 @@
   box-shadow: var(--shadow-sm);
 }
 
+[data-site-theme="partial"] .guide-card::before {
+  background: linear-gradient(180deg, var(--gold), var(--gold-2));
+}
+
+[data-site-theme="partial"] .guide-card::after {
+  background: rgba(160, 114, 10, 0.12);
+  border-color: rgba(160, 114, 10, 0.28);
+  color: var(--gold);
+}
+
+[data-site-theme="partial"] .guide-card:hover {
+  border-color: rgba(160, 114, 10, 0.45);
+}
+
+/* Home hero module panel — warm ink/brown, not cool grey */
+[data-site-theme="partial"] .hero-panel {
+  background:
+    linear-gradient(135deg, #16120a 0%, #2a2216 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 28px,
+      rgba(200, 146, 42, 0.07) 29px
+    );
+  border-color: rgba(200, 146, 42, 0.35);
+}
+
+[data-site-theme="partial"] .hero-panel::before {
+  background: linear-gradient(90deg, var(--gold), var(--gold-2), var(--gold));
+}
+
+[data-site-theme="partial"] .hero-panel::after {
+  border-color: rgba(244, 237, 224, 0.1);
+}
+
+[data-site-theme="partial"] .orbit-grid span {
+  background: rgba(244, 237, 224, 0.08);
+  border-color: rgba(200, 146, 42, 0.28);
+  color: #e8b84b;
+}
+
+[data-site-theme="partial"] .orbit-grid span:hover {
+  background: rgba(200, 146, 42, 0.16);
+  border-color: var(--gold);
+}
+
 [data-site-theme="partial"] .guide-card h3,
 [data-site-theme="partial"] .guide-section h2,
 [data-site-theme="partial"] .tool-strip h2,
