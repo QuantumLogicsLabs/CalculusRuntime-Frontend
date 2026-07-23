@@ -4,6 +4,7 @@ import { ProgressProvider } from "./pages/ProgressContext";
 import Layout from "./components/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import ErrorBoundary from "./components/ErrorBoundary";
+import SiteThemeManager from "./components/SiteThemeManager";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -49,6 +50,7 @@ function App() {
         <BrowserRouter>
           <ErrorBoundary>
             <ScrollToTop />
+            <SiteThemeManager />
             <Routes>
               {/* Home */}
               <Route path="/" element={<Layout body={<Home />} />} />
