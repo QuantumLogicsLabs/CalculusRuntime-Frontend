@@ -121,17 +121,12 @@ function Header({ darkMode, onToggleDark }) {
             <Link
               to="/login"
               className="header-login"
-              style={{ color: darkMode ? undefined : "#1a1a1a" }}
             >
               Sign in
             </Link>
             <Link
               to="/signup"
               className="header-signup"
-              style={{
-                color: darkMode ? undefined : "#ffffff",
-                backgroundColor: darkMode ? undefined : "#1a1a1a",
-              }}
             >
               Sign up
             </Link>
@@ -189,14 +184,12 @@ function Header({ darkMode, onToggleDark }) {
             <Link
               to="/login"
               onClick={() => setMenuOpen(false)}
-              style={{ color: darkMode ? undefined : "#1a1a1a" }}
             >
               Sign in
             </Link>
             <Link
               to="/signup"
               onClick={() => setMenuOpen(false)}
-              style={{ color: darkMode ? undefined : "#1a1a1a" }}
             >
               Sign up
             </Link>
