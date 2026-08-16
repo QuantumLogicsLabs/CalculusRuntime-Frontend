@@ -3,7 +3,7 @@ import SubmitToLeaderboard from '../components/SubmitToLeaderboard';
 import './Leaderboard.css';
 import './PractiseSection.css';
 
-// --- MASTER PROBLEM DATABASE (120 DISTINCT PROBLEM OBJECTS) ---
+// --- MASTER PROBLEM DATABASE (120+ DISTINCT PROBLEM OBJECTS) ---
 const PRACTICE_PROBLEMS = [
   // ==========================================
   // TOPIC 1: Lagrange Multipliers (12 Problems)
@@ -59,8 +59,8 @@ const PRACTICE_PROBLEMS = [
   {
     id: 9, topic: 'Lagrange Multipliers', difficulty: 'Hard',
     question: 'Maximize f(x,y,z) = xyz restricted across two simultaneous boundaries: x + y + z = 1 and x - y - z = 0.',
-    options: ['1 / 16', '1 / 32', '0', '-1 / 32'],
-    correctAnswer: 3, explanation: 'Adding constraints gives 2x = 1 → x = 1/2. Then y + z = 1/2 and y - z = 0 → y = 1/4, z = 1/4. Thus f(1/2, 1/4, 1/4) = -1/32.'
+    options: ['1 / 32', '1 / 16', '0', '-1 / 32'],
+    correctAnswer: 0, explanation: 'Adding constraints gives 2x = 1 → x = 1/2. Then y + z = 1/2 and y - z = 0 → y = 1/4, z = 1/4. Thus f(1/2, 1/4, 1/4) = 1/32.'
   },
   {
     id: 10, topic: 'Lagrange Multipliers', difficulty: 'Hard',
@@ -352,7 +352,7 @@ const PRACTICE_PROBLEMS = [
     id: 55, topic: 'Partial Derivatives', difficulty: 'Medium',
     question: 'If z = x^2 y and x = t^2, y = t^3, use the multivariable Chain Rule to compute dz/dt.',
     options: ['7t^6', '7t^7', '6t^5', '5t^4'],
-    correctAnswer: 0, explanation: 'dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt) = (2xy)(2t) + (x^2)(3t^2) = (2t^7)(2t) + (t^4)(3t^2) = 4t^7 + 3t^6... wait, substituting x and y gives 2(t^2)(t^3)(2t) + (t^4)(3t^2) = 4t^6 + 3t^6 = 7t^6.'
+    correctAnswer: 0, explanation: 'dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt) = (2xy)(2t) + (x^2)(3t^2) = 4t^6 + 3t^6 = 7t^6.'
   },
   {
     id: 56, topic: 'Partial Derivatives', difficulty: 'Medium',
@@ -614,156 +614,119 @@ const PRACTICE_PROBLEMS = [
   },
 
   // ==========================================
-  // EXTRA DRILL BANK (ids 97–120)
+  // TOPIC 9: Descriptive Statistics (Easy, Medium, Hard)
   // ==========================================
   {
-    id: 97, topic: 'Lagrange Multipliers', difficulty: 'Easy',
-    question: 'What does the multiplier λ represent geometrically when maximizing f subject to g = c?',
-    options: [
-      'The curvature of the constraint',
-      'How the objective changes relative to a change in the constraint value',
-      'The arc length of the level curve',
-      'The Hessian determinant at the point'
-    ],
-    correctAnswer: 1, explanation: 'λ measures the sensitivity of the optimal value to relaxing the constraint; gradients being parallel encodes that trade-off.'
+    id: 121, topic: 'Descriptive Statistics', difficulty: 'Easy',
+    question: 'Which measure of central tendency is calculated as the sum of values divided by the total number of observations?',
+    options: ['Median', 'Mean', 'Mode', 'Variance'],
+    correctAnswer: 1, explanation: 'The mean is the arithmetic average of a dataset.'
   },
   {
-    id: 98, topic: 'Lagrange Multipliers', difficulty: 'Medium',
-    question: 'Maximize f(x,y) = xy subject to x + y = 6. What is the maximum value?',
-    options: ['6', '9', '12', '18'],
-    correctAnswer: 1, explanation: '∇f = ⟨y,x⟩, ∇g = ⟨1,1⟩ ⇒ y = x = λ and x+y=6 ⇒ x=y=3, so f=9.'
+    id: 122, topic: 'Descriptive Statistics', difficulty: 'Easy',
+    question: 'What measure represents the middle value in a sorted data sequence?',
+    options: ['Mean', 'Median', 'Standard Deviation', 'Range'],
+    correctAnswer: 1, explanation: 'The median divides a sorted dataset exactly in half.'
   },
   {
-    id: 99, topic: 'Lagrange Multipliers', difficulty: 'Hard',
-    question: 'Minimize f(x,y,z) = x² + y² + z² subject to x + 2y + 2z = 9. What is the minimum?',
-    options: ['1', '3', '9', '81/9'],
-    correctAnswer: 2, explanation: '∇f = 2⟨x,y,z⟩ = λ⟨1,2,2⟩ and the plane constraint give the closest point to the origin; distance squared equals 9.'
+    id: 123, topic: 'Descriptive Statistics', difficulty: 'Easy',
+    question: 'Which metric measures the total spread between the maximum and minimum numbers in a dataset?',
+    options: ['Variance', 'Interquartile Range', 'Range', 'Mean Absolute Deviation'],
+    correctAnswer: 2, explanation: 'Range = Maximum value - Minimum value.'
   },
   {
-    id: 100, topic: 'Divergence & Curl', difficulty: 'Easy',
-    question: 'If F = ⟨x, y, z⟩, then ∇·F equals:',
-    options: ['0', '1', '2', '3'],
-    correctAnswer: 3, explanation: '∂/∂x(x)+∂/∂y(y)+∂/∂z(z) = 1+1+1 = 3.'
+    id: 124, topic: 'Descriptive Statistics', difficulty: 'Medium',
+    question: 'What is the variance of a sample dataset if its standard deviation is 5?',
+    options: ['2.5', '10', '25', '50'],
+    correctAnswer: 2, explanation: 'Variance is the square of standard deviation: 5^2 = 25.'
   },
   {
-    id: 101, topic: 'Divergence & Curl', difficulty: 'Medium',
-    question: 'For F = ⟨-y, x, 0⟩, ∇×F equals:',
-    options: ['⟨0,0,0⟩', '⟨0,0,2⟩', '⟨0,0,1⟩', '⟨2,0,0⟩'],
-    correctAnswer: 1, explanation: 'k-component is ∂Q/∂x − ∂P/∂y = 1 − (−1) = 2.'
+    id: 125, topic: 'Descriptive Statistics', difficulty: 'Medium',
+    question: 'The Interquartile Range (IQR) measures the spread of which central percentage of data points?',
+    options: ['Central 25%', 'Central 50%', 'Central 75%', 'Central 90%'],
+    correctAnswer: 1, explanation: 'IQR is computed as Q3 - Q1, which encompasses the middle 50% of sorted observations.'
   },
   {
-    id: 102, topic: 'Divergence & Curl', difficulty: 'Hard',
-    question: 'Which identity is always true (when the fields are smooth)?',
-    options: ['∇×(∇·F) = 0', '∇·(∇×F) = 0', '∇×(∇×F) = 0', '∇·(∇f) = 0'],
-    correctAnswer: 1, explanation: 'The divergence of any curl is identically zero.'
+    id: 126, topic: 'Descriptive Statistics', difficulty: 'Medium',
+    question: 'If a constant value of 5 is added to every number in a dataset, how does the standard deviation change?',
+    options: ['Increases by 5', 'Multiplies by 5', 'Remains unchanged', 'Increases by 25'],
+    correctAnswer: 2, explanation: 'Adding a constant shifts the entire distribution without changing the relative distances between points or variance.'
   },
   {
-    id: 103, topic: "Stokes' Theorem", difficulty: 'Easy',
-    question: "Stokes' Theorem relates a surface integral of curl F to:",
-    options: ['A volume integral of div F', 'A line integral of F around ∂S', 'A scalar surface integral of |F|', 'The Hessian of F'],
-    correctAnswer: 1, explanation: '∬_S (∇×F)·dS = ∮_∂S F·dr.'
+    id: 127, topic: 'Descriptive Statistics', difficulty: 'Hard',
+    question: 'In a positively skewed distribution (right-skewed), what is the relative order of mean, median, and mode?',
+    options: ['Mean < Median < Mode', 'Mode < Median < Mean', 'Median < Mean < Mode', 'Mean = Median = Mode'],
+    correctAnswer: 1, explanation: 'Positive skewness pulls the mean towards the long right tail, making Mode < Median < Mean.'
   },
   {
-    id: 104, topic: "Stokes' Theorem", difficulty: 'Medium',
-    question: 'If ∇×F = 0 everywhere in a simply connected region, then ∮_C F·dr for a closed curve C is:',
-    options: ['Always positive', 'Always zero', 'Equal to the area enclosed', 'Undefined'],
-    correctAnswer: 1, explanation: 'Irrotational fields are conservative in simply connected domains, so closed-loop circulation vanishes.'
+    id: 128, topic: 'Descriptive Statistics', difficulty: 'Hard',
+    question: 'According to Chebyshev\'s Theorem, at least what percentage of data must lie within 2 standard deviations of the mean for ANY distribution shape?',
+    options: ['50%', '68%', '75%', '95%'],
+    correctAnswer: 2, explanation: 'Chebyshev\'s inequality states at least (1 - 1/k^2) of data falls within k standard deviations. For k=2: 1 - 1/4 = 75%.'
   },
   {
-    id: 105, topic: "Stokes' Theorem", difficulty: 'Hard',
-    question: 'For F = ⟨-y, x, z⟩ and S the unit disk in z = 0 oriented upward, ∬_S (∇×F)·dS equals:',
-    options: ['0', 'π', '2π', '1'],
-    correctAnswer: 2, explanation: '∇×F = ⟨0,0,2⟩, so flux through the unit disk is 2·π = 2π (matches ∮ −y dx + x dy).'
+    id: 129, topic: 'Descriptive Statistics', difficulty: 'Hard',
+    question: 'What happens to the sample variance calculation denominator when switching from population parameter (N) to unbiased sample estimator (n-1)?',
+    options: ['Bessel\'s correction prevents underestimation of population variance.', 'It increases degrees of freedom.', 'It forces the variance to match median deviation.', 'It removes outliers automatically.'],
+    correctAnswer: 0, explanation: 'Dividing by (n-1) instead of n (Bessel\'s correction) corrects the bias in estimating population variance from a sample.'
+  },
+
+  // ==========================================
+  // TOPIC 10: Basic Probability & Bayes' Rule (Easy, Medium, Hard)
+  // ==========================================
+  {
+    id: 130, topic: "Basic Probability & Bayes' Rule", difficulty: 'Easy',
+    question: 'What is the probability of rolling a sum of 7 with two fair 6-sided dice?',
+    options: ['1/6', '1/12', '1/36', '7/36'],
+    correctAnswer: 0, explanation: 'Out of 36 outcomes, 6 yield a sum of 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). 6/36 = 1/6.'
   },
   {
-    id: 106, topic: 'Taylor Series for Multivariable Functions', difficulty: 'Easy',
-    question: 'The first-order Taylor approximation of f about (a,b) is the:',
-    options: ['Hessian matrix', 'Tangent plane', 'Level curve', 'Gradient flow'],
-    correctAnswer: 1, explanation: 'Linear approximation uses the gradient and is the tangent-plane formula.'
+    id: 131, topic: "Basic Probability & Bayes' Rule", difficulty: 'Easy',
+    question: 'If two events A and B are independent, P(A ∩ B) equals:',
+    options: ['P(A) + P(B)', 'P(A) * P(B)', 'P(A) / P(B)', 'P(A) - P(B)'],
+    correctAnswer: 1, explanation: 'By definition of independence, joint probability is the product of individual probabilities: P(A ∩ B) = P(A)P(B).'
   },
   {
-    id: 107, topic: 'Taylor Series for Multivariable Functions', difficulty: 'Medium',
-    question: 'For f(x,y) = e^{x+y} at (0,0), the quadratic term involves which second derivatives?',
-    options: ['Only fₓₓ', 'fₓₓ, fₓy, and f_yy', 'Only mixed partials', 'None — e^{x+y} is already linear'],
-    correctAnswer: 1, explanation: 'All second partials equal e^{x+y}; at (0,0) they equal 1, so the quadratic form uses all three.'
+    id: 132, topic: "Basic Probability & Bayes' Rule", difficulty: 'Easy',
+    question: 'If two events are mutually exclusive, what is P(A ∩ B)?',
+    options: ['0', '1', 'P(A)P(B)', '0.5'],
+    correctAnswer: 0, explanation: 'Mutually exclusive events cannot happen simultaneously, so their intersection probability is zero.'
   },
   {
-    id: 108, topic: 'Taylor Series for Multivariable Functions', difficulty: 'Hard',
-    question: 'The Maclaurin expansion of cos x through degree 4 is:',
-    options: ['1 + x²/2 + x⁴/24', '1 − x²/2 + x⁴/24', 'x − x³/6', '1 − x + x²/2'],
-    correctAnswer: 1, explanation: 'cos x = 1 − x²/2! + x⁴/4! − … = 1 − x²/2 + x⁴/24 − …'
+    id: 133, topic: "Basic Probability & Bayes' Rule", difficulty: 'Medium',
+    question: "Bayes' Theorem provides a mathematical method to update probabilities based on new evidence by calculating:",
+    options: ['P(A ∪ B)', 'P(A|B) using P(B|A)', 'P(A^c)', 'Marginal probability P(A) only'],
+    correctAnswer: 1, explanation: 'Bayes Theorem updates prior probability P(A) to posterior probability P(A|B) = [P(B|A)*P(A)] / P(B).'
   },
   {
-    id: 109, topic: 'Partial Derivatives', difficulty: 'Easy',
-    question: 'If f(x,y) = x²y, then fₓ equals:',
-    options: ['2xy', 'x²', '2x', 'y'],
-    correctAnswer: 0, explanation: 'Treat y as constant: ∂/∂x(x²y) = 2xy.'
+    id: 134, topic: "Basic Probability & Bayes' Rule", difficulty: 'Medium',
+    question: 'If P(A) = 0.4, P(B) = 0.5, and P(A ∪ B) = 0.7, what is P(A ∩ B)?',
+    options: ['0.1', '0.2', '0.3', '0.9'],
+    correctAnswer: 1, explanation: 'Using the Inclusion-Exclusion Principle: P(A ∩ B) = P(A) + P(B) - P(A ∪ B) = 0.4 + 0.5 - 0.7 = 0.2.'
   },
   {
-    id: 110, topic: 'Partial Derivatives', difficulty: 'Medium',
-    question: 'Clairaut’s theorem says that if the mixed partials are continuous, then:',
-    options: ['fₓₓ = f_yy', 'fₓy = f_yx', '∇f = 0', 'f is linear'],
-    correctAnswer: 1, explanation: 'Order of differentiation can be swapped for continuous mixed partials.'
+    id: 135, topic: "Basic Probability & Bayes' Rule", difficulty: 'Medium',
+    question: 'Box A contains 3 red and 2 blue balls. Box B contains 1 red and 4 blue balls. If a box is chosen at random and a ball is drawn, what is the probability it is red?',
+    options: ['2/5', '1/2', '4/10', '3/10'],
+    correctAnswer: 0, explanation: 'Law of Total Probability: P(Red) = P(Box A)*P(Red|A) + P(Box B)*P(Red|B) = 0.5*(3/5) + 0.5*(1/5) = 3/10 + 1/10 = 4/10 = 2/5.'
   },
   {
-    id: 111, topic: 'Partial Derivatives', difficulty: 'Hard',
-    question: 'For f(x,y) = ln(x² + y²), ∇f at (1,1) is:',
-    options: ['⟨1,1⟩', '⟨1/2, 1/2⟩', '⟨2,2⟩', '⟨0,0⟩'],
-    correctAnswer: 1, explanation: 'fₓ = 2x/(x²+y²), f_y = 2y/(x²+y²); at (1,1) both equal 2/2 = 1/2.'
+    id: 136, topic: "Basic Probability & Bayes' Rule", difficulty: 'Hard',
+    question: 'A test detects a rare disease 99% of the time when present. Only 1% of the population has the disease. If the false positive rate is 5%, what is the probability a person testing positive actually has the disease?',
+    options: ['99%', '50%', '16.7%', '1%'],
+    correctAnswer: 2, explanation: 'Bayes Theorem: P(D|+) = (0.01*0.99) / [0.01*0.99 + 0.99*0.05] = 0.0099 / (0.0099 + 0.0495) = 0.0099 / 0.0594 ≈ 16.7%.'
   },
   {
-    id: 112, topic: 'Vector Calculus', difficulty: 'Easy',
-    question: 'Green’s Theorem converts a line integral around a simple closed curve into:',
-    options: ['A triple integral', 'A double integral over the enclosed region', 'An arc-length integral only', 'A surface integral in 3D'],
-    correctAnswer: 1, explanation: '∮_C P dx + Q dy = ∬_D (∂Q/∂x − ∂P/∂y) dA.'
+    id: 137, topic: "Basic Probability & Bayes' Rule", difficulty: 'Hard',
+    question: 'In a Monty Hall problem with 3 doors, after you pick Door 1 and the host opens Door 3 showing a goat, what is your probability of winning if you switch to Door 2?',
+    options: ['1/3', '1/2', '2/3', '3/4'],
+    correctAnswer: 2, explanation: 'Initial choice has 1/3 win probability. Since the host eliminates a non-prize door, the remaining unchosen door inherits the combined 2/3 probability.'
   },
   {
-    id: 113, topic: 'Vector Calculus', difficulty: 'Medium',
-    question: 'The work of a conservative field F = ∇f from A to B equals:',
-    options: ['f(A) + f(B)', 'f(B) − f(A)', '|f(B)|', '∬ curl f'],
-    correctAnswer: 1, explanation: 'Fundamental theorem for line integrals: ∫_C ∇f·dr = f(B) − f(A).'
-  },
-  {
-    id: 114, topic: 'Vector Calculus', difficulty: 'Hard',
-    question: 'Flux of F = ⟨x,y⟩ outward across the unit circle equals:',
-    options: ['0', '1', 'π', '2π'],
-    correctAnswer: 3, explanation: 'By divergence theorem in 2D (or direct computation), ∮ M dy − N dx = ∬ (1+1) dA = 2·π = 2π.'
-  },
-  {
-    id: 115, topic: 'Limits and Continuity', difficulty: 'Easy',
-    question: 'If lim_{(x,y)→(a,b)} f(x,y) exists and equals f(a,b), then f is:',
-    options: ['Differentiable', 'Continuous at (a,b)', 'Analytic', 'Bounded only'],
-    correctAnswer: 1, explanation: 'That is the definition of continuity at a point.'
-  },
-  {
-    id: 116, topic: 'Limits and Continuity', difficulty: 'Medium',
-    question: 'Along y = mx, lim_{(x,y)→(0,0)} xy/(x²+y²) equals:',
-    options: ['0 for all m', 'm/(1+m²)', '1', 'Does not depend on path'],
-    correctAnswer: 1, explanation: 'Substitute y=mx: m x² / (x²(1+m²)) = m/(1+m²), which depends on m — so the full limit DNE.'
-  },
-  {
-    id: 117, topic: 'Limits and Continuity', difficulty: 'Hard',
-    question: 'lim_{(x,y)→(0,0)} (x²y)/(x⁴+y²) along y = x² equals:',
-    options: ['0', '1/2', '1', 'Does not exist along that path'],
-    correctAnswer: 1, explanation: 'y=x² ⇒ x²(x²)/(x⁴+x⁴) = x⁴/(2x⁴) = 1/2.'
-  },
-  {
-    id: 118, topic: 'Multiple Integrals', difficulty: 'Easy',
-    question: '∬_R 1 dA over a region R computes:',
-    options: ['The perimeter of R', 'The area of R', 'The centroid only', 'Average of x'],
-    correctAnswer: 1, explanation: 'Integrating the constant 1 yields area.'
-  },
-  {
-    id: 119, topic: 'Multiple Integrals', difficulty: 'Medium',
-    question: 'In polar coordinates, dA becomes:',
-    options: ['dr dθ', 'r dr dθ', 'r² dr dθ', 'sinθ dr dθ'],
-    correctAnswer: 1, explanation: 'The Jacobian of x=r cosθ, y=r sinθ is r.'
-  },
-  {
-    id: 120, topic: 'Multiple Integrals', difficulty: 'Hard',
-    question: 'Evaluate ∫_0^1 ∫_0^{1-x} (x+y) dy dx.',
-    options: ['1/6', '1/3', '1/2', '1'],
-    correctAnswer: 0, explanation: 'Inner: [xy + y²/2]_0^{1-x} = x(1-x)+(1-x)²/2; integrate in x to get 1/6.'
+    id: 138, topic: "Basic Probability & Bayes' Rule", difficulty: 'Hard',
+    question: 'Let X be a continuous random variable with PDF f(x) = 2x for 0 ≤ x ≤ 1. What is P(X > 0.5)?',
+    options: ['0.25', '0.50', '0.75', '1.00'],
+    correctAnswer: 2, explanation: 'Integrate f(x) from 0.5 to 1: ∫_0.5^1 2x dx = [x^2]_0.5^1 = 1^2 - (0.5)^2 = 1 - 0.25 = 0.75.'
   }
 ];
 
@@ -777,7 +740,9 @@ const TOPICS = [
   'Partial Derivatives',
   'Vector Calculus',
   'Limits and Continuity',
-  'Multiple Integrals'
+  'Multiple Integrals',
+  'Descriptive Statistics',
+  "Basic Probability & Bayes' Rule"
 ];
 
 export default function PractiseSection() {

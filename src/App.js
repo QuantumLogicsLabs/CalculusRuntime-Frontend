@@ -5,6 +5,7 @@ import { ProgressProvider } from "./pages/ProgressContext";
 import Layout from "./components/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import ErrorBoundary from "./components/ErrorBoundary";
+import ProbStatsTopic from "./pages/ProbStatsTopic";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -69,6 +70,16 @@ function App() {
 
               {/* AI Solver */}
               <Route path="/ai-solver" element={<Layout body={<AISolver />} />} />
+
+              {/* Probability & Statistics Topics */}
+              <Route path="/descriptive-statistics" element={<Navigate to="/descriptive-statistics/1" replace />} />
+              <Route path="/descriptive-statistics/1" element={<Layout body={<ProbStatsTopic />} />} />
+
+              <Route path="/basic-probability" element={<Navigate to="/basic-probability/1" replace />} />
+              <Route path="/basic-probability/1" element={<Layout body={<ProbStatsTopic />} />} />
+
+              <Route path="/probability-distributions" element={<Navigate to="/probability-distributions/1" replace />} />
+              <Route path="/probability-distributions/1" element={<Layout body={<ProbStatsTopic />} />} />
 
               {/* Partial Derivatives */}
               <Route path="/partial-derivatives"   element={<Navigate to="/partial-derivatives/1" replace />} />

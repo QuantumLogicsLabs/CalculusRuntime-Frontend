@@ -126,13 +126,27 @@ export const COURSES = [
     description:
       "Probability models, random variables, distributions, and statistical reasoning for science and engineering.",
     path: "/courses/probability-statistics",
-    meta: "Course hub · Modules expanding",
+    meta: "Course hub · Modules active",
     icon: "P",
     color: "purple",
     modules: [
       {
+        title: "Descriptive Statistics",
+        description: "Mean, median, mode, variance, standard deviation, and real-life data summaries.",
+        path: "/descriptive-statistics/1",
+        meta: "15 MCQs · 8 Examples · Practice Arena",
+        icon: "📊",
+      },
+      {
+        title: "Basic Probability & Bayes' Rule",
+        description: "Sample spaces, conditional probability, independence, and Bayes' theorem.",
+        path: "/basic-probability/1",
+        meta: "15 MCQs · 8 Examples · Practice Arena",
+        icon: "🎲",
+      },
+      {
         title: "Practice Section",
-        description: "MCQ drills across calculus topics while statistics modules are added.",
+        description: "MCQ drills across probability and statistics topics with Easy, Medium, and Hard tiers.",
         path: "/practice",
         meta: "Practice workspace",
         icon: "✎",
