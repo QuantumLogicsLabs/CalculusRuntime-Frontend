@@ -44,6 +44,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Certificate from "./pages/calculus/Certificate";
 import CourseQuiz from "./pages/CourseQuiz";
 import MyCertificates from "./pages/MyCertificates";
+import VerifyCertificate from "./pages/VerifyCertificate";
 import SavedForLater from "./pages/SavedForLater";
 import Chatbot from "./components/Chatbot/Chatbot";
 import BackToTop from "./components/BackToTop";
@@ -168,6 +169,7 @@ function App() {
               <Route path="/taylor-series/2" element={<Layout body={<TaylorPart2 />} />} />
 
               <Route path="/certificates" element={<Layout body={<MyCertificates />} />} />
+              <Route path="/verify" element={<Layout body={<VerifyCertificate />} />} />
               <Route path="/certificate/:courseId" element={<Layout body={<Certificate />} />} />
               <Route path="/quiz/:courseId" element={<Layout body={<CourseQuiz />} />} />
 
