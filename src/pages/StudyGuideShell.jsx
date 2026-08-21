@@ -460,6 +460,58 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
     answeredCount[section] = 0;
   });
 
+  // One-question-at-a-time slider: cardsBySection keeps DOM order per
+  // section, activeIndex tracks which card is currently showing.
+  const cardsBySection = {};
+  cards.forEach((card) => {
+    const section = card.dataset.section;
+    if (!section) return;
+    (cardsBySection[section] = cardsBySection[section] || []).push(card);
+  });
+  const activeIndex = {};
+
+  const renderSlide = (section) => {
+    const secCards = cardsBySection[section];
+    if (!secCards || !secCards.length) return;
+    const unlockedIdxs = secCards.reduce((acc, c, i) => {
+      if (!c.classList.contains("mcq-locked")) acc.push(i);
+      return acc;
+    }, []);
+    const maxIdx = unlockedIdxs.length ? unlockedIdxs[unlockedIdxs.length - 1] : 0;
+    if (activeIndex[section] == null) activeIndex[section] = 0;
+    if (activeIndex[section] > maxIdx) activeIndex[section] = maxIdx;
+
+    secCards.forEach((c, i) => {
+      c.classList.toggle("mcq-slide-hide", i !== activeIndex[section]);
+    });
+
+    root.querySelectorAll(`.mcq-dot[data-section="${section}"]`).forEach((dot, i) => {
+      const reached = i <= maxIdx;
+      dot.classList.toggle("active", i === activeIndex[section]);
+      dot.classList.toggle("reached", reached);
+      dot.disabled = !reached;
+    });
+
+    const nav = root.querySelector(`.mcq-slide-nav[data-section="${section}"]`);
+    if (nav) {
+      const pos = nav.querySelector(".mcq-slide-pos-cur");
+      if (pos) pos.textContent = String(activeIndex[section] + 1);
+      const prevBtn = nav.querySelector(".mcq-slide-prev");
+      const nextBtn = nav.querySelector(".mcq-slide-next");
+      if (prevBtn) prevBtn.disabled = activeIndex[section] <= 0;
+      if (nextBtn) nextBtn.disabled = activeIndex[section] >= maxIdx;
+    }
+  };
+
+  const goToSlide = (section, index) => {
+    const secCards = cardsBySection[section];
+    if (!secCards) return;
+    const clamped = Math.max(0, Math.min(index, secCards.length - 1));
+    if (secCards[clamped]?.classList.contains("mcq-locked")) return;
+    activeIndex[section] = clamped;
+    renderSlide(section);
+  };
+
   const updateScoreDisplay = (section) => {
     const el =
       root.querySelector(`#score${section}`) ||
@@ -577,6 +629,7 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       const sectionCards = Array.from(sec.querySelectorAll(".mcq-card[data-answer]")).filter(
         isWiredCard,
       );
+      const sectionKey = sectionCards[0]?.dataset.section;
       const prevSection = secIndex > 0 ? quizSections[secIndex - 1] : null;
       const prevCards = prevSection
         ? Array.from(prevSection.querySelectorAll(".mcq-card[data-answer]")).filter(isWiredCard)
@@ -593,6 +646,7 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
           `Locked — finish Quiz ${secIndex} (all questions) to unlock Quiz ${secIndex + 1}`,
         );
         sectionCards.forEach((card) => card.classList.add("mcq-locked"));
+        if (sectionKey) renderSlide(sectionKey);
         return;
       }
 
@@ -613,7 +667,7 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       if (!hint) {
         hint = document.createElement("p");
         hint.className = "mcq-unlock-hint";
-        const head = sec.querySelector(".mcq-score-strip");
+        const head = sec.querySelector(".mcq-dots") || sec.querySelector(".mcq-score-strip");
         if (head) head.insertAdjacentElement("afterend", hint);
         else sec.prepend(hint);
       }
@@ -623,7 +677,9 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       hint.textContent = `Quiz progress: question ${Math.min(
         visible,
         sectionCards.length,
-      )} of ${sectionCards.length} unlocked — solve each question to reveal the next.`;
+      )} of ${sectionCards.length} unlocked — slide through with the dots or Prev / Next below.`;
+
+      if (sectionKey) renderSlide(sectionKey);
     });
   };
 
@@ -631,6 +687,24 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
 
   // Event delegation on the stable root — survives React child re-renders.
   const onRootClick = (event) => {
+    const dot = event.target.closest(".mcq-dot");
+    if (dot && root.contains(dot) && !dot.disabled) {
+      const section = dot.dataset.section;
+      const idx = Number(dot.dataset.dot) - 1;
+      if (section && Number.isInteger(idx)) goToSlide(section, idx);
+      return;
+    }
+
+    const slideNav = event.target.closest(".mcq-slide-prev, .mcq-slide-next");
+    if (slideNav && root.contains(slideNav) && !slideNav.disabled) {
+      const section = slideNav.closest(".mcq-slide-nav")?.dataset.section;
+      if (section) {
+        const delta = slideNav.classList.contains("mcq-slide-prev") ? -1 : 1;
+        goToSlide(section, (activeIndex[section] || 0) + delta);
+      }
+      return;
+    }
+
     const revealButton = event.target.closest(".mcq-reveal-btn");
     const option = event.target.closest(".mcq-opt");
     const card = (revealButton || option)?.closest(".mcq-card");
@@ -699,6 +773,9 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
   // React progress re-renders can strip imperative .selected/.correct/.wrong classes.
   // Re-apply from in-memory quiz state whenever the DOM under root mutates.
   const rehydrate = () => {
+    // React re-renders can also wipe the imperative mcq-locked / mcq-slide-hide
+    // classes — reapply lock + slider state before the per-card styling below.
+    applySequentialUnlock();
     root.querySelectorAll(".mcq-card[data-answer]").forEach((card) => {
       if (!isWiredCard(card)) return;
       const key = cardKey(card);
