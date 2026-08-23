@@ -239,6 +239,7 @@ function LinearEquationsGuide({ part = 1 }) {
         <a className="sb-link" href="#la-le-2var">Two variables</a>
         <a className="sb-link" href="#la-le-3var">Three variables</a>
         <a className="sb-link" href="#la-le-nvar">n variables</a>
+        <a className="sb-link" href="#la-le-slope">Slope, generalized</a>
         <a className="sb-link" href="#quiz-la-le-forms">Quiz</a>
         <a className="sb-link" href="#la-le-graph">Graphing &amp; intercepts</a>
         <a className="sb-link" href="#quiz-la-le-graph">Quiz</a>
@@ -324,6 +325,60 @@ function LinearEquationsGuide({ part = 1 }) {
             </p>
           </TheoremBox>
           <RealLifeUse>{"A nutrition constraint balancing dozens of ingredients, or the weighted sum $\\mathbf{w}\\cdot\\mathbf{x}=b$ inside a single artificial neuron, are both linear equations in $n$ variables — the exact same object you just met in 2D and 3D, just with more coordinates."}</RealLifeUse>
+        </section>
+
+        <section className="section" id="la-le-slope">
+          <div className="sec-badge">Concept spotlight</div>
+          <h2 className="sec-title">Slope, generalized: from a line to a hyperplane</h2>
+          <p>
+            {"Slope in two variables is a single number. As soon as a third variable joins, one number can't describe the tilt anymore — so slope has to generalize. Here's exactly how it does, using nothing beyond what Sections 0.1–0.3 already gave you."}
+          </p>
+          <TheoryBox title="Slope is a repackaged coefficient vector">
+            <p>
+              {"Start from standard form $Ax+By=C$. Solving for $y$ gives slope-intercept form with $m=-A/B$. So the slope was never an independent idea — it's just a ratio built from the coefficient vector $(A,B)$. That vector is called the "}<strong>normal vector</strong>{" of the line: it always points perpendicular to the line itself."}
+            </p>
+            <p>
+              {"You can check this directly: a direction vector that runs "}<em>along</em>{" the line is $(B,-A)$ (or equivalently $(1,m)$), and its dot product with the normal is $A\\cdot B + B\\cdot(-A)=0$ — perpendicular, always. Slope-as-a-number and normal-vector-as-perpendicular are the same fact seen two ways."}
+            </p>
+          </TheoryBox>
+          <TheoremBox title="Why one number stops being enough">
+            <p>
+              {"In $Ax+By+Cz=D$ (Section 0.2), you can move along the plane in infinitely many directions, not just one axis — so a single ratio can't capture the tilt anymore. What still works is the "}<em>full coefficient vector</em>{" $(A,B,C)$: it stays perpendicular to the plane, exactly like $(A,B)$ was perpendicular to the line. This vector is the direct generalization of slope."}
+            </p>
+          </TheoremBox>
+          <TheoryBox title="The general pattern, n variables">
+            <p>
+              {"For $a_1x_1+a_2x_2+\\cdots+a_nx_n=b$ (Section 0.3), the coefficient vector $\\mathbf{a}=(a_1,\\ldots,a_n)$ is the normal vector to the hyperplane — perpendicular to every direction vector that lies inside it. This "}<strong>is</strong>{" slope in $n$ variables: not one ratio, but the row of coefficients that tells you, per axis, how steeply the equation's left side climbs."}
+            </p>
+            <p>
+              {"You can even recover a single 'steepness in direction $\\mathbf{u}$' number the same way the 2D slope worked: it's the dot product $\\mathbf{a}\\cdot\\mathbf{u}$. Restrict to the $x$-axis alone in 2 variables and this collapses back down to the plain slope $m$ you started with."}
+            </p>
+          </TheoryBox>
+          <WorkedExample
+            number={"2.5"}
+            title="Confirm the normal vector matches the 2D slope"
+            setup={"For $3x-2y=6$, find slope-intercept form, then verify the normal vector is perpendicular to the line's direction vector."}
+            steps={[
+              { text: "Slope-intercept form: $-2y=6-3x\\Rightarrow y=\\tfrac{3}{2}x-3$, so $m=\\tfrac{3}{2}$." },
+              { text: "Normal vector from standard form: $(A,B)=(3,-2)$." },
+              { text: "A direction vector along the line is $(1,m)=(1,\\tfrac{3}{2})$, or scaled up, $(2,3)$." },
+              { text: "Dot product check: $(3,-2)\\cdot(2,3)=6-6=0$ — perpendicular, confirming $(3,-2)$ really is the line's normal (slope) vector." },
+            ]}
+            result={"Slope $m=\\tfrac{3}{2}$; normal vector $(3,-2)$ is perpendicular to the line, as it must be."}
+            check={"Same relationship $m=-A/B=-3/(-2)=\\tfrac{3}{2}$ holds — the two views agree."}
+          />
+          <TheoremBox title="The full progression">
+            <p>
+              {"$\\textbf{2 variables:}$ slope is the single number $m=-A/B$, built from the normal vector $(A,B)$."}
+            </p>
+            <p>
+              {"$\\textbf{3 variables:}$ 'slope' is the normal vector $(A,B,C)$ — perpendicular to the plane, one component per axis."}
+            </p>
+            <p>
+              {"$\\textbf{n variables:}$ 'slope' is the normal (coefficient) vector $\\mathbf{a}=(a_1,\\ldots,a_n)$ — perpendicular to the hyperplane, and $\\mathbf{a}\\cdot\\mathbf{u}$ gives the steepness along any chosen direction $\\mathbf{u}$."}
+            </p>
+          </TheoremBox>
+          <RealLifeUse>{"A single neuron's weighted sum $\\mathbf{w}\\cdot\\mathbf{x}=b$ (Section 0.3's real-life example) uses exactly this idea: the weight vector $\\mathbf{w}$ is the n-variable slope, and it points in the direction the output grows fastest — the same role the plain number $m$ played back in two variables."}</RealLifeUse>
         </section>
 
         <LaMcqSection

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
@@ -9,6 +10,7 @@ function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handle = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -54,14 +56,25 @@ function Login() {
           </label>
           <label className="auth-label">
             Password
-            <input
-              className="auth-input"
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handle}
-              autoComplete="current-password"
-            />
+            <div className="auth-input-wrap">
+              <input
+                className="auth-input"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handle}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="auth-pw-toggle"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </label>
 
           {error && <p className="auth-error" role="alert">{error}</p>}
