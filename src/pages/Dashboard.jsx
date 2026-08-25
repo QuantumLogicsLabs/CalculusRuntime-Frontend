@@ -170,6 +170,7 @@ const CURRICULUM = [
     title: "Linear Transformations",
     icon: "T",
     color: "blue",
+    subject: "Linear Algebra",
     parts: [
       { id: "la-transform-1", label: "Part 1 — Definition & Properties", path: "/linear-algebra/transformations/1" },
       { id: "la-transform-2", label: "Part 2 — Matrix Representation & Applications", path: "/linear-algebra/transformations/2" },
@@ -180,6 +181,7 @@ const CURRICULUM = [
     title: "Orthogonality & Least Squares",
     icon: "⊥",
     color: "blue",
+    subject: "Linear Algebra",
     parts: [
       { id: "la-ortho-1", label: "Part 1 — Orthogonality & Gram–Schmidt", path: "/linear-algebra/orthogonality/1" },
       { id: "la-ortho-2", label: "Part 2 — Projections & Least Squares", path: "/linear-algebra/orthogonality/2" },
@@ -190,6 +192,7 @@ const CURRICULUM = [
     title: "Singular Value Decomposition",
     icon: "Σ",
     color: "blue",
+    subject: "Linear Algebra",
     parts: [
       { id: "la-svd-1", label: "Part 1 — Definition & Geometry", path: "/linear-algebra/svd/1" },
       { id: "la-svd-2", label: "Part 2 — Applications & Low-rank Approximation", path: "/linear-algebra/svd/2" },
@@ -542,43 +545,7 @@ function Dashboard() {
         )}
       </section>
 
-      {/* Curriculum */}
-      <section className="db-section">
-        <h2 className="db-section-title">Curriculum</h2>
-        {groupCurriculumBySubject(CURRICULUM).map(({ subject, topics }) => (
-          <div key={subject} className="db-curriculum-subject">
-            <h3 className="db-curriculum-subject-title">{subject}</h3>
-            <div className="db-curriculum">
-              {topics.map((course) => {
-                const done = course.parts.filter((p) => progress.completedSections[p.id]).length;
-                return (
-                  <div key={course.id} className={`db-course db-course--${course.color}`}>
-                    <div className="db-course-head">
-                      <span className="db-course-icon">{course.icon}</span>
-                      <div>
-                        <div className="db-course-title">{course.title}</div>
-                        <div className="db-course-meta">{done} / {course.parts.length} parts complete</div>
-                      </div>
-                    </div>
-                    <ProgressBar value={done} max={course.parts.length} />
-                    <div className="db-parts">
-                      {course.parts.map((part) => {
-                        const complete = !!progress.completedSections[part.id];
-                        return (
-                          <Link key={part.id} to={part.path} className={`db-part${complete ? " db-part--done" : ""}`}>
-                            <span className="db-part-check">{complete ? "✓" : "○"}</span>
-                            <span>{part.label}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </section>
+
 
       {/* Tools */}
       <section className="db-section">
