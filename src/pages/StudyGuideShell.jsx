@@ -375,6 +375,135 @@ const integrationStyles = `
     padding-right: 1rem;
   }
 }
+
+/* ── MCQ Progress Sidebar ────────────────────────────────── */
+.mcq-progress-sidebar {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 180;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1.1rem 0.85rem 1.2rem;
+  background: rgba(15, 14, 13, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(200, 146, 42, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(200, 146, 42, 0.08);
+  min-width: 58px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.mcq-progress-sidebar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mcq-progress-sidebar__label {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8922a;
+  white-space: nowrap;
+}
+
+.mcq-progress-sidebar__track {
+  position: relative;
+  width: 6px;
+  height: 120px;
+  background: rgba(200, 146, 42, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mcq-progress-sidebar__fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, #c8922a, #e8b84b);
+  border-radius: 3px;
+  transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mcq-progress-sidebar__count {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #faf7f2;
+  white-space: nowrap;
+}
+
+.mcq-progress-sidebar__score {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: rgba(250, 247, 242, 0.55);
+  white-space: nowrap;
+}
+
+.mcq-progress-sidebar__pct {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #e8b84b;
+  line-height: 1;
+}
+
+.mcq-progress-sidebar__check {
+  font-size: 1.25rem;
+  line-height: 1;
+  animation: mcq-check-pop 0.4s ease;
+}
+
+@keyframes mcq-check-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 920px) {
+  .mcq-progress-sidebar {
+    right: 0.75rem;
+    padding: 0.75rem 0.6rem;
+    min-width: 48px;
+    border-radius: 10px;
+  }
+  .mcq-progress-sidebar__track {
+    height: 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mcq-progress-sidebar {
+    top: auto;
+    bottom: 5rem;
+    right: 0.5rem;
+    transform: none;
+    flex-direction: row;
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    border-radius: 8px;
+  }
+  .mcq-progress-sidebar__track {
+    width: 60px;
+    height: 5px;
+  }
+  .mcq-progress-sidebar__fill {
+    bottom: 0;
+    left: 0;
+    height: 100% !important;
+    width: var(--fill-w, 0%);
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
 `;
 
 const saveForLaterStyles = `
@@ -735,11 +864,14 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       }
 
       answered[key] = true;
-      revealButton.disabled = true;
-      revealButton.textContent = "Revealed";
-      applyStyles(card, state[key].chosen, correctAnswer, true);
+      revealButton.style.display = "none";
       const answerPanel = card.querySelector(".mcq-answer");
-      answerPanel?.classList.add("visible");
+      if (answerPanel) answerPanel.classList.add("visible");
+
+      // Replace the MCQ number with a checkmark on the dot
+      const qIndex = parseInt(card.dataset.q, 10) - 1;
+      const dot = root.querySelector(`.mcq-dot[data-section="${section}"][data-dot="${qIndex + 1}"]`);
+      if (dot) dot.textContent = "✓";
 
       if (state[key].chosen === correctAnswer) {
         scores[section] = (scores[section] || 0) + 1;
@@ -764,6 +896,19 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       }
 
       if (answerPanel) renderLatex(answerPanel);
+
+      // Dispatch progress event for the floating sidebar
+      root.dispatchEvent(
+        new CustomEvent("mcq-progress-update", {
+          bubbles: true,
+          detail: {
+            section,
+            answered: answeredCount[section] || 0,
+            total: totals[section] || 0,
+            score: scores[section] || 0,
+          },
+        }),
+      );
     }
   };
 
@@ -785,10 +930,14 @@ function setupMcqs(root, { publishQuizToLeaderboard, saveQuizScore, setLeaderboa
       if (answered[key]) {
         applyStyles(card, state[key]?.chosen, correctAnswer, true);
         if (revealButton) {
-          revealButton.disabled = true;
-          revealButton.textContent = "Revealed";
+          revealButton.style.display = "none";
         }
         answerPanel?.classList.add("visible");
+
+        // Replace the MCQ number with a checkmark on the dot
+        const qIndex = parseInt(card.dataset.q, 10) - 1;
+        const dot = root.querySelector(`.mcq-dot[data-section="${card.dataset.section}"][data-dot="${qIndex + 1}"]`);
+        if (dot) dot.textContent = "✓";
       } else if (state[key]?.chosen) {
         applyStyles(card, state[key].chosen, correctAnswer, false);
       }
@@ -895,6 +1044,110 @@ function setupPinnedGuideNav(root) {
     spacer.remove();
     document.documentElement.style.removeProperty("--guide-topbar-h");
     document.documentElement.style.removeProperty("--sidebar-top");
+  };
+}
+
+/**
+ * Floating MCQ progress sidebar — shows a vertical progress bar + counters
+ * that update in real-time as quiz questions are answered. Visibility is
+ * driven by IntersectionObserver on .mcq-section elements.
+ */
+function setupMcqProgressSidebar(root) {
+  const mcqSections = Array.from(root.querySelectorAll(".mcq-section"));
+  if (!mcqSections.length) return () => {};
+
+  // Build the sidebar DOM
+  const el = document.createElement("div");
+  el.className = "mcq-progress-sidebar";
+  el.setAttribute("aria-label", "Quiz progress");
+  el.innerHTML = `
+    <span class="mcq-progress-sidebar__label">QUIZ</span>
+    <div class="mcq-progress-sidebar__track">
+      <div class="mcq-progress-sidebar__fill" style="height:0%"></div>
+    </div>
+    <span class="mcq-progress-sidebar__count">0 / 0</span>
+    <span class="mcq-progress-sidebar__score">Score: 0</span>
+    <span class="mcq-progress-sidebar__pct">0%</span>
+  `;
+  document.body.appendChild(el);
+
+  const fill = el.querySelector(".mcq-progress-sidebar__fill");
+  const countEl = el.querySelector(".mcq-progress-sidebar__count");
+  const scoreEl = el.querySelector(".mcq-progress-sidebar__score");
+  const pctEl = el.querySelector(".mcq-progress-sidebar__pct");
+
+  // Track progress per section (multiple quiz sections may exist)
+  const progress = {};
+  let activeSection = null;
+
+  const updateUI = () => {
+    const data = activeSection ? progress[activeSection] : null;
+    if (!data) return;
+    const pct = data.total > 0 ? Math.round((data.answered / data.total) * 100) : 0;
+    const fillH = data.total > 0 ? (data.answered / data.total) * 100 : 0;
+    fill.style.height = `${fillH}%`;
+    fill.style.setProperty("--fill-w", `${fillH}%`);
+    countEl.textContent = `${data.answered} / ${data.total}`;
+    scoreEl.textContent = `Score: ${data.score}`;
+    pctEl.textContent = `${pct}%`;
+
+    if (pct === 100) {
+      pctEl.innerHTML = `<span class="mcq-progress-sidebar__check">✅</span>`;
+    }
+  };
+
+  // Initialize from current DOM state
+  mcqSections.forEach((sec) => {
+    const cards = sec.querySelectorAll(".mcq-card[data-section]");
+    if (!cards.length) return;
+    const section = cards[0].dataset.section;
+    if (!section) return;
+    progress[section] = { answered: 0, total: cards.length, score: 0 };
+  });
+
+  // Listen for progress events
+  const onProgress = (e) => {
+    const { section, answered, total, score } = e.detail;
+    progress[section] = { answered, total, score };
+    if (activeSection === section) updateUI();
+  };
+  root.addEventListener("mcq-progress-update", onProgress);
+
+  // Intersection observer to show/hide when quiz sections are in view
+  let visibleSections = new Set();
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const cards = entry.target.querySelectorAll(".mcq-card[data-section]");
+        const section = cards[0]?.dataset.section;
+        if (!section) return;
+
+        if (entry.isIntersecting) {
+          visibleSections.add(section);
+          activeSection = section;
+          updateUI();
+          el.classList.add("visible");
+        } else {
+          visibleSections.delete(section);
+          if (visibleSections.size === 0) {
+            el.classList.remove("visible");
+          } else {
+            // Switch to another visible section
+            activeSection = visibleSections.values().next().value;
+            updateUI();
+          }
+        }
+      });
+    },
+    { rootMargin: "0px", threshold: 0.05 },
+  );
+
+  mcqSections.forEach((sec) => io.observe(sec));
+
+  return () => {
+    io.disconnect();
+    root.removeEventListener("mcq-progress-update", onProgress);
+    el.remove();
   };
 }
 
@@ -1184,6 +1437,7 @@ function StudyGuideShell({
           guideTitle: title,
           guidePath,
         }),
+        setupMcqProgressSidebar(rootRef.current),
       ];
       const topButton = rootRef.current.querySelector("#top-btn");
       const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
