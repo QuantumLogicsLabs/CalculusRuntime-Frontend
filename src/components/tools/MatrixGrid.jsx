@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Button from '../common/Button';
-import './MatrixGrid.css';
+import React, { useState } from "react";
+import Button from "../common/Button";
+import "./MatrixGrid.css";
 
 /**
  * Scalable interactive MatrixGrid component for Linear Algebra & Multivariable Calculus operations.

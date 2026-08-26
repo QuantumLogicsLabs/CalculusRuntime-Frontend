@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './Alert.css';
+import React, { useState } from "react";
+import "./Alert.css";
 
 /**
  * Scalable Alert banner component for notices, hints, errors, successes.

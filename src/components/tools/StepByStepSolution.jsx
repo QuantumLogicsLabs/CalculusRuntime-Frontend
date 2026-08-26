@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { InlineMath, BlockMath } from '../Math';
-import Badge from '../common/Badge';
-import './StepByStepSolution.css';
+import React, { useState } from "react";
+import { InlineMath, BlockMath } from "./Math";
+import Badge from "../common/Badge";
+import "./StepByStepSolution.css";
 
 /**
  * Scalable StepByStepSolution component for presenting calculus & math derivations clearly.

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import './Modal.css';
+import React, { useEffect } from "react";
+import "./Modal.css";
 
 /**
  * Scalable Modal component with backdrop blur, keyboard navigation (ESC), and smooth transitions.

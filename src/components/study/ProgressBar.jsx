@@ -1,5 +1,5 @@
-import React from 'react';
-import './ProgressBar.css';
+import React from "react";
+import "./ProgressBar.css";
 
 /**
  * Scalable ProgressBar component with animated stripes, percentage labels, and milestone indicators.

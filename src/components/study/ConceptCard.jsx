@@ -1,8 +1,8 @@
-import React from 'react';
-import { InlineMath } from '../Math';
-import Badge from '../common/Badge';
-import Button from '../common/Button';
-import './ConceptCard.css';
+import React from "react";
+import { InlineMath } from "./Math";
+import Badge from "../common/Badge";
+import Button from "../common/Button";
+import "./ConceptCard.css";
 
 /**
  * Scalable ConceptCard for presenting calculus/math topics with formula preview and action links.

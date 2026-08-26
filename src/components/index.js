@@ -1,5 +1,4 @@
-// Scalable Master Component Export
-export * from './common';
-export * from './study';
-export * from './tools';
-export * from './Chatbot';
+export * from "./common";
+export * from "./study";
+export * from "./tools";
+export { default as Chatbot } from "./Chatbot/Chatbot";

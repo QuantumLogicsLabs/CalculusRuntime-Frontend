@@ -1,5 +1,5 @@
-import React from 'react';
-import './Card.css';
+import React from "react";
+import "./Card.css";
 
 /**
  * Scalable Card component with glassmorphic aesthetic, optional header, body, footer, and hover effects.
