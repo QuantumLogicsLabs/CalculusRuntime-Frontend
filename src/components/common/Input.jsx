@@ -1,5 +1,5 @@
-import React from 'react';
-import './Input.css';
+import React from "react";
+import "./Input.css";
 
 /**
  * Scalable Input component with label, error, helper text, and icon support.

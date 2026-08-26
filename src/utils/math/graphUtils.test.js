@@ -1,4 +1,4 @@
-import { buildCrossSectionData, buildSurfaceData } from './graphUtils';
+import { buildCrossSectionData, buildSurfaceData } from "./graphUtils";
 
 describe('graphUtils multi-variable helpers', () => {
   it('buildSurfaceData returns a 2D grid for a surface expression', () => {

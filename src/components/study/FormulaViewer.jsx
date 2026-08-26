@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { BlockMath } from '../Math';
-import Button from '../common/Button';
-import './FormulaViewer.css';
+import React, { useState } from "react";
+import { BlockMath } from "./Math";
+import Button from "../common/Button";
+import "./FormulaViewer.css";
 
 /**
  * Scalable FormulaViewer with KaTeX rendering, copy-to-clipboard LaTeX, and expandable explanation.

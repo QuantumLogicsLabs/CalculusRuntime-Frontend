@@ -1,3 +1,3 @@
-export * from './chatApi';
-export * from './courseVerificationService';
-export * from './verificationAPI';
+export * from "./chatApi";
+export * from "./courseVerificationService";
+export * from "./verificationAPI";

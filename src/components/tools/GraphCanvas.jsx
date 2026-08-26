@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import './GraphCanvas.css';
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import "./GraphCanvas.css";
 
 /**
  * Scalable 2D function GraphCanvas component for plotting mathematical functions with grid, pan, zoom, and tooltip.

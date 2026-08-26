@@ -1,9 +1,10 @@
-export { default as ProgressBar } from './ProgressBar';
-export { default as ConceptCard } from './ConceptCard';
-export { default as FormulaViewer } from './FormulaViewer';
-
-// Existing study components re-exported for scalable organization
-export { default as GuideMcq, GuideMcqSection } from '../GuideMcq';
-export { default as HintButton } from '../HintButton';
-export { default as SectionCompleteBar } from '../SectionCompleteBar';
-export { default as SubmitToLeaderboard } from '../SubmitToLeaderboard';
+export { default as BookmarkButton } from "./BookmarkButton";
+export { default as GuideMcq, GuideMcqSection } from "./GuideMcq";
+export { default as SectionCompleteBar } from "./SectionCompleteBar";
+export { default as SiteSearch } from "./SiteSearch";
+export { default as SubmitToLeaderboard } from "./SubmitToLeaderboard";
+export { BlockMath, InlineMath, renderLatexToElement } from "./Math";
+export { default as HintButton } from "./HintButton";
+export { default as ProgressBar } from "./ProgressBar";
+export { default as ConceptCard } from "./ConceptCard";
+export { default as FormulaViewer } from "./FormulaViewer";

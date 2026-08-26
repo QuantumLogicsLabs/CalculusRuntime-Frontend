@@ -1,5 +1,5 @@
-import React from 'react';
-import './Badge.css';
+import React from "react";
+import "./Badge.css";
 
 /**
  * Scalable Badge / Tag component with various status colors and styles.
