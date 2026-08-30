@@ -16,12 +16,12 @@ function PartialPart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
-          <span className="guide-part-title">Partial Derivatives — Chain Rule, Directional Derivatives &amp; Extrema</span>
+          <span className="guide-part-badge">Section 2</span>
+          <span className="guide-part-title">Partial Derivatives — Chain Rule, Tangent Planes &amp; Extrema</span>
         </div>
         <BookmarkButton
           id="partial-2"
-          title="Partial Derivatives — Part 2"
+          title="Partial Derivatives — Section 2"
           path="/partial-derivatives/2"
         />
       </div>

@@ -16,14 +16,14 @@ function TaylorPart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
+          <span className="guide-part-badge">Section 2</span>
           <span className="guide-part-title">
             Taylor Series — Convergence, Error Bounds & Applications
           </span>
         </div>
         <BookmarkButton
           id="taylor-2"
-          title="Taylor Series — Part 2"
+          title="Taylor Series — Section 2"
           path="/taylor-series/2"
         />
       </div>

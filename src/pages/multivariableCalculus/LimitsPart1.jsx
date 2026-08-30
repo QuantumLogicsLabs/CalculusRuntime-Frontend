@@ -16,14 +16,14 @@ function LimitsPart1() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 1 of 2</span>
+          <span className="guide-part-badge">Section 1</span>
           <span className="guide-part-title">
             Limits & Continuity — Limits of Multivariable Functions
           </span>
         </div>
         <BookmarkButton
           id="limits-1"
-          title="Limits & Continuity — Part 1"
+          title="Limits & Continuity — Section 1"
           path="/limits-continuity/1"
         />
       </div>
@@ -31,7 +31,7 @@ function LimitsPart1() {
       <SectionCompleteBar
         sectionId="limits-1"
         nextPath="/limits-continuity/2"
-        nextLabel="Part 2: Continuity"
+        nextLabel="Continuity of Multivariable Functions"
       />
     </div>
   );
