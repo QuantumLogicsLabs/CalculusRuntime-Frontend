@@ -18,12 +18,12 @@ function VectorPart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
-          <span className="guide-part-title">Vector Calculus — Green's Theorem &amp; Surfaces</span>
+          <span className="guide-part-badge">Section 2</span>
+          <span className="guide-part-title">Vector Calculus — Green's Theorem, Surface Integrals & Flux</span>
         </div>
         <BookmarkButton
           id="vector-2"
-          title="Vector Calculus — Part 2"
+          title="Vector Calculus — Section 2"
           path="/vector-calculus/2"
         />
       </div>

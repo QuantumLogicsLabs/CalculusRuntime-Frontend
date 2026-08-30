@@ -16,14 +16,14 @@ function DivergencePart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
+          <span className="guide-part-badge">Section 2</span>
           <span className="guide-part-title">
-            Divergence & Curl — Identities, Divergence Theorem & Stokes
+            Divergence & Curl — Vector Identities, Flux & Divergence Theorem
           </span>
         </div>
         <BookmarkButton
           id="divergence-2"
-          title="Divergence & Curl — Part 2"
+          title="Divergence & Curl — Section 2"
           path="/divergence-curl/2"
         />
       </div>

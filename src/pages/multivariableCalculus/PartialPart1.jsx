@@ -16,12 +16,12 @@ function PartialPart1() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 1 of 2</span>
+          <span className="guide-part-badge">Section 1</span>
           <span className="guide-part-title">Partial Derivatives — Functions, Limits &amp; Partial Derivatives</span>
         </div>
         <BookmarkButton
           id="partial-1"
-          title="Partial Derivatives — Part 1"
+          title="Partial Derivatives — Section 1"
           path="/partial-derivatives/1"
         />
       </div>
@@ -29,7 +29,7 @@ function PartialPart1() {
       <SectionCompleteBar
         sectionId="partial-1"
         nextPath="/partial-derivatives/2"
-        nextLabel="Part 2: Chain Rule & Extrema"
+        nextLabel="Chain Rule & Extrema"
       />
     </div>
   );
