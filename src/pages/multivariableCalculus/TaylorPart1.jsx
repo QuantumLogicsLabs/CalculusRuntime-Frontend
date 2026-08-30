@@ -16,14 +16,14 @@ function TaylorPart1() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 1 of 2</span>
+          <span className="guide-part-badge">Section 1</span>
           <span className="guide-part-title">
             Taylor Series — Foundations, Formula & Maclaurin Reductions
           </span>
         </div>
         <BookmarkButton
           id="taylor-1"
-          title="Taylor Series — Part 1"
+          title="Taylor Series — Section 1"
           path="/taylor-series/1"
         />
       </div>
@@ -31,7 +31,7 @@ function TaylorPart1() {
       <SectionCompleteBar
         sectionId="taylor-1"
         nextPath="/taylor-series/2"
-        nextLabel="Part 2: Convergence, Error Bounds & Applications"
+        nextLabel="Convergence, Error Bounds & Applications"
       />
     </div>
   );

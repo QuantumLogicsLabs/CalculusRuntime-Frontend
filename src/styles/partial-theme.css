@@ -277,12 +277,23 @@
   color: var(--gold-2);
 }
 
-/* Footer */
 [data-site-theme="partial"] .site-footer {
   background: #16120a;
   border-top: 3px solid var(--gold);
   border-bottom: none;
   color: rgba(244, 237, 224, 0.75);
+}
+
+/* Ensure footer text is never covered by fixed left sidebar on desktop */
+@media (min-width: 921px) {
+  body:has(.sidebar) .site-footer,
+  body:has(.partial-derivatives-guide) .site-footer,
+  .guide-part-wrapper ~ .site-footer,
+  .study-guide-page ~ .site-footer {
+    margin-left: 240px !important;
+    width: calc(100% - 240px) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 [data-site-theme="partial"] .site-footer a {

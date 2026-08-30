@@ -16,14 +16,14 @@ function LagrangePart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
+          <span className="guide-part-badge">Section 2</span>
           <span className="guide-part-title">
-            Lagrange Multipliers — Applications & Multi-Constraint Frameworks
+            Lagrange Multipliers — Multiple Constraints & Optimization Applications
           </span>
         </div>
         <BookmarkButton
           id="lagrange-2"
-          title="Lagrange Multipliers — Part 2"
+          title="Lagrange Multipliers — Section 2"
           path="/lagrange-multipliers/2"
         />
       </div>

@@ -16,14 +16,14 @@ function IntegralsPart2() {
     <div className="guide-part-wrapper">
       <div className="guide-part-topbar">
         <div className="guide-part-info">
-          <span className="guide-part-badge">Part 2 of 2</span>
+          <span className="guide-part-badge">Section 2</span>
           <span className="guide-part-title">
-            Multiple Integrals — Triple Integrals & Coordinate Systems
+            Multiple Integrals — Polar, Cylindrical & Spherical Coordinates
           </span>
         </div>
         <BookmarkButton
           id="integrals-2"
-          title="Multiple Integrals — Part 2"
+          title="Multiple Integrals — Section 2"
           path="/multiple-integrals/2"
         />
       </div>
