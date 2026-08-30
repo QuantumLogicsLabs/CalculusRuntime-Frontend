@@ -31,7 +31,7 @@ function LimitsPart1() {
       <SectionCompleteBar
         sectionId="limits-1"
         nextPath="/limits-continuity/2"
-        nextLabel="Part 2: Continuity"
+        nextLabel="Continue to Part 2: Multivariable Continuity"
       />
     </div>
   );
