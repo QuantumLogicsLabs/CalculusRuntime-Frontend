@@ -6,6 +6,7 @@ import {
   LA_M_OPS_QUIZ,
   LA_M_DET_QUIZ,
   LA_M_INV_QUIZ,
+  LA_M_RANK_QUIZ,
 } from "../../data/laVectorsMatricesQuizzes";
 import { TheoryBox, TheoremBox, ProcedureBox, WorkedExample, PracticalTheory, RealLifeUse } from "./LaBlocks";
 
@@ -38,13 +39,17 @@ function MatricesGuide({ part = 1 }) {
           <a className="sb-link" href="#quiz-la-m-det">Quiz</a>
           <a className="sb-link" href="#la-m-inv">Inverses</a>
           <a className="sb-link" href="#quiz-la-m-inv">Quiz</a>
+          <a className="sb-link" href="#la-m-rank">Rank</a>
+          <a className="sb-link" href="#la-m-proc-rank">Method</a>
+          <a className="sb-link" href="#la-m-ex-rank">Examples</a>
+          <a className="sb-link" href="#quiz-la-m-rank">Quiz</a>
           <a className="sb-link" href="#la-cert-matrices-p2">Eight examples</a>
         </nav>
         <main className="main">
           <header className="ch-hdr">
             <div className="ch-eye">Linear Algebra · Part 2 of 2</div>
             <h1 className="ch-title">Matrices &amp; Determinants</h1>
-            <p className="ch-sub">Determinants, invertibility, and inverse algorithms</p>
+            <p className="ch-sub">Determinants, rank, invertibility, and inverse algorithms</p>
             <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
           </header>
 
@@ -246,13 +251,116 @@ function MatricesGuide({ part = 1 }) {
           />
 
           <Divider />
+
+          <section className="section" id="la-m-rank">
+            <div className="sec-badge">Section 2.5</div>
+            <h2 className="sec-title">Rank — what it tells you about a matrix</h2>
+            <p>
+              {"The determinant gives a single yes/no verdict on invertibility, and only for square matrices. Rank refines that verdict into a number that works for any shape: it counts how many genuinely independent directions a matrix carries. Almost every structural question — is $A$ invertible, does $Ax=b$ always/never/sometimes solve, how large is the nullspace, does the map lose information — is answered by comparing $\\mathrm{rank}(A)$ with the number of rows and columns."}
+            </p>
+            <TheoryBox title="Definition: rank = number of pivots = number of independent directions">
+              <p>
+                {"$\\mathrm{rank}(A)$ is the number of pivots in any row echelon form of $A$. Equivalently it is $\\dim\\mathrm{Col}(A)$, the number of linearly independent columns, and also the dimension of the row space — these two counts are always equal, so “row rank” and “column rank” are the same number. Every path to reduced row echelon form yields the same pivot count, so rank is a property of the matrix, not of the elimination you happened to run."}
+              </p>
+              <p>
+                {"For an $m\\times n$ matrix, $0\\le\\mathrm{rank}(A)\\le\\min(m,n)$. Only the zero matrix has rank $0$. When $\\mathrm{rank}(A)=\\min(m,n)$ the matrix has full rank; otherwise it is rank deficient, and the deficiency $\\min(m,n)-\\mathrm{rank}(A)$ measures how much independence is missing."}
+              </p>
+            </TheoryBox>
+            <TheoremBox title="What the one number encodes">
+              <p>
+                {"Let $A$ be $m\\times n$ with $r=\\mathrm{rank}(A)$. Then: the columns are linearly independent iff $r=n$; the rows are linearly independent iff $r=m$; the map $x\\mapsto Ax$ is onto $\\mathbb{R}^m$ iff $r=m$; and it is one-to-one iff $r=n$. For square $A$ ($m=n$), all four conditions collapse into one — $r=n$ — which is exactly $\\det A\\neq 0$ and exactly invertibility."}
+              </p>
+            </TheoremBox>
+            <TheoryBox title="Rank–nullity: the missing directions become the nullspace">
+              <p>
+                {"$\\mathrm{rank}(A)+\\dim\\mathrm{Nul}(A)=n$ (the number of columns). So a rank-deficient matrix has a nontrivial nullspace of dimension $n-r$: there are $n-r$ independent input directions the matrix crushes to zero. For a consistent system $Ax=b$ this is precisely the number of free variables, and the full solution set is one particular solution plus that $(n-r)$-dimensional nullspace."}
+              </p>
+              <p>
+                {"Consistency itself is a rank statement: $Ax=b$ has a solution iff $\\mathrm{rank}(A)=\\mathrm{rank}([A\\mid b])$. If appending $b$ raises the rank, the extra pivot sits in the right-hand column and encodes a contradiction $0=c$."}
+              </p>
+            </TheoryBox>
+            <PracticalTheory title="Reading rank off a computation">
+              <p>
+                {"Row-reduce to echelon form and count pivots — that count is $r$. Then read directly: $r$ vs $n$ tells you about column independence and uniqueness; $r$ vs $m$ tells you about spanning and existence; $n-r$ is the nullspace dimension and the free-variable count. For a square matrix a fast shortcut is $\\det$: nonzero means $r=n$, zero means $r<n$ (but $\\det$ alone will not tell you which deficient value)."}
+              </p>
+            </PracticalTheory>
+            <TheoremBox title="Rank versus determinant">
+              <p>
+                {"The determinant is the square-matrix special case of the rank question. $\\det A\\neq 0 \\iff \\mathrm{rank}(A)=n$; $\\det A=0 \\iff \\mathrm{rank}(A)<n$. Rank stays informative where $\\det$ cannot go: rectangular matrices, and singular matrices where you still want to know how singular. Useful product facts: $\\mathrm{rank}(AB)\\le\\min(\\mathrm{rank}A,\\mathrm{rank}B)$, and multiplying by an invertible matrix on either side leaves rank unchanged."}
+              </p>
+            </TheoremBox>
+            <RealLifeUse>{"Rank is the language of redundancy. A data matrix whose rank is far below its size compresses well — that is the basis of PCA and low-rank image compression. In regression, collinear predictors drop the design matrix below full column rank and make coefficients unidentifiable. In control engineering, the controllability and observability matrices must have full rank for a system to be steerable and reconstructable; in structural analysis a rank drop in the stiffness matrix signals a mechanism that can move without resistance."}</RealLifeUse>
+          </section>
+
+          <section className="section" id="la-m-proc-rank">
+            <div className="sec-badge">Procedure</div>
+            <h2 className="sec-title">How to find the rank and read what it means</h2>
+            <ProcedureBox
+              title="How to compute rank(A) and interpret it"
+              steps={[
+                { text: "Row-reduce $A$ to row echelon form using elementary operations; these never change the rank.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
+                { text: "Count the pivots (leading nonzero entries). That count is $r=\\mathrm{rank}(A)$.", why: "Rank is the number of pivots, equal to $\\dim\\mathrm{Col}(A)$ and $\\dim\\mathrm{Row}(A)$." },
+                { text: "Compare $r$ with the number of columns $n$: if $r=n$ the columns are independent and $Ax=0$ has only the trivial solution; if $r<n$ there are $n-r$ free variables.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
+                { text: "Compare $r$ with the number of rows $m$: if $r=m$ the rows are independent and the columns span $\\mathbb{R}^m$, so $Ax=b$ is solvable for every $b$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
+                { text: "For square $A$, translate: $r=n \\Leftrightarrow \\det A\\neq 0 \\Leftrightarrow A^{-1}$ exists; $r<n \\Leftrightarrow \\det A=0 \\Leftrightarrow A$ singular.", why: "Invertibility matches nonzero det and a full set of pivots." },
+                { text: "Sanity check with rank–nullity: $\\dim\\mathrm{Nul}(A)$ should come out to $n-r$.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
+              ]}
+            />
+          </section>
+
+          <section className="section" id="la-m-ex-rank">
+            <div className="sec-badge">Large examples</div>
+            <h2 className="sec-title">Two detailed worked examples</h2>
+
+            <WorkedExample
+              number={1}
+              title="Rank of a 3×4 matrix, and what it predicts"
+              setup={"$A=\\begin{pmatrix}1&2&1&3\\\\2&4&0&4\\\\1&2&2&5\\end{pmatrix}$. Find $\\mathrm{rank}(A)$ and describe the solution behaviour of $Ax=b$."}
+              steps={[
+                { text: "R2 ← R2 − 2R1 gives $(0,0,-2,-2)$; R3 ← R3 − R1 gives $(0,0,1,2)$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
+                { text: "R3 ← R3 + $\\tfrac12$R2 gives $(0,0,0,1)$. Echelon form is $\\begin{pmatrix}1&2&1&3\\\\0&0&-2&-2\\\\0&0&0&1\\end{pmatrix}$." },
+                { text: "Pivots sit in columns $1,3,4$: three pivots, so $\\mathrm{rank}(A)=3$.", why: "Rank is the number of pivots." },
+                { text: "Here $m=3$ and $r=3$, so $r=m$: the rows are independent and the columns span $\\mathbb{R}^3$. Hence $Ax=b$ is consistent for every $b$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
+                { text: "Here $n=4$ and $r=3$, so $n-r=1$: column $2$ is free (indeed column $2 = 2\\times$ column $1$), and every consistent system has a $1$-parameter family of solutions.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
+                { text: "Rank–nullity check: $\\dim\\mathrm{Nul}(A)=4-3=1$, matching the single free variable.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
+              ]}
+              result={"$\\mathrm{rank}(A)=3$: full row rank, so $Ax=b$ always solves, with a $1$-dimensional solution set each time."}
+              check={"Column $2=2\\cdot$ column $1$, so at most $3$ of the $4$ columns are independent; columns $1,3,4$ are, giving rank exactly $3$."}
+            />
+            <WorkedExample
+              number={2}
+              title="Rank-deficient square matrix: linking rank, determinant, and nullspace"
+              setup={"$B=\\begin{pmatrix}2&1&3\\\\4&2&6\\\\1&0&1\\end{pmatrix}$. Find $\\mathrm{rank}(B)$, then $\\det B$ and $\\mathrm{Nul}(B)$."}
+              steps={[
+                { text: "R2 ← R2 − 2R1 gives $(0,0,0)$ — row $2$ was exactly twice row $1$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
+                { text: "R3 ← R3 − $\\tfrac12$R1 gives $(0,-\\tfrac12,-\\tfrac12)$. Echelon form is $\\begin{pmatrix}2&1&3\\\\0&-\\tfrac12&-\\tfrac12\\\\0&0&0\\end{pmatrix}$." },
+                { text: "Two pivots (columns $1,2$), so $\\mathrm{rank}(B)=2<3$.", why: "Rank is the number of pivots." },
+                { text: "Since $B$ is $3\\times 3$ and $r=2<3$, $B$ is singular: $\\det B=0$.", why: "Invertibility matches nonzero det and a full set of pivots." },
+                { text: "Rank–nullity: $\\dim\\mathrm{Nul}(B)=3-2=1$. Back-substitute: $-\\tfrac12 y-\\tfrac12 z=0\\Rightarrow y=-z$; then $2x+y+3z=0\\Rightarrow x=-z$.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
+                { text: "So $\\mathrm{Nul}(B)=\\mathrm{Span}\\{(-1,-1,1)\\}$, and $\\mathrm{Col}(B)$ is a plane in $\\mathbb{R}^3$: $Bx=b$ solves only when $b$ lies in that plane.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
+              ]}
+              result={"$\\mathrm{rank}(B)=2$, hence $\\det B=0$, $\\dim\\mathrm{Nul}(B)=1$ with null vector $(-1,-1,1)$."}
+              check={"$B(-1,-1,1)^T=(-2-1+3,\\,-4-2+6,\\,-1+0+1)^T=(0,0,0)^T$."}
+            />
+          </section>
+
+          <LaMcqSection
+            id="quiz-la-m-rank"
+            badge="Quiz 2.5"
+            title="Rank"
+            scoreId="score-la-m-rank"
+            section="la-m-rank"
+            questions={LA_M_RANK_QUIZ}
+          />
+
+          <Divider />
           <LaCertificateBoost topic="matrices" part={2} />
 
           <section className="section" id="summary">
             <div className="sec-badge">Reference</div>
             <h2 className="sec-title">Part 2 complete</h2>
             <p>
-              {"Determinants measure volume scaling and detect singularity; inverses undo linear maps when $\\det\\neq 0$. Gauss–Jordan on $[A\\mid I]$ builds $A^{-1}$ systematically."}
+              {"Determinants measure volume scaling and detect singularity; inverses undo linear maps when $\\det\\neq 0$. Gauss–Jordan on $[A\\mid I]$ builds $A^{-1}$ systematically. Rank puts a number on all of it — $r=n$ is the full-rank / invertible / $\\det\\neq 0$ case, and $n-r$ is the dimension of the nullspace."}
             </p>
             <p>
               Continue with the gold bar: <strong>Next: Systems of Linear Equations</strong>.

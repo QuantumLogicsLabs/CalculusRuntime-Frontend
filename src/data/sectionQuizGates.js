@@ -57,7 +57,7 @@ export const SECTION_GUIDE_QUIZ_KEYS = {
   "la-vectors-1": ["la-v-intro", "la-v-ops"],
   "la-vectors-2": ["la-v-span", "la-v-indep"],
   "la-matrices-1": ["la-m-intro", "la-m-ops"],
-  "la-matrices-2": ["la-m-det", "la-m-inv"],
+  "la-matrices-2": ["la-m-det", "la-m-inv", "la-m-rank"],
   "la-systems-1": ["la-s-intro", "la-s-gauss"],
   "la-systems-2": ["la-s-rank", "la-s-geo"],
   "la-eigen-1": ["la-e-intro", "la-e-char"],

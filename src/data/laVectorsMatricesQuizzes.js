@@ -743,3 +743,110 @@ export const LA_M_INV_QUIZ = [
     explanation: "$\\det=3$; adjugate formula gives $(1/3)\\begin{pmatrix}1&-1\\\\-1&4\\end{pmatrix}$.",
   },
 ];
+
+export const LA_M_RANK_QUIZ = [
+  {
+    prompt: "The rank of a matrix is:",
+    options: [
+      "The number of rows it has",
+      "The number of pivots in any row echelon form",
+      "The largest entry in absolute value",
+    ],
+    answer: "B",
+    explanation:
+      "Rank counts the pivots, which equals the dimension of the column space (and of the row space).",
+  },
+  {
+    prompt: "$\\operatorname{rank}(I_5)$ equals:",
+    options: ["$5$", "$1$", "$25$"],
+    answer: "A",
+    explanation: "Every one of the five columns is a pivot column, so the rank is $5$.",
+  },
+  {
+    prompt: "The rank of the $3\\times 3$ zero matrix is:",
+    options: ["$3$", "$1$", "$0$"],
+    answer: "C",
+    explanation: "There are no pivots; the column space is just $\\{\\mathbf{0}\\}$.",
+  },
+  {
+    prompt: "For an $m\\times n$ matrix $A$, $\\operatorname{rank}(A)$ is at most:",
+    options: ["$\\min(m,n)$", "$m+n$", "$mn$"],
+    answer: "A",
+    explanation: "You cannot have more pivots than there are rows, nor more than there are columns.",
+  },
+  {
+    prompt: "$\\operatorname{rank}\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}$ equals:",
+    options: ["$2$", "$1$", "$0$"],
+    answer: "B",
+    explanation: "Row 2 is twice row 1, so only one independent row (and column) remains.",
+  },
+  {
+    prompt: "If $A$ is $5\\times 5$ with $\\operatorname{rank}(A)=3$, then $\\dim\\operatorname{Nul}(A)$ equals:",
+    options: ["$2$", "$3$", "$5$"],
+    answer: "A",
+    explanation: "Rank–nullity: $\\dim\\operatorname{Nul}(A)=n-\\operatorname{rank}(A)=5-3=2$.",
+  },
+  {
+    prompt: "A square $n\\times n$ matrix is invertible if and only if its rank is:",
+    options: ["$0$", "$n-1$", "$n$"],
+    answer: "C",
+    explanation: "Full rank means a pivot in every column, which is equivalent to invertibility.",
+  },
+  {
+    prompt: "Row rank and column rank of any matrix are:",
+    options: ["Always equal", "Equal only when the matrix is square", "Unrelated in general"],
+    answer: "A",
+    explanation: "The dimension of the row space always equals the dimension of the column space.",
+  },
+  {
+    prompt: "Applying elementary row operations to a matrix changes its rank by:",
+    options: ["Nothing — rank is preserved", "It can only decrease", "It doubles"],
+    answer: "A",
+    explanation: "Row operations leave the row space unchanged, so the rank is invariant.",
+  },
+  {
+    prompt: "$\\operatorname{rank}\\begin{pmatrix}1&2&3\\\\2&4&6\\\\1&1&1\\end{pmatrix}$ equals:",
+    options: ["$3$", "$2$", "$1$"],
+    answer: "B",
+    explanation: "Row 2 is $2\\times$ row 1; rows 1 and 3 are independent, so the rank is $2$.",
+  },
+  {
+    prompt: "If a $4\\times 6$ matrix has rank $4$, then:",
+    options: [
+      "Its six columns are linearly independent",
+      "Its four rows are linearly independent",
+      "It is invertible",
+    ],
+    answer: "B",
+    explanation:
+      "Rank $4$ with $4$ rows means every row is a pivot row; six vectors in $\\mathbb{R}^4$ can never be independent, and a non-square matrix is never invertible.",
+  },
+  {
+    prompt: "The columns of an $m\\times n$ matrix $A$ are linearly independent exactly when:",
+    options: ["$\\operatorname{rank}(A)=m$", "$\\operatorname{rank}(A)=n$", "$\\operatorname{rank}(A)=0$"],
+    answer: "B",
+    explanation: "A pivot in every one of the $n$ columns leaves no free variables.",
+  },
+  {
+    prompt: "For a square matrix, $\\det A\\neq 0$ is equivalent to:",
+    options: ["$A$ has full rank", "$A$ is symmetric", "$A$ has rank $0$"],
+    answer: "A",
+    explanation: "Nonzero determinant $\\iff$ full rank $\\iff$ invertible — the same condition stated three ways.",
+  },
+  {
+    prompt: "For nonzero column vectors $\\mathbf{u},\\mathbf{v}$, the rank of the outer product $\\mathbf{u}\\mathbf{v}^{T}$ is:",
+    options: ["$0$", "$1$", "Equal to the number of entries of $\\mathbf{u}$"],
+    answer: "B",
+    explanation: "Every column of $\\mathbf{u}\\mathbf{v}^{T}$ is a scalar multiple of $\\mathbf{u}$, so the column space is one line.",
+  },
+  {
+    prompt: "In general, $\\operatorname{rank}(AB)$ satisfies:",
+    options: [
+      "$\\operatorname{rank}(AB)\\le\\min\\big(\\operatorname{rank}A,\\operatorname{rank}B\\big)$",
+      "$\\operatorname{rank}(AB)=\\operatorname{rank}A+\\operatorname{rank}B$",
+      "$\\operatorname{rank}(AB)=\\operatorname{rank}A$ always",
+    ],
+    answer: "A",
+    explanation: "A product cannot carry more independent directions than either factor allows.",
+  },
+];
