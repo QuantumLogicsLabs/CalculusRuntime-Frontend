@@ -256,54 +256,60 @@ function MatricesGuide({ part = 1 }) {
             <div className="sec-badge">Section 2.5</div>
             <h2 className="sec-title">Rank — what it tells you about a matrix</h2>
             <p>
-              {"The determinant gives a single yes/no verdict on invertibility, and only for square matrices. Rank refines that verdict into a number that works for any shape: it counts how many genuinely independent directions a matrix carries. Almost every structural question — is $A$ invertible, does $Ax=b$ always/never/sometimes solve, how large is the nullspace, does the map lose information — is answered by comparing $\\mathrm{rank}(A)$ with the number of rows and columns."}
+              {"Rank is one whole number attached to a matrix. It counts how many rows (or columns) carry real information — rows that are not just copies, multiples, or sums of the other rows. That one number answers several questions at once: can the matrix be inverted, does the system $Ax=b$ have one solution, many solutions, or none, and how much information the matrix throws away. You get the answers by comparing the rank with the number of rows and the number of columns."}
             </p>
-            <TheoryBox title="Definition: rank = number of pivots = number of independent directions">
+            <TheoryBox title="What rank means">
               <p>
-                {"$\\mathrm{rank}(A)$ is the number of pivots in any row echelon form of $A$. Equivalently it is $\\dim\\mathrm{Col}(A)$, the number of linearly independent columns, and also the dimension of the row space — these two counts are always equal, so “row rank” and “column rank” are the same number. Every path to reduced row echelon form yields the same pivot count, so rank is a property of the matrix, not of the elimination you happened to run."}
+                {"To find the rank, use row operations (the same steps you use to solve a system) until the matrix is in staircase form. Then count the rows that still have a leading non-zero number. Those leading entries are called pivots, and the number of pivots is the rank. If you count the independent columns instead, you get the same number — the count of independent rows always equals the count of independent columns. It also doesn't matter which row steps you choose; every correct reduction gives the same rank."}
               </p>
               <p>
-                {"For an $m\\times n$ matrix, $0\\le\\mathrm{rank}(A)\\le\\min(m,n)$. Only the zero matrix has rank $0$. When $\\mathrm{rank}(A)=\\min(m,n)$ the matrix has full rank; otherwise it is rank deficient, and the deficiency $\\min(m,n)-\\mathrm{rank}(A)$ measures how much independence is missing."}
+                {"For a matrix with $m$ rows and $n$ columns, the rank is somewhere between $0$ and the smaller of $m$ and $n$. Only the all-zeros matrix has rank $0$. If the rank is as large as it can be, we say the matrix has full rank. If it is smaller, the matrix is rank deficient, and the gap tells you how many rows or columns are wasted (repeats of the others)."}
               </p>
             </TheoryBox>
-            <TheoremBox title="What the one number encodes">
+            <TheoremBox title="What the rank tells you">
               <p>
-                {"Let $A$ be $m\\times n$ with $r=\\mathrm{rank}(A)$. Then: the columns are linearly independent iff $r=n$; the rows are linearly independent iff $r=m$; the map $x\\mapsto Ax$ is onto $\\mathbb{R}^m$ iff $r=m$; and it is one-to-one iff $r=n$. For square $A$ ($m=n$), all four conditions collapse into one — $r=n$ — which is exactly $\\det A\\neq 0$ and exactly invertibility."}
+                {"Write $r$ for the rank, $m$ for the number of rows, $n$ for the number of columns."}
+              </p>
+              <p>
+                {"If $r=n$: every column carries new information, so $Ax=b$ has at most one solution. If $r=m$: every row carries new information, so $Ax=b$ has at least one solution for every $b$. If $r$ is smaller than $n$: some columns repeat information, so whenever a solution exists there are infinitely many."}
+              </p>
+              <p>
+                {"For a square matrix ($m=n$) these all say the same thing: $r=n$. That is exactly the case where $\\det A\\neq 0$ and the inverse $A^{-1}$ exists."}
               </p>
             </TheoremBox>
-            <TheoryBox title="Rank–nullity: the missing directions become the nullspace">
+            <TheoryBox title="Rank plus the lost directions">
               <p>
-                {"$\\mathrm{rank}(A)+\\dim\\mathrm{Nul}(A)=n$ (the number of columns). So a rank-deficient matrix has a nontrivial nullspace of dimension $n-r$: there are $n-r$ independent input directions the matrix crushes to zero. For a consistent system $Ax=b$ this is precisely the number of free variables, and the full solution set is one particular solution plus that $(n-r)$-dimensional nullspace."}
+                {"There is a simple adding-up rule: $(\\text{rank}) + (\\text{number of independent solutions of } Ax=0) = n$, the number of columns. The non-zero solutions of $Ax=0$ are the input directions the matrix flattens to zero. So if the rank is $r$, there are $n-r$ of them. When you solve a system that does have solutions, $n-r$ is also the number of free variables — the values you get to pick yourself."}
               </p>
               <p>
-                {"Consistency itself is a rank statement: $Ax=b$ has a solution iff $\\mathrm{rank}(A)=\\mathrm{rank}([A\\mid b])$. If appending $b$ raises the rank, the extra pivot sits in the right-hand column and encodes a contradiction $0=c$."}
+                {"Whether $Ax=b$ has any solution at all is also a rank question. Put $b$ beside $A$ as an extra column and take the rank of that wider block. If it equals the rank of $A$, a solution exists. If adding $b$ pushes the rank up by one, that extra step is really an impossible equation like $0=5$, so there is no solution."}
               </p>
             </TheoryBox>
-            <PracticalTheory title="Reading rank off a computation">
+            <PracticalTheory title="How to use it in practice">
               <p>
-                {"Row-reduce to echelon form and count pivots — that count is $r$. Then read directly: $r$ vs $n$ tells you about column independence and uniqueness; $r$ vs $m$ tells you about spanning and existence; $n-r$ is the nullspace dimension and the free-variable count. For a square matrix a fast shortcut is $\\det$: nonzero means $r=n$, zero means $r<n$ (but $\\det$ alone will not tell you which deficient value)."}
+                {"Row-reduce and count the pivots — that is $r$. Then compare: $r$ against $n$ (columns) tells you about uniqueness; $r$ against $m$ (rows) tells you whether a solution always exists; and $n-r$ is the number of free variables. For a square matrix, the determinant is a quick shortcut: $\\det\\neq 0$ means full rank, $\\det=0$ means the rank is smaller (though the determinant alone won't say how much smaller)."}
               </p>
             </PracticalTheory>
-            <TheoremBox title="Rank versus determinant">
+            <TheoremBox title="Rank vs. determinant">
               <p>
-                {"The determinant is the square-matrix special case of the rank question. $\\det A\\neq 0 \\iff \\mathrm{rank}(A)=n$; $\\det A=0 \\iff \\mathrm{rank}(A)<n$. Rank stays informative where $\\det$ cannot go: rectangular matrices, and singular matrices where you still want to know how singular. Useful product facts: $\\mathrm{rank}(AB)\\le\\min(\\mathrm{rank}A,\\mathrm{rank}B)$, and multiplying by an invertible matrix on either side leaves rank unchanged."}
+                {"The determinant only works for square matrices and only gives a yes/no answer: $\\det A\\neq 0$ means full rank ($r=n$), and $\\det A=0$ means not full rank ($r<n$). Rank still works when the determinant can't be used — for non-square matrices, or when you want to know how far a square matrix is from full rank. Two handy facts: the rank of a product $AB$ is never larger than the rank of $A$ or of $B$; and multiplying by an invertible matrix (on either side) does not change the rank."}
               </p>
             </TheoremBox>
-            <RealLifeUse>{"Rank is the language of redundancy. A data matrix whose rank is far below its size compresses well — that is the basis of PCA and low-rank image compression. In regression, collinear predictors drop the design matrix below full column rank and make coefficients unidentifiable. In control engineering, the controllability and observability matrices must have full rank for a system to be steerable and reconstructable; in structural analysis a rank drop in the stiffness matrix signals a mechanism that can move without resistance."}</RealLifeUse>
+            <RealLifeUse>{"Rank measures repeated information. If a large table of data has a much smaller rank than its size, it can be stored in far less space — that idea is behind image compression and PCA. In statistics, two inputs that move together (like a height in centimetres and the same height in inches) drop the rank and make a model impossible to pin down. In engineering, checking that certain matrices have full rank is how you confirm a system can be fully controlled, or that a structure won't fold into a loose mechanism."}</RealLifeUse>
           </section>
 
           <section className="section" id="la-m-proc-rank">
             <div className="sec-badge">Procedure</div>
             <h2 className="sec-title">How to find the rank and read what it means</h2>
             <ProcedureBox
-              title="How to compute rank(A) and interpret it"
+              title="How to find rank(A) and read what it means"
               steps={[
-                { text: "Row-reduce $A$ to row echelon form using elementary operations; these never change the rank.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
-                { text: "Count the pivots (leading nonzero entries). That count is $r=\\mathrm{rank}(A)$.", why: "Rank is the number of pivots, equal to $\\dim\\mathrm{Col}(A)$ and $\\dim\\mathrm{Row}(A)$." },
-                { text: "Compare $r$ with the number of columns $n$: if $r=n$ the columns are independent and $Ax=0$ has only the trivial solution; if $r<n$ there are $n-r$ free variables.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
-                { text: "Compare $r$ with the number of rows $m$: if $r=m$ the rows are independent and the columns span $\\mathbb{R}^m$, so $Ax=b$ is solvable for every $b$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
-                { text: "For square $A$, translate: $r=n \\Leftrightarrow \\det A\\neq 0 \\Leftrightarrow A^{-1}$ exists; $r<n \\Leftrightarrow \\det A=0 \\Leftrightarrow A$ singular.", why: "Invertibility matches nonzero det and a full set of pivots." },
-                { text: "Sanity check with rank–nullity: $\\dim\\mathrm{Nul}(A)$ should come out to $n-r$.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
+                { text: "Use row operations to bring $A$ into staircase (row echelon) form. These steps never change the rank.", why: "Row reduction is the standard way to bring pivots and free variables into view." },
+                { text: "Count the pivots — the leading non-zero entry in each non-zero row. That count is the rank $r$.", why: "Rank is the number of pivots, which is also the number of independent rows or columns." },
+                { text: "Compare $r$ with the number of columns $n$. If $r=n$, the columns are independent and $Ax=0$ has only the all-zero solution. If $r<n$, there are $n-r$ free variables.", why: "Comparing rank with the column count tells you whether solutions are unique." },
+                { text: "Compare $r$ with the number of rows $m$. If $r=m$, the rows are independent and $Ax=b$ has a solution for every $b$.", why: "Comparing rank with the row count tells you whether a solution always exists." },
+                { text: "If $A$ is square: $r=n$ means $\\det A\\neq 0$ and $A^{-1}$ exists; $r<n$ means $\\det A=0$ and $A$ has no inverse.", why: "For a square matrix, full rank, non-zero determinant, and invertibility are the same thing." },
+                { text: "Check your work: the number of independent solutions of $Ax=0$ should come out to exactly $n-r$.", why: "This is the adding-up rule: rank plus the number of zeroed-out directions equals $n$." },
               ]}
             />
           </section>
@@ -314,32 +320,32 @@ function MatricesGuide({ part = 1 }) {
 
             <WorkedExample
               number={1}
-              title="Rank of a 3×4 matrix, and what it predicts"
-              setup={"$A=\\begin{pmatrix}1&2&1&3\\\\2&4&0&4\\\\1&2&2&5\\end{pmatrix}$. Find $\\mathrm{rank}(A)$ and describe the solution behaviour of $Ax=b$."}
+              title="Find the rank of a 3×4 matrix and read off what it means"
+              setup={"$A=\\begin{pmatrix}1&2&1&3\\\\2&4&0&4\\\\1&2&2&5\\end{pmatrix}$. Find $\\mathrm{rank}(A)$, then say how $Ax=b$ behaves."}
               steps={[
-                { text: "R2 ← R2 − 2R1 gives $(0,0,-2,-2)$; R3 ← R3 − R1 gives $(0,0,1,2)$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
-                { text: "R3 ← R3 + $\\tfrac12$R2 gives $(0,0,0,1)$. Echelon form is $\\begin{pmatrix}1&2&1&3\\\\0&0&-2&-2\\\\0&0&0&1\\end{pmatrix}$." },
-                { text: "Pivots sit in columns $1,3,4$: three pivots, so $\\mathrm{rank}(A)=3$.", why: "Rank is the number of pivots." },
-                { text: "Here $m=3$ and $r=3$, so $r=m$: the rows are independent and the columns span $\\mathbb{R}^3$. Hence $Ax=b$ is consistent for every $b$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
-                { text: "Here $n=4$ and $r=3$, so $n-r=1$: column $2$ is free (indeed column $2 = 2\\times$ column $1$), and every consistent system has a $1$-parameter family of solutions.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
-                { text: "Rank–nullity check: $\\dim\\mathrm{Nul}(A)=4-3=1$, matching the single free variable.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
+                { text: "Subtract $2\\times$ row 1 from row 2: it becomes $(0,0,-2,-2)$. Subtract row 1 from row 3: it becomes $(0,0,1,2)$.", why: "Clear the first column below the top-left entry." },
+                { text: "Add $\\tfrac12\\times$ row 2 to row 3: it becomes $(0,0,0,1)$. The staircase form is $\\begin{pmatrix}1&2&1&3\\\\0&0&-2&-2\\\\0&0&0&1\\end{pmatrix}$.", why: "Finish the reduction so every pivot is visible." },
+                { text: "There are three pivots (in columns 1, 3, and 4), so $\\mathrm{rank}(A)=3$.", why: "Rank is the number of pivots." },
+                { text: "The matrix has 3 rows and the rank is 3, so all rows carry new information. That means $Ax=b$ has a solution for every $b$.", why: "Rank equal to the row count means a solution always exists." },
+                { text: "The matrix has 4 columns and the rank is 3, so $4-3=1$ column is free (here column 2 is just $2\\times$ column 1). So every solvable system has one free choice and infinitely many solutions.", why: "Rank below the column count leaves free variables." },
+                { text: "Check: the number of independent solutions of $Ax=0$ should be $4-3=1$, which matches the one free variable.", why: "The adding-up rule: rank plus zeroed-out directions equals the column count." },
               ]}
-              result={"$\\mathrm{rank}(A)=3$: full row rank, so $Ax=b$ always solves, with a $1$-dimensional solution set each time."}
-              check={"Column $2=2\\cdot$ column $1$, so at most $3$ of the $4$ columns are independent; columns $1,3,4$ are, giving rank exactly $3$."}
+              result={"$\\mathrm{rank}(A)=3$. All rows carry new information, so $Ax=b$ always has solutions — infinitely many, with one free choice each time."}
+              check={"Column 2 equals $2\\times$ column 1, so at most 3 columns are independent; columns 1, 3, and 4 are, so the rank is exactly 3."}
             />
             <WorkedExample
               number={2}
-              title="Rank-deficient square matrix: linking rank, determinant, and nullspace"
-              setup={"$B=\\begin{pmatrix}2&1&3\\\\4&2&6\\\\1&0&1\\end{pmatrix}$. Find $\\mathrm{rank}(B)$, then $\\det B$ and $\\mathrm{Nul}(B)$."}
+              title="A square matrix that is not full rank: rank, determinant, and Ax = 0"
+              setup={"$B=\\begin{pmatrix}2&1&3\\\\4&2&6\\\\1&0&1\\end{pmatrix}$. Find $\\mathrm{rank}(B)$, then $\\det B$ and the solutions of $Bx=0$."}
               steps={[
-                { text: "R2 ← R2 − 2R1 gives $(0,0,0)$ — row $2$ was exactly twice row $1$.", why: "Row-reduce and read pivots, free variables, and consistency from the echelon form." },
-                { text: "R3 ← R3 − $\\tfrac12$R1 gives $(0,-\\tfrac12,-\\tfrac12)$. Echelon form is $\\begin{pmatrix}2&1&3\\\\0&-\\tfrac12&-\\tfrac12\\\\0&0&0\\end{pmatrix}$." },
-                { text: "Two pivots (columns $1,2$), so $\\mathrm{rank}(B)=2<3$.", why: "Rank is the number of pivots." },
-                { text: "Since $B$ is $3\\times 3$ and $r=2<3$, $B$ is singular: $\\det B=0$.", why: "Invertibility matches nonzero det and a full set of pivots." },
-                { text: "Rank–nullity: $\\dim\\mathrm{Nul}(B)=3-2=1$. Back-substitute: $-\\tfrac12 y-\\tfrac12 z=0\\Rightarrow y=-z$; then $2x+y+3z=0\\Rightarrow x=-z$.", why: "Use (A−λI)v=0 for each eigenvalue and read the nullspace." },
-                { text: "So $\\mathrm{Nul}(B)=\\mathrm{Span}\\{(-1,-1,1)\\}$, and $\\mathrm{Col}(B)$ is a plane in $\\mathbb{R}^3$: $Bx=b$ solves only when $b$ lies in that plane.", why: "Use independence and spanning (via rank/pivots) to decide bases and membership." },
+                { text: "Subtract $2\\times$ row 1 from row 2: it becomes $(0,0,0)$. So row 2 was just twice row 1 — no new information.", why: "A row that turns into all zeros was a repeat of the others." },
+                { text: "Subtract $\\tfrac12\\times$ row 1 from row 3: it becomes $(0,-\\tfrac12,-\\tfrac12)$. The staircase form is $\\begin{pmatrix}2&1&3\\\\0&-\\tfrac12&-\\tfrac12\\\\0&0&0\\end{pmatrix}$.", why: "Reduce until the pivots are visible." },
+                { text: "There are two pivots (columns 1 and 2), so $\\mathrm{rank}(B)=2$, which is less than 3.", why: "Rank is the number of pivots." },
+                { text: "$B$ is 3×3 but its rank is only 2, so it is not full rank. That means $\\det B=0$ and $B$ has no inverse.", why: "For a square matrix, rank below its size means zero determinant and no inverse." },
+                { text: "Solve $Bx=0$. From row 2: $-\\tfrac12 y-\\tfrac12 z=0$, so $y=-z$. From row 1: $2x+y+3z=0$, so $x=-z$.", why: "Back-substitute in the reduced system." },
+                { text: "So $Bx=0$ is solved by every multiple of $(-1,-1,1)$. There is exactly $3-2=1$ independent solution, matching the rank.", why: "The number of independent solutions of $Ax=0$ is $n-r$." },
               ]}
-              result={"$\\mathrm{rank}(B)=2$, hence $\\det B=0$, $\\dim\\mathrm{Nul}(B)=1$ with null vector $(-1,-1,1)$."}
+              result={"$\\mathrm{rank}(B)=2$, so $\\det B=0$, and $Bx=0$ is solved by every multiple of $(-1,-1,1)$."}
               check={"$B(-1,-1,1)^T=(-2-1+3,\\,-4-2+6,\\,-1+0+1)^T=(0,0,0)^T$."}
             />
           </section>
