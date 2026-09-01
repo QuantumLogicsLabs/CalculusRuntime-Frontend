@@ -361,16 +361,34 @@ function CourseQuiz() {
       </div>
 
       <div className="quiz-submit-bar">
-        <button
-          className="quiz-btn"
-          disabled={submitting}
-          onClick={() => {
-            advancingRef.current = true;
-            goToQuestion(currentIndex + 1);
-          }}
-        >
-          {currentIndex === totalQuestions - 1 ? "Skip & submit" : "Skip →"}
-        </button>
+        <div className="quiz-submit-group">
+          <button
+            type="button"
+            className="quiz-btn quiz-btn--primary"
+            disabled={submitting || selectedForCurrent === undefined}
+            onClick={() => {
+              advancingRef.current = true;
+              goToQuestion(currentIndex + 1);
+            }}
+          >
+            {submitting
+              ? "Submitting…"
+              : currentIndex === totalQuestions - 1
+                ? "Submit Quiz ✓"
+                : "Submit Answer →"}
+          </button>
+          <button
+            type="button"
+            className="quiz-btn quiz-btn--secondary"
+            disabled={submitting}
+            onClick={() => {
+              advancingRef.current = true;
+              goToQuestion(currentIndex + 1);
+            }}
+          >
+            {currentIndex === totalQuestions - 1 ? "Skip & Submit" : "Skip →"}
+          </button>
+        </div>
       </div>
     </main>
   );

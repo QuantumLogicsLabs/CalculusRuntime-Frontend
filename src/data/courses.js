@@ -1,13 +1,20 @@
+import * as MathIcons from '../components/icons/MathIcons';
+
 /** Top-level subject paths shown on Home ("Choose a path"). */
 export const COURSES = [
   {
     id: "calculus-analytical-geometry",
     title: "Calculus and Analytical Geometry",
+    logo: (
+      <span className="math-logo-card">
+        <span className="math-sym-big">∫</span> f(x) dx
+      </span>
+    ),
     description:
       "Single-variable foundations: limits, differentiation, integration, sequences & series, conics, and Taylor series — certificate-ready theory and examples.",
     path: "/courses/calculus-analytical-geometry",
     meta: "6 guides · Tools + practice",
-    icon: "ƒ",
+    icon: "∫",
     color: "gold",
     overview: {
       longDescription: [
@@ -20,7 +27,7 @@ export const COURSES = [
         "Convergence tests, power series & Taylor expansions",
         "Parabolas, ellipses, hyperbolas & analytic geometry",
         "TaylorX interactive derivative visualizer",
-        "Certificate quiz — 30 MCQs, 80 % to pass",
+        "Certificate quiz — 30 MCQs, 80% to pass",
       ],
       prerequisites: "Algebra, basic trigonometry, and function notation.",
     },
@@ -31,6 +38,7 @@ export const COURSES = [
         path: "/limits-continuity/1",
         meta: "2 parts · 6+ examples each",
         icon: "lim",
+        logo: <span className="math-logo">lim<sub>x→a</sub> f(x)</span>,
       },
       {
         title: "Differentiation",
@@ -38,6 +46,7 @@ export const COURSES = [
         path: "/differentiation/1",
         meta: "2 parts · 6 examples each",
         icon: "d/dx",
+        logo: <span className="math-logo">f'(x) = <sup>df</sup>/<sub>dx</sub></span>,
       },
       {
         title: "Integration",
@@ -45,6 +54,7 @@ export const COURSES = [
         path: "/integration/1",
         meta: "2 parts · 6 examples each",
         icon: "∫",
+        logo: <span className="math-logo">∫ f(x) dx</span>,
       },
       {
         title: "Sequences & Infinite Series",
@@ -52,6 +62,7 @@ export const COURSES = [
         path: "/sequences-series/1",
         meta: "2 parts · 8 examples each",
         icon: "Σ",
+        logo: <span className="math-logo">Σ<sub>n=1</sub><sup>∞</sup> a<sub>n</sub></span>,
       },
       {
         title: "Conic Sections",
@@ -59,6 +70,7 @@ export const COURSES = [
         path: "/conic-sections/1",
         meta: "2 parts · 8 examples each",
         icon: "◯",
+        logo: <span className="math-logo">x²/a² + y²/b² = 1</span>,
       },
       {
         title: "Continuity Finder",
@@ -66,6 +78,7 @@ export const COURSES = [
         path: "/test",
         meta: "Interactive tool",
         icon: "lim",
+        logo: <span className="math-logo">lim<sub>x→c</sub> f(x) = f(c)</span>,
       },
       {
         title: "Taylor Series",
@@ -73,6 +86,7 @@ export const COURSES = [
         path: "/taylor-series/1",
         meta: "2 parts · 6+ examples each",
         icon: "Σ",
+        logo: <span className="math-logo">Σ <sup>f<sup>(n)</sup>(a)</sup>/<sub>n!</sub> (x-a)<sup>n</sup></span>,
       },
       {
         title: "TaylorX (Derivative Visualizer)",
@@ -80,6 +94,7 @@ export const COURSES = [
         path: "/taylorx",
         meta: "Interactive tool",
         icon: "Σ",
+        logo: <span className="math-logo">T<sub>n</sub>(x) ≈ f(x)</span>,
       },
       {
         title: "Certification Quiz",
@@ -87,17 +102,23 @@ export const COURSES = [
         path: "/quiz/calculus-analytical-geometry",
         meta: "30 questions · 80% to pass",
         icon: "✓",
+        logo: <span className="math-logo">✓ 30 MCQs · 80%</span>,
       },
     ],
   },
   {
     id: "multivariable-calculus",
     title: "Multivariable Calculus",
+    logo: (
+      <span className="math-logo-card">
+        <span className="math-sym-big">∭</span> curl <span className="math-bold">F</span>
+      </span>
+    ),
     description:
       "Partial derivatives, vector calculus, multiple integrals, Lagrange multipliers, divergence & curl, and Stokes.",
     path: "/courses/multivariable-calculus",
     meta: "Full study path · Guides + tools",
-    icon: "∂",
+    icon: "∇",
     color: "teal",
     overview: {
       longDescription: [
@@ -121,6 +142,7 @@ export const COURSES = [
         path: "/partial-derivatives/1",
         meta: "2 parts · MCQ practice",
         icon: "∂",
+        logo: <span className="math-logo">∂f/∂x, ∂f/∂y</span>,
       },
       {
         title: "Extreme Value Finder",
@@ -128,13 +150,15 @@ export const COURSES = [
         path: "/extreme",
         meta: "Interactive tool",
         icon: "⬆",
+        logo: <span className="math-logo">D = f<sub>xx</sub>f<sub>yy</sub> - f<sub>xy</sub>²</span>,
       },
       {
         title: "Vector Calculus",
-        description: "Line integrals, conservative fields, Green’s theorem, and surfaces.",
+        description: "Line integrals, conservative fields, Green's theorem, and surfaces.",
         path: "/vector-calculus/1",
         meta: "2 parts · Worked examples",
         icon: "∇",
+        logo: <span className="math-logo">∮<sub>C</sub> F · dr</span>,
       },
       {
         title: "Vector Field Visualizer",
@@ -142,6 +166,7 @@ export const COURSES = [
         path: "/vectorfield",
         meta: "Interactive tool",
         icon: "∇",
+        logo: <span className="math-logo">F(x,y) = ⟨P, Q⟩</span>,
       },
       {
         title: "Multiple Integrals",
@@ -149,6 +174,7 @@ export const COURSES = [
         path: "/multiple-integrals/1",
         meta: "2 parts · Worked integrals",
         icon: "∬",
+        logo: <span className="math-logo">∬<sub>R</sub> f(x,y) dA</span>,
       },
       {
         title: "Volume Calculator",
@@ -156,6 +182,7 @@ export const COURSES = [
         path: "/volumecalculator",
         meta: "Interactive tool",
         icon: "∬",
+        logo: <span className="math-logo">V = ∬ (z₂ - z₁) dA</span>,
       },
       {
         title: "Lagrange Multipliers",
@@ -163,6 +190,7 @@ export const COURSES = [
         path: "/lagrange-multipliers/1",
         meta: "2 parts · Applications",
         icon: "λ",
+        logo: <span className="math-logo">∇f = λ ∇g</span>,
       },
       {
         title: "Divergence & Curl",
@@ -170,6 +198,7 @@ export const COURSES = [
         path: "/divergence-curl/1",
         meta: "2 parts · Theorems",
         icon: "∇·",
+        logo: <span className="math-logo">div F, curl F</span>,
       },
       {
         title: "Stokes' Theorem",
@@ -177,6 +206,7 @@ export const COURSES = [
         path: "/stokes-theorem/1",
         meta: "2 parts · Theorem applications",
         icon: "∮",
+        logo: <span className="math-logo">∮<sub>∂S</sub> F·dr = ∬<sub>S</sub> (∇×F)·dS</span>,
       },
       {
         title: "Certification Quiz",
@@ -184,12 +214,18 @@ export const COURSES = [
         path: "/quiz/multivariable-calculus",
         meta: "30 questions · 80% to pass",
         icon: "✓",
+        logo: <span className="math-logo">✓ 30 MCQs · 80%</span>,
       },
     ],
   },
   {
     id: "linear-algebra",
     title: "Linear Algebra",
+    logo: (
+      <span className="math-logo-card">
+        <span className="math-sym-big">A</span>x = b
+      </span>
+    ),
     description:
       "Vectors, matrices, linear systems, eigenvalues, and the algebraic toolkit used across calculus and data science.",
     path: "/courses/linear-algebra",
@@ -219,6 +255,7 @@ export const COURSES = [
         path: "/linear-algebra/overview",
         meta: "Start here",
         icon: "★",
+        logo: <span className="math-logo">ℝ<sup>n</sup> Toolkit</span>,
         start: true,
       },
       {
@@ -227,6 +264,7 @@ export const COURSES = [
         path: "/linear-algebra/linear-equations/1",
         meta: "2 parts · MCQ practice",
         icon: "=",
+        logo: <span className="math-logo">a₁x₁ + ... + aₙxₙ = b</span>,
       },
       {
         title: "Vectors & Vector Spaces",
@@ -234,6 +272,7 @@ export const COURSES = [
         path: "/linear-algebra/vectors/1",
         meta: "2 parts · MCQ practice",
         icon: "v",
+        logo: <span className="math-logo">span&#123;v₁, ..., vₖ&#125;</span>,
       },
       {
         title: "Matrices & Determinants",
@@ -241,6 +280,7 @@ export const COURSES = [
         path: "/linear-algebra/matrices/1",
         meta: "2 parts · MCQ practice",
         icon: "M",
+        logo: <span className="math-logo">det(A) ≠ 0</span>,
       },
       {
         title: "Systems of Linear Equations",
@@ -248,6 +288,7 @@ export const COURSES = [
         path: "/linear-algebra/systems/1",
         meta: "2 parts · MCQ practice",
         icon: "Σ",
+        logo: <span className="math-logo">[A | b] → [I | x]</span>,
       },
       {
         title: "Eigenvalues & Eigenvectors",
@@ -255,6 +296,7 @@ export const COURSES = [
         path: "/linear-algebra/eigen/1",
         meta: "2 parts · MCQ practice",
         icon: "λ",
+        logo: <span className="math-logo">Av = λv</span>,
       },
       {
         title: "Linear Transformations",
@@ -262,6 +304,7 @@ export const COURSES = [
         path: "/linear-algebra/transformations/1",
         meta: "2 parts · MCQ practice",
         icon: "T",
+        logo: <span className="math-logo">T(u + v) = Tu + Tv</span>,
       },
       {
         title: "Orthogonality & Least Squares",
@@ -269,6 +312,7 @@ export const COURSES = [
         path: "/linear-algebra/orthogonality/1",
         meta: "2 parts · MCQ practice",
         icon: "⊥",
+        logo: <span className="math-logo">Q<sup>T</sup>Q = I</span>,
       },
       {
         title: "Singular Value Decomposition",
@@ -276,6 +320,7 @@ export const COURSES = [
         path: "/linear-algebra/svd/1",
         meta: "2 parts · MCQ practice",
         icon: "Σ",
+        logo: <span className="math-logo">A = U Σ V<sup>T</sup></span>,
       },
       {
         title: "Practice Arena",
@@ -283,6 +328,7 @@ export const COURSES = [
         path: "/practice",
         meta: "Interactive · Difficulty tiers",
         icon: "✎",
+        logo: <span className="math-logo">✎ Drill Arena</span>,
       },
       {
         title: "Certification Quiz",
@@ -290,68 +336,87 @@ export const COURSES = [
         path: "/quiz/linear-algebra",
         meta: "30 questions · 80% to pass",
         icon: "✓",
+        logo: <span className="math-logo">✓ 30 MCQs · 80%</span>,
       },
     ],
   },
   {
     id: "probability-statistics",
     title: "Probability and Statistics",
+    logo: (
+      <span className="math-logo-card">
+        <span className="math-sym-big">P</span>(A|B)
+      </span>
+    ),
     description:
-      "Probability models, random variables, distributions, and statistical reasoning for science and engineering.",
+      "Probability foundations, Bayes theorem, random variables, distributions, descriptive statistics, hypothesis testing, and regression analysis.",
     path: "/courses/probability-statistics",
-    meta: "5 modules · Guides + practice",
+    meta: "6 modules · Guides + tools",
     icon: "P",
     color: "purple",
     overview: {
       longDescription: [
-        "Probability and Statistics formalizes the mathematical science of quantifying uncertainty, analyzing random phenomena, and extracting empirical insights from data. Beginning from Kolmogorov's axioms, set operations, and combinatorics, we develop conditional probability and Bayesian updating. The curriculum models discrete and continuous random variables across named distributions including Binomial, Poisson, Exponential, and Gaussian Normal, evaluating expectations, variances, joint densities, and the Central Limit Theorem. Exploratory statistics analyzes central tendency, dispersion, and standardized z-score normalizations. Finally, inferential statistics formalizes point estimation, confidence intervals, classical hypothesis testing via p-values and statistical power, and Ordinary Least Squares linear regression models for predictive analysis."
+        "Probability and Statistics bridges mathematical theory and real-world empirical inference. Master sample spaces, probability axioms, conditional probability, and Bayes' Theorem. Explore discrete and continuous random variables, probability mass and density functions, expected values, variance, and fundamental distributions (Binomial, Poisson, Normal, Exponential). Learn descriptive statistics, central limit theorem, hypothesis testing (z-tests, t-tests, p-values), and linear regression with residual analysis."
       ],
       highlights: [
-        "Sample spaces, axioms & Bayes' theorem",
-        "Discrete & continuous distributions (Binomial, Poisson, Normal)",
-        "Mean, median, variance, z-scores & data displays",
-        "Hypothesis tests, p-values & statistical power",
-        "Least-squares regression & correlation",
-        "Interactive Bayes Lab",
-        "Certificate quiz — 30 MCQs, 80 % to pass",
+        "Sample spaces, axioms & conditional probability",
+        "Bayes' Theorem & interactive Bayes screening lab",
+        "Discrete & continuous random variables (PMF, PDF, CDF)",
+        "Mean, variance, z-scores & central limit theorem",
+        "Hypothesis testing, significance levels & p-values",
+        "Linear regression, correlation coefficient & residuals",
+        "Certificate quiz — 30 MCQs, 80% to pass",
       ],
-      prerequisites: "Basic algebra and familiarity with functions; no prior statistics needed.",
+      prerequisites: "Basic algebra and single-variable calculus.",
     },
     modules: [
       {
         title: "Probability Basics",
-        description: "Sample spaces, events, axioms, conditionals, and Bayes.",
+        description: "Sample spaces, axioms, conditional probability, and Bayes' Theorem.",
         path: "/probability-statistics/probability-basics/1",
-        meta: "2 parts · MCQ practice",
+        meta: "2 parts · Worked examples",
         icon: "P",
+        logo: <span className="math-logo">P(A|B) = <sup>P(A∩B)</sup>/<sub>P(B)</sub></span>,
+      },
+      {
+        title: "Bayes Lab",
+        description: "Interactive Bayesian screening and posterior probability calculator.",
+        path: "/probability-statistics/bayes-lab",
+        meta: "Interactive tool",
+        icon: "⚖",
+        logo: <span className="math-logo">P(B|A) = <sup>P(A|B)P(B)</sup>/<sub>P(A)</sub></span>,
       },
       {
         title: "Random Variables & Distributions",
-        description: "Discrete and continuous RVs, PMFs, PDFs, and named families.",
+        description: "Discrete and continuous random variables, PMFs, PDFs, expectation, and variance.",
         path: "/probability-statistics/random-variables/1",
-        meta: "2 parts · MCQ practice",
+        meta: "2 parts · Worked examples",
         icon: "X",
+        logo: <span className="math-logo">E[X] = μ, Var(X) = σ²</span>,
       },
       {
         title: "Descriptive Statistics",
-        description: "Mean, median, spread, z-scores, and data displays.",
+        description: "Mean, median, mode, variance, standard deviation, and data visualization.",
         path: "/probability-statistics/descriptive-statistics/1",
-        meta: "2 parts · MCQ practice",
-        icon: "μ",
+        meta: "2 parts · Worked examples",
+        icon: "σ",
+        logo: <span className="math-logo">x̄, s² = <sup>1</sup>/<sub>n-1</sub>Σ(x-x̄)²</span>,
       },
       {
         title: "Hypothesis Testing",
-        description: "Null hypotheses, p-values, errors, and power.",
+        description: "Null and alternative hypotheses, z-tests, t-tests, and p-value inference.",
         path: "/probability-statistics/hypothesis-testing/1",
-        meta: "2 parts · MCQ practice",
+        meta: "2 parts · Worked examples",
         icon: "H",
+        logo: <span className="math-logo">z = <sup>(x̄ - μ₀)</sup>/<sub>(σ/√n)</sub></span>,
       },
       {
         title: "Regression & Correlation",
-        description: "Linear association, least squares, and residuals.",
+        description: "Linear association, least squares regression, and residual analysis.",
         path: "/probability-statistics/regression-correlation/1",
         meta: "2 parts · MCQ practice",
         icon: "ρ",
+        logo: <span className="math-logo">ŷ = β₀ + β₁x</span>,
       },
       {
         title: "Practice Arena",
@@ -359,6 +424,7 @@ export const COURSES = [
         path: "/practice",
         meta: "Interactive · Difficulty tiers",
         icon: "✎",
+        logo: <span className="math-logo">✎ Drill Arena</span>,
       },
       {
         title: "Certification Quiz",
@@ -366,6 +432,7 @@ export const COURSES = [
         path: "/quiz/probability-statistics",
         meta: "30 questions · 80% to pass",
         icon: "✓",
+        logo: <span className="math-logo">✓ 30 MCQs · 80%</span>,
       },
     ],
   },
