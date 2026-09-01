@@ -14,7 +14,14 @@ export default function SiteThemeManager() {
       });
     });
 
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-site-theme"],
+    });
+
     document.documentElement.setAttribute("data-site-theme", "default");
+
+    return () => observer.disconnect();
   }, []);
 
   return null;

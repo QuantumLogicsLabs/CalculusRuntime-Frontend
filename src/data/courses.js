@@ -1,5 +1,3 @@
-import * as MathIcons from '../components/icons/MathIcons';
-
 /** Top-level subject paths shown on Home ("Choose a path"). */
 export const COURSES = [
   {

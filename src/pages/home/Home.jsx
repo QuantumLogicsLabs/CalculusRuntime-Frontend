@@ -1,7 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useProgress } from "../../context/ProgressContext";
 import { COURSES } from "../../data/courses";
 
 const guideCards = COURSES.map((c) => ({
@@ -74,7 +73,6 @@ function Home() {
   const [query, setQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user } = useAuth();
-  const { stats } = useProgress();
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const isSearching = query.trim().length > 0;
