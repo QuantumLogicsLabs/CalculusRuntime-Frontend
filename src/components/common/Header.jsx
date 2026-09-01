@@ -129,23 +129,17 @@ function Header({ darkMode, onToggleDark }) {
 
         {user ? (
           <div className="header-user">
-            <Link to="/dashboard" className="header-avatar" title="Dashboard">
-              {user.username?.[0]?.toUpperCase() ?? "U"}
+            <Link to="/dashboard" className="header-auth-btn" title="Dashboard">
+              Profile
             </Link>
           </div>
         ) : (
           <div className="header-auth">
             <Link
-              to="/login"
-              className="header-login"
-            >
-              Sign in
-            </Link>
-            <Link
               to="/signup"
-              className="header-signup"
+              className="header-auth-btn"
             >
-              Sign up
+              Log in / Sign up
             </Link>
           </div>
         )}

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./pages/courses/ProgressContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Layout from "./components/common/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import ErrorBoundary from "./components/common/ErrorBoundary";
@@ -96,8 +97,9 @@ import {
 
 function App() {
   return (
-    <AuthProvider>
-      <ProgressProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ProgressProvider>
         <BrowserRouter>
           <ErrorBoundary>
             <ScrollToTop />
@@ -169,6 +171,7 @@ function App() {
               <Route path="/taylor-series/2" element={<Layout body={<TaylorPart2 />} />} />
 
               <Route path="/certificates" element={<Layout body={<MyCertificates />} />} />
+              <Route path="/my-certificates" element={<Navigate to="/certificates" replace />} />
               <Route path="/verify" element={<Layout body={<VerifyCertificate />} />} />
               <Route path="/certificate/:courseId" element={<Layout body={<Certificate />} />} />
               <Route path="/quiz/:courseId" element={<Layout body={<CourseQuiz />} />} />
@@ -264,6 +267,7 @@ function App() {
         </BrowserRouter>
       </ProgressProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
