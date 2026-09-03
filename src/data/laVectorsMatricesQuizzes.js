@@ -743,3 +743,110 @@ export const LA_M_INV_QUIZ = [
     explanation: "$\\det=3$; adjugate formula gives $(1/3)\\begin{pmatrix}1&-1\\\\-1&4\\end{pmatrix}$.",
   },
 ];
+
+export const LA_M_RANK_QUIZ = [
+  {
+    prompt: "The rank of a matrix is:",
+    options: [
+      "The number of rows it has",
+      "The number of pivots after you reduce it to staircase form",
+      "The largest entry, ignoring sign",
+    ],
+    answer: "B",
+    explanation:
+      "Reduce the matrix and count the leading non-zero entries (the pivots). That count is the rank — it is also the number of rows, or columns, that carry new information.",
+  },
+  {
+    prompt: "$\\operatorname{rank}(I_5)$ (the $5\\times 5$ identity) equals:",
+    options: ["$5$", "$1$", "$25$"],
+    answer: "A",
+    explanation: "The identity is already in staircase form with a pivot in every one of its 5 columns, so the rank is 5.",
+  },
+  {
+    prompt: "The rank of the $3\\times 3$ matrix of all zeros is:",
+    options: ["$3$", "$1$", "$0$"],
+    answer: "C",
+    explanation: "There are no non-zero rows, so there are no pivots. Only the all-zeros matrix has rank 0.",
+  },
+  {
+    prompt: "For a matrix with $m$ rows and $n$ columns, the rank can be at most:",
+    options: ["The smaller of $m$ and $n$", "$m+n$", "$m\\times n$"],
+    answer: "A",
+    explanation: "You can't have more pivots than there are rows, and not more than there are columns, so the rank never passes the smaller of the two.",
+  },
+  {
+    prompt: "$\\operatorname{rank}\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}$ equals:",
+    options: ["$2$", "$1$", "$0$"],
+    answer: "B",
+    explanation: "Row 2 is exactly twice row 1, so it adds nothing new. Only one row carries information, so the rank is 1.",
+  },
+  {
+    prompt: "A $5\\times 5$ matrix has rank $3$. How many independent solutions does $Ax=0$ have?",
+    options: ["$2$", "$3$", "$5$"],
+    answer: "A",
+    explanation: "Adding-up rule: rank + (independent solutions of $Ax=0$) = number of columns. So $3 + ? = 5$ gives 2.",
+  },
+  {
+    prompt: "A square $n\\times n$ matrix has an inverse exactly when its rank is:",
+    options: ["$0$", "$n-1$", "$n$"],
+    answer: "C",
+    explanation: "Full rank (a pivot in every column) is the same as having an inverse, which is the same as $\\det A\\neq 0$.",
+  },
+  {
+    prompt: "For any matrix, the number of independent rows and the number of independent columns are:",
+    options: ["Always the same", "The same only for square matrices", "Not related"],
+    answer: "A",
+    explanation: "These two counts are always equal — that shared value is the rank.",
+  },
+  {
+    prompt: "Doing row operations on a matrix changes its rank:",
+    options: ["Not at all — the rank stays the same", "It can only go down", "It doubles"],
+    answer: "A",
+    explanation: "Row operations just rewrite the same information a different way, so the rank is unchanged. That's why reducing first is a safe way to find it.",
+  },
+  {
+    prompt: "$\\operatorname{rank}\\begin{pmatrix}1&2&3\\\\2&4&6\\\\1&1&1\\end{pmatrix}$ equals:",
+    options: ["$3$", "$2$", "$1$"],
+    answer: "B",
+    explanation: "Row 2 is $2\\times$ row 1, so it adds nothing. Rows 1 and 3 are different from each other, so 2 rows carry information and the rank is 2.",
+  },
+  {
+    prompt: "A matrix with 4 rows and 6 columns has rank 4. Which statement is true?",
+    options: [
+      "All 6 columns are independent",
+      "All 4 rows are independent",
+      "The matrix has an inverse",
+    ],
+    answer: "B",
+    explanation:
+      "Rank 4 with 4 rows means every row carries new information. Six columns can't all be independent (there's only room for 4), and a non-square matrix never has an inverse.",
+  },
+  {
+    prompt: "The columns of a matrix with $n$ columns are all independent exactly when the rank equals:",
+    options: ["The number of rows", "$n$ (the number of columns)", "$0$"],
+    answer: "B",
+    explanation: "Rank $n$ means a pivot in every column, so no column repeats another and there are no free variables.",
+  },
+  {
+    prompt: "For a square matrix, $\\det A\\neq 0$ means the same as:",
+    options: ["$A$ has full rank", "$A$ is symmetric", "$A$ has rank $0$"],
+    answer: "A",
+    explanation: "Non-zero determinant, full rank, and “has an inverse” are three ways of saying the same thing.",
+  },
+  {
+    prompt: "If every column of a matrix is a multiple of one fixed column, its rank is:",
+    options: ["$0$", "$1$", "The number of columns"],
+    answer: "B",
+    explanation: "All the columns point along the same single direction, so only one column's worth of information is present: rank 1.",
+  },
+  {
+    prompt: "How does the rank of a product $AB$ compare with the ranks of $A$ and $B$?",
+    options: [
+      "It is never bigger than the smaller of $\\operatorname{rank}(A)$ and $\\operatorname{rank}(B)$",
+      "It equals $\\operatorname{rank}(A)+\\operatorname{rank}(B)$",
+      "It always equals $\\operatorname{rank}(A)$",
+    ],
+    answer: "A",
+    explanation: "Multiplying can lose information but never create it, so the product's rank can't beat either factor's rank.",
+  },
+];
