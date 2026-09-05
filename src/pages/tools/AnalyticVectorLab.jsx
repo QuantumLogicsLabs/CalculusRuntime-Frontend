@@ -82,6 +82,7 @@ export default function AnalyticVectorLab() {
   const [rotYaw, setRotYaw] = useState(45);     // horizontal azimuth angle (0° to 360°)
   const [zoom3D, setZoom3D] = useState(20);     // scale (pixels per unit)
   const [autoRotate3D, setAutoRotate3D] = useState(false);
+  const [rotSpeed, setRotSpeed] = useState(2.0); // 3D auto-orbit speed (degrees per frame)
   const [hoveredVector, setHoveredVector] = useState(null); // 'u' | 'v' | 'w' | null
   const [hoverInfo, setHoverInfo] = useState(null);
   const isDraggingRef = useRef(false);
@@ -634,17 +635,17 @@ export default function AnalyticVectorLab() {
     ctx.fillStyle = "#0284c7"; ctx.fillText("+Z", zAx - 4, zAy - 8);
   }, [u, v, w, rotPitch, rotYaw, zoom3D, darkMode, hoveredVector]);
 
-  // Auto-rotation loop
+  // Auto-rotation loop (fast and fluid 3D spin)
   useEffect(() => {
     if (!autoRotate3D || activeTab !== "vectors3d") return undefined;
     let animId;
     const loop = () => {
-      setRotYaw((prev) => (prev + 0.55) % 360);
+      setRotYaw((prev) => (prev + rotSpeed) % 360);
       animId = requestAnimationFrame(loop);
     };
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [autoRotate3D, activeTab]);
+  }, [autoRotate3D, activeTab, rotSpeed]);
 
   const handlePointerDown3D = (e) => {
     isDraggingRef.current = true;
@@ -664,13 +665,13 @@ export default function AnalyticVectorLab() {
     if (isDraggingRef.current) {
       const dx = e.clientX - dragStartRef.current.x;
       const dy = e.clientY - dragStartRef.current.y;
-      setRotYaw((dragStartRef.current.yaw - dx * 0.65) % 360);
-      setRotPitch(Math.max(-85, Math.min(85, dragStartRef.current.pitch + dy * 0.65)));
+      setRotYaw((dragStartRef.current.yaw - dx * 1.25) % 360);
+      setRotPitch(Math.max(-85, Math.min(85, dragStartRef.current.pitch + dy * 1.1)));
     } else {
-      // Interactive mouse hover parallax tilt (subtle ±7° angle shift as mouse moves)
+      // Interactive mouse hover parallax tilt (dynamic ±24° horizontal, ±18° vertical angle shift)
       const normX = (mx - rect.width / 2) / (rect.width / 2);
       const normY = (my - rect.height / 2) / (rect.height / 2);
-      hoverOffsetRef.current = { yaw: -normX * 7, pitch: normY * 7 };
+      hoverOffsetRef.current = { yaw: -normX * 24, pitch: normY * 18 };
       draw3DVectors();
 
       // Check distance to vector endpoints for hover tooltip & glow
@@ -1120,10 +1121,19 @@ export default function AnalyticVectorLab() {
                   <button
                     type="button"
                     className="avl-canvas-ctrl-btn"
+                    onClick={() => setRotSpeed((prev) => (prev === 2.0 ? 4.0 : prev === 4.0 ? 1.0 : 2.0))}
+                    title="Toggle 3D rotation speed"
+                  >
+                    {rotSpeed >= 3.5 ? "⚡ Turbo" : rotSpeed >= 1.8 ? "⚡ Fast" : "🐢 Slow"}
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
                     onClick={() => {
                       setRotPitch(24);
                       setRotYaw(45);
                       setZoom3D(20);
+                      setRotSpeed(2.0);
                       hoverOffsetRef.current = { yaw: 0, pitch: 0 };
                     }}
                     title="Reset to default isometric angle"
