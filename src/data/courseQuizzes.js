@@ -37,7 +37,7 @@ export const COURSE_QUIZZES = {
       { q: "Three non-zero vectors u, v, w in 3D space lie in the same plane (coplanar) if and only if:", options: ["u · v = 0","u × v = w","u · (v × w) = 0","|u| = |v| = |w|"], correct: 2 },
       { q: "The symmetric equations of a 3D line passing through P(1, −2, 4) with direction vector v = ⟨3, 5, −1⟩ are:", options: ["(x − 1)/3 = (y + 2)/5 = (z − 4)/(−1)","(x + 1)/3 = (y − 2)/5 = (z + 4)/(−1)","3(x − 1) = 5(y + 2) = −1(z − 4)","x/3 = y/5 = z/(−1)"], correct: 0 },
       { q: "Find the perpendicular distance from point P(1, 2, 3) to the plane 2x − 2y + z + 5 = 0:", options: ["2","6/9","6","3"], correct: 0 },
-      { q: "The derivative of a function measures its:", options: ["Total area","Instantaneous rate of change","Average value","Domain"], correct: 1 },
+      { q: "For two skew lines with direction vectors v₁ and v₂ and points P₁ and P₂ on each line respectively, the shortest distance D is:", options: ["D = |(P₂ − P₁) · (v₁ × v₂)| / |v₁ × v₂|","D = |(P₂ − P₁) × (v₁ · v₂)|","D = |v₁ × v₂| / |P₂ − P₁|","D = (v₁ · v₂) / |P₂ − P₁|"], correct: 0 },
     ],  },
 
   "quiz-multivariable-calculus": {
