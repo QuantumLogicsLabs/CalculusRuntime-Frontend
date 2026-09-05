@@ -71,6 +71,16 @@ export const COURSES = [
         logo: <span className="math-logo">x²/a² + y²/b² = 1</span>,
       },
       {
+        title: "Analytic & 3D Vector Lab",
+        description: "Interactive laboratory for 2D conic rotation of axes, polar conics, scalar triple product, and skew line distance.",
+        path: "/analytic-vector-lab",
+        meta: "Interactive Suite",
+        icon: "📐",
+        logo: <span className="math-logo">B²-4AC &amp; u·(v×w)</span>,
+      },
+
+
+      {
         title: "Continuity Finder",
         description: "Interactive tool for checking continuity conditions at a point or over an interval.",
         path: "/test",

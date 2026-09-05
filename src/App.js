@@ -40,6 +40,8 @@ import ExtremeValueFunction from "./pages/tools/ExtremeValueFinder";
 import VolumeCalculator from "./pages/tools/VolumeCalculator";
 import DerivativeTool from "./components/tools/DerivativeTool";
 import VectorFieldVisualizer from "./pages/tools/VectorFieldVisualizer";
+import AnalyticVectorLab from "./pages/tools/AnalyticVectorLab";
+
 import CheatSheet from "./pages/courses/CheatSheet";
 import Leaderboard from "./pages/dashboard/Leaderboard";
 import Certificate from "./pages/calculus/Certificate";
@@ -245,7 +247,9 @@ function App() {
               <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
+              <Route path="/analytic-vector-lab" element={<Layout body={<AnalyticVectorLab />} />} />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
+
               <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
               <Route path="/cheatsheet" element={<Layout body={<CheatSheet />} />} />
 

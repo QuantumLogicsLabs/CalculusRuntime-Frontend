@@ -31,6 +31,7 @@ const navLinks = [
   // General (site-wide) tools
   { to: "/simple-concepts", label: "Concepts",    type: "General" },
   { to: "/ai-solver",       label: "AI Solver",   type: "General" },
+
   { to: "/cheatsheet",      label: "Cheat Sheet", type: "General" },
   { to: "/practice",        label: "Practice",    type: "General" },
   { to: "/saved",           label: "Saved",       type: "General" },
