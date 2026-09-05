@@ -33,11 +33,11 @@ export const COURSE_QUIZZES = {
       { q: "Given vectors u = ⟨1, 2, 2⟩ and v = ⟨2, −1, 2⟩ in ℝ³, find the cosine of the angle θ between them:", options: ["cos θ = 4/9","cos θ = 0","cos θ = 2/3","cos θ = 1/3"], correct: 0 },
       { q: "Compute the cross product u × v for u = ⟨2, 1, 0⟩ and v = ⟨0, 3, 1⟩:", options: ["⟨1, −2, 6⟩","⟨1, 2, −6⟩","⟨−1, 2, 6⟩","⟨0, 3, 0⟩"], correct: 0 },
       { q: "The area of a triangle in ℝ³ with adjacent edge vectors u and v is given by:", options: ["|u × v|","(1/2) |u × v|","(1/2) (u · v)","|u| · |v|"], correct: 1 },
-      { q: "An improper integral involves:", options: ["Only polynomial integrands","Infinite limits or a discontinuous integrand","Only even functions","No constant of integration"], correct: 1 },
-      { q: "The chain rule is used to differentiate:", options: ["Sums of functions","Composite functions","Constants","Inverse trig functions only"], correct: 1 },
-      { q: "∫ₐᵇ f(x) dx represents:", options: ["The slope of f at x = b","The net signed area under f from a to b","The derivative of f at a","The average of f(a) and f(b)"], correct: 1 },
-      { q: "If a power series converges for |x| < R, R is called the:", options: ["Convergence limit","Radius of convergence","Taylor bound","Series constant"], correct: 1 },
-      { q: "The derivative of a function measures its:", options: ["Total area","Instantaneous rate of change","Average value","Domain"], correct: 1 },
+      { q: "The volume of a parallelepiped formed by vectors u, v, and w in ℝ³ is calculated by:", options: ["|u · (v × w)|","|u × (v × w)|","(u · v) × w","|u| + |v| + |w|"], correct: 0 },
+      { q: "Three non-zero vectors u, v, w in 3D space lie in the same plane (coplanar) if and only if:", options: ["u · v = 0","u × v = w","u · (v × w) = 0","|u| = |v| = |w|"], correct: 2 },
+      { q: "The symmetric equations of a 3D line passing through P(1, −2, 4) with direction vector v = ⟨3, 5, −1⟩ are:", options: ["(x − 1)/3 = (y + 2)/5 = (z − 4)/(−1)","(x + 1)/3 = (y − 2)/5 = (z + 4)/(−1)","3(x − 1) = 5(y + 2) = −1(z − 4)","x/3 = y/5 = z/(−1)"], correct: 0 },
+      { q: "Find the perpendicular distance from point P(1, 2, 3) to the plane 2x − 2y + z + 5 = 0:", options: ["2","6/9","6","3"], correct: 0 },
+      { q: "For two skew lines with direction vectors v₁ and v₂ and points P₁ and P₂ on each line respectively, the shortest distance D is:", options: ["D = |(P₂ − P₁) · (v₁ × v₂)| / |v₁ × v₂|","D = |(P₂ − P₁) × (v₁ · v₂)|","D = |v₁ × v₂| / |P₂ − P₁|","D = (v₁ · v₂) / |P₂ − P₁|"], correct: 0 },
     ],  },
 
   "quiz-multivariable-calculus": {
