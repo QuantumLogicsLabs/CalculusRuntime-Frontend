@@ -80,7 +80,7 @@ export default function AnalyticVectorLab() {
   // 3D Interactive Viewport State (Mouse Orbit, Hover & Zoom)
   const [rotPitch, setRotPitch] = useState(24); // vertical elevation angle (-85° to 85°)
   const [rotYaw, setRotYaw] = useState(45);     // horizontal azimuth angle (0° to 360°)
-  const [zoom3D, setZoom3D] = useState(20);     // scale (pixels per unit)
+  const [zoom3D, setZoom3D] = useState(30);     // scale (pixels per unit, larger graph)
   const [autoRotate3D, setAutoRotate3D] = useState(false);
   const [rotSpeed, setRotSpeed] = useState(2.0); // 3D auto-orbit speed (degrees per frame)
   const [hoveredVector, setHoveredVector] = useState(null); // 'u' | 'v' | 'w' | null
@@ -1129,10 +1129,26 @@ export default function AnalyticVectorLab() {
                   <button
                     type="button"
                     className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoom3D((z) => Math.min(50, z + 4))}
+                    title="Zoom In"
+                  >
+                    🔍+
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoom3D((z) => Math.max(14, z - 4))}
+                    title="Zoom Out"
+                  >
+                    🔍-
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
                     onClick={() => {
                       setRotPitch(24);
                       setRotYaw(45);
-                      setZoom3D(20);
+                      setZoom3D(30);
                       setRotSpeed(2.0);
                       hoverOffsetRef.current = { yaw: 0, pitch: 0 };
                     }}
@@ -1146,8 +1162,8 @@ export default function AnalyticVectorLab() {
               <div style={{ position: "relative" }}>
                 <canvas
                   ref={vector3dCanvasRef}
-                  width={500}
-                  height={320}
+                  width={800}
+                  height={520}
                   className="avl-canvas avl-canvas-3d"
                   onPointerDown={handlePointerDown3D}
                   onPointerMove={handlePointerMove3D}
