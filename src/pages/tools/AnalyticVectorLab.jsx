@@ -39,6 +39,24 @@ function InlineMath({ math }) {
   return <span ref={containerRef} style={{ display: "inline-block", padding: "0 2px" }} />;
 }
 
+const CONIC_PRESETS = [
+  { name: "Circle", A: 1, B: 0, C: 1, D: 0, E: 0, F: -16, desc: "x² + y² = 16" },
+  { name: "Ellipse", A: 4, B: 0, C: 9, D: 0, E: 0, F: -36, desc: "4x² + 9y² = 36" },
+  { name: "Rotated Ellipse", A: 5, B: -6, C: 5, D: 0, E: 0, F: -32, desc: "5x² - 6xy + 5y² = 32" },
+  { name: "Hyperbola", A: 1, B: 0, C: -1, D: 0, E: 0, F: -9, desc: "x² - y² = 9" },
+  { name: "Rotated Hyperbola", A: 0, B: 2, C: 0, D: 0, E: 0, F: -8, desc: "2xy = 8" },
+  { name: "Parabola", A: 1, B: 0, C: 0, D: 0, E: -2, F: 0, desc: "x² - 2y = 0" },
+  { name: "Rotated Parabola", A: 1, B: 2, C: 1, D: -4, E: 4, F: 0, desc: "(x+y)² - 4x + 4y = 0" },
+];
+
+const POLAR_PRESETS = [
+  { name: "Circle (e=0)", e: 0.001, d: 3, func: "cos", sign: "+" },
+  { name: "Ellipse (e=0.6)", e: 0.6, d: 2.5, func: "cos", sign: "+" },
+  { name: "Parabola (e=1.0)", e: 1.0, d: 2.0, func: "cos", sign: "+" },
+  { name: "Hyperbola (e=1.6)", e: 1.6, d: 1.8, func: "cos", sign: "+" },
+  { name: "Vertical Directrix", e: 0.7, d: 3.0, func: "sin", sign: "-" },
+];
+
 export default function AnalyticVectorLab() {
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("conics2d");
@@ -53,11 +71,26 @@ export default function AnalyticVectorLab() {
   const [coefE, setCoefE] = useState(0);
   const [coefF, setCoefF] = useState(0);
 
+  // 2D Conic Interactive Viewport & Feature Toggles
+  const [zoom2D, setZoom2D] = useState(24);
+  const [showRotatedAxes, setShowRotatedAxes] = useState(true);
+  const [showCenterFoci, setShowCenterFoci] = useState(true);
+  const [showAsymptotes, setShowAsymptotes] = useState(true);
+  const [showTangentInspector, setShowTangentInspector] = useState(true);
+  const [hover2D, setHover2D] = useState(null);
+
   // Polar Conic Parameters
   const [polarE, setPolarE] = useState(0.75); // Eccentricity
   const [polarD, setPolarD] = useState(2);    // Directrix distance
   const [polarFunc, setPolarFunc] = useState("cos"); // cos or sin
   const [polarSign, setPolarSign] = useState("+");
+
+  // Polar Conic Interactive Viewport & Feature Toggles
+  const [zoomPolar, setZoomPolar] = useState(26);
+  const [showPolarRays, setShowPolarRays] = useState(true);
+  const [showDirectrix, setShowDirectrix] = useState(true);
+  const [showPolarFocus, setShowPolarFocus] = useState(true);
+  const [hoverPolar, setHoverPolar] = useState(null);
 
   // ----------------------------------------------------
   // Tab 2: 3D Vector Geometry & Distance Calculator
@@ -170,6 +203,63 @@ export default function AnalyticVectorLab() {
   const E_prime = -D * sinT + E * cosT;
   const F_prime = F;
 
+  // Central conic analytical metrics: Center, Foci, and Asymptotes
+  const conicMetrics = useMemo(() => {
+    const det = 4 * A * C - B * B;
+    const hasCenter = Math.abs(det) > 1e-5;
+    const xc = hasCenter ? (-2 * C * D + B * E) / det : 0;
+    const yc = hasCenter ? (-2 * A * E + B * D) / det : 0;
+
+    // Evaluate constant K = -F(xc, yc)
+    const K = -(A * xc * xc + B * xc * yc + C * yc * yc + D * xc + E * yc + F);
+
+    let foci = [];
+    let vertices = [];
+    let asymptoteSlopes = [];
+
+    // If Ellipse (det > 0 and A' * C' > 0 and K / A' > 0)
+    if (det > 0 && Math.abs(A_prime) > 1e-5 && Math.abs(C_prime) > 1e-5) {
+      const a2 = K / A_prime;
+      const b2 = K / C_prime;
+      if (a2 > 0 && b2 > 0) {
+        const a = Math.sqrt(a2);
+        const b = Math.sqrt(b2);
+        if (a >= b) {
+          const c = Math.sqrt(a * a - b * b);
+          foci = [
+            [xc + c * cosT, yc + c * sinT],
+            [xc - c * cosT, yc - c * sinT],
+          ];
+          vertices = [
+            [xc + a * cosT, yc + a * sinT],
+            [xc - a * cosT, yc - a * sinT],
+          ];
+        } else {
+          const c = Math.sqrt(b * b - a * a);
+          foci = [
+            [xc - c * sinT, yc + c * cosT],
+            [xc + c * sinT, yc - c * cosT],
+          ];
+          vertices = [
+            [xc - b * sinT, yc + b * cosT],
+            [xc + b * sinT, yc - b * cosT],
+          ];
+        }
+      }
+    } else if (det < 0 && Math.abs(C_prime) > 1e-5) {
+      // Hyperbola (det < 0)
+      const ratio = -A_prime / C_prime;
+      if (ratio > 0) {
+        const slopePrime = Math.sqrt(ratio);
+        const dir1 = [cosT - slopePrime * sinT, sinT + slopePrime * cosT];
+        const dir2 = [cosT + slopePrime * sinT, sinT - slopePrime * cosT];
+        asymptoteSlopes = [dir1, dir2];
+      }
+    }
+
+    return { hasCenter, xc, yc, foci, vertices, asymptoteSlopes, det };
+  }, [A, B, C, D, E, F, A_prime, C_prime, cosT, sinT]);
+
   // Draw 2D Conic Canvas
   const draw2DConic = useCallback(() => {
     const canvas = canvas2dRef.current;
@@ -184,28 +274,115 @@ export default function AnalyticVectorLab() {
 
     const centerX = width / 2;
     const centerY = height / 2;
-    const scale = 22; // pixels per unit
+    const scale = zoom2D; // pixels per unit
 
-    // Grid lines
-    ctx.strokeStyle = darkMode ? "#1e293b" : "#e2e8f0";
+    // 1. Minor & Major Grid Lines
+    // Minor Grid (every 1 unit)
+    ctx.strokeStyle = darkMode ? "rgba(30, 41, 59, 0.45)" : "rgba(226, 232, 240, 0.65)";
     ctx.lineWidth = 1;
-    for (let x = 0; x <= width; x += scale) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    ctx.beginPath();
+    const maxUnitsX = Math.ceil(width / (2 * scale)) + 1;
+    const maxUnitsY = Math.ceil(height / (2 * scale)) + 1;
+
+    for (let u = -maxUnitsX; u <= maxUnitsX; u++) {
+      if (u % 2 !== 0) {
+        const px = centerX + u * scale;
+        ctx.moveTo(px, 0); ctx.lineTo(px, height);
+      }
     }
-    for (let y = 0; y <= height; y += scale) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+    for (let u = -maxUnitsY; u <= maxUnitsY; u++) {
+      if (u % 2 !== 0) {
+        const py = centerY - u * scale;
+        ctx.moveTo(0, py); ctx.lineTo(width, py);
+      }
+    }
+    ctx.stroke();
+
+    // Major Grid (every 2 units)
+    ctx.strokeStyle = darkMode ? "rgba(51, 65, 85, 0.7)" : "rgba(203, 213, 225, 0.85)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    for (let u = -maxUnitsX; u <= maxUnitsX; u += 2) {
+      if (u !== 0) {
+        const px = centerX + u * scale;
+        ctx.moveTo(px, 0); ctx.lineTo(px, height);
+      }
+    }
+    for (let u = -maxUnitsY; u <= maxUnitsY; u += 2) {
+      if (u !== 0) {
+        const py = centerY - u * scale;
+        ctx.moveTo(0, py); ctx.lineTo(width, py);
+      }
+    }
+    ctx.stroke();
+
+    // 2. Numeric Coordinate Ticks along Main Axes
+    ctx.font = "600 10px 'JetBrains Mono', monospace";
+    ctx.fillStyle = darkMode ? "#94a3b8" : "#64748b";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
+    for (let u = -maxUnitsX; u <= maxUnitsX; u += 2) {
+      if (u !== 0) {
+        const px = centerX + u * scale;
+        ctx.beginPath(); ctx.moveTo(px, centerY - 3); ctx.lineTo(px, centerY + 3); ctx.stroke();
+        ctx.fillText(u.toString(), px, centerY + 5);
+      }
+    }
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    for (let u = -maxUnitsY; u <= maxUnitsY; u += 2) {
+      if (u !== 0) {
+        const py = centerY - u * scale;
+        ctx.beginPath(); ctx.moveTo(centerX - 3, py); ctx.lineTo(centerX + 3, py); ctx.stroke();
+        ctx.fillText(u.toString(), centerX - 6, py);
+      }
     }
 
-    // Original Axes (x, y)
-    ctx.strokeStyle = darkMode ? "#94a3b8" : "#64748b";
+    // Helper: 2D Arrow
+    const drawArrow2D = (fromX, fromY, toX, toY, color) => {
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const len = Math.hypot(dx, dy);
+      if (len < 1e-3) return;
+      const ux = dx / len;
+      const uy = dy / len;
+      const perpX = -uy;
+      const perpY = ux;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(toX - ux * 8 + perpX * 4, toY - uy * 8 + perpY * 4);
+      ctx.lineTo(toX - ux * 8 - perpX * 4, toY - uy * 8 - perpY * 4);
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    // 3. Original Axes (x, y) with Arrows & Origin Marker
+    ctx.strokeStyle = darkMode ? "#94a3b8" : "#475569";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, centerY); ctx.lineTo(width, centerY);
     ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height);
     ctx.stroke();
 
-    // Rotated Axes (x', y') in Sky Blue (not gold)
-    if (B !== 0) {
+    // Origin circle O(0,0)
+    ctx.fillStyle = darkMode ? "#94a3b8" : "#475569";
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillText("O", centerX - 7, centerY + 12);
+
+    drawArrow2D(width - 20, centerY, width - 2, centerY, darkMode ? "#94a3b8" : "#475569");
+    drawArrow2D(centerX, 20, centerX, 2, darkMode ? "#94a3b8" : "#475569");
+
+    ctx.font = "bold 13px Inter, sans-serif";
+    ctx.fillStyle = darkMode ? "#f8fafc" : "#0f172a";
+    ctx.fillText("+x", width - 16, centerY - 14);
+    ctx.fillText("+y", centerX + 18, 14);
+
+    // 4. Rotated Axes (x', y') with Angle Arc & Readout
+    if (showRotatedAxes && B !== 0) {
       ctx.strokeStyle = darkMode ? "#38bdf8" : "#0284c7";
       ctx.lineWidth = 1.8;
       ctx.setLineDash([5, 4]);
@@ -223,43 +400,286 @@ export default function AnalyticVectorLab() {
       ctx.moveTo(centerX - dirY1X * height, centerY - dirY1Y * height);
       ctx.lineTo(centerX + dirY1X * height, centerY + dirY1Y * height);
       ctx.stroke();
-
       ctx.setLineDash([]);
-    }
 
-    // Plot Conic Curve: Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
-    ctx.fillStyle = darkMode ? "#60a5fa" : "#0056D2";
-    const step = 2;
-    for (let px = 0; px < width; px += step) {
-      for (let py = 0; py < height; py += step) {
-        const x = (px - centerX) / scale;
-        const y = (centerY - py) / scale;
+      const rxTipX = centerX + dirX * (Math.min(width, height) * 0.44);
+      const rxTipY = centerY + dirY * (Math.min(width, height) * 0.44);
+      drawArrow2D(centerX, centerY, rxTipX, rxTipY, darkMode ? "#38bdf8" : "#0284c7");
 
-        const val = A * x * x + B * x * y + C * y * y + D * x + E * y + F;
-        const xNext = (px + step - centerX) / scale;
-        const yNext = (centerY - py) / scale;
-        const valNext = A * xNext * xNext + B * xNext * yNext + C * yNext * yNext + D * xNext + E * yNext + F;
-
-        if (val * valNext <= 0 && Math.abs(val - valNext) < 12) {
-          ctx.fillRect(px, py, 2.5, 2.5);
-        }
-      }
-    }
-
-    // Labeling
-    ctx.font = "bold 12px Inter, sans-serif";
-    ctx.fillStyle = darkMode ? "#f8fafc" : "#0f172a";
-    ctx.fillText("x", width - 15, centerY - 8);
-    ctx.fillText("y", centerX + 8, 16);
-    if (B !== 0) {
+      ctx.font = "bold 12px Inter, sans-serif";
       ctx.fillStyle = darkMode ? "#38bdf8" : "#0284c7";
+      ctx.fillText(`x' (${rotAngleDeg.toFixed(1)}°)`, rxTipX + 8, rxTipY - 8);
+
+      // Angle arc showing theta from +x to +x'
+      ctx.strokeStyle = darkMode ? "#38bdf8" : "#0284c7";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      const arcR = 38;
+      ctx.arc(centerX, centerY, arcR, 0, -rotAngleRad, rotAngleRad > 0);
+      ctx.stroke();
+      ctx.font = "bold 10px Inter, sans-serif";
       ctx.fillText(
-        `x' (${rotAngleDeg.toFixed(1)}°)`,
-        centerX + 110 * Math.cos(rotAngleRad),
-        centerY - 110 * Math.sin(rotAngleRad)
+        `θ=${rotAngleDeg.toFixed(1)}°`,
+        centerX + arcR * Math.cos(-rotAngleRad / 2) + 8,
+        centerY + arcR * Math.sin(-rotAngleRad / 2)
       );
     }
-  }, [A, B, C, D, E, F, rotAngleRad, rotAngleDeg, darkMode]);
+
+    // 5. Asymptotes for Hyperbola
+    if (showAsymptotes && conicMetrics.asymptoteSlopes.length > 0 && conicMetrics.hasCenter) {
+      const { xc, yc, asymptoteSlopes } = conicMetrics;
+      const cPx = centerX + xc * scale;
+      const cPy = centerY - yc * scale;
+
+      ctx.strokeStyle = darkMode ? "rgba(245, 158, 11, 0.8)" : "rgba(217, 119, 6, 0.85)";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 5]);
+
+      asymptoteSlopes.forEach((dir) => {
+        const len = width + height;
+        const dx = dir[0] * len;
+        const dy = -dir[1] * len;
+        ctx.beginPath();
+        ctx.moveTo(cPx - dx, cPy - dy);
+        ctx.lineTo(cPx + dx, cPy + dy);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      ctx.font = "italic 11px Inter, sans-serif";
+      ctx.fillStyle = darkMode ? "#f59e0b" : "#d97706";
+      ctx.fillText("Asymptotes", cPx + 15, cPy - 15);
+    }
+
+    // 6. Vector-Smooth Marching Segments Conic Plotting
+    ctx.strokeStyle = darkMode ? "#38bdf8" : "#0056D2";
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+
+    const cellSize = 3;
+    const cols = Math.ceil(width / cellSize);
+    const rows = Math.ceil(height / cellSize);
+
+    let prevRowValues = new Float64Array(cols + 1);
+    for (let c = 0; c <= cols; c++) {
+      const mx = (c * cellSize - centerX) / scale;
+      const my = (centerY - 0) / scale;
+      prevRowValues[c] = A * mx * mx + B * mx * my + C * my * my + D * mx + E * my + F;
+    }
+
+    for (let r = 0; r < rows; r++) {
+      const nextY = (r + 1) * cellSize;
+      const nextMathY = (centerY - nextY) / scale;
+      const currRowValues = new Float64Array(cols + 1);
+
+      for (let c = 0; c <= cols; c++) {
+        const mx = (c * cellSize - centerX) / scale;
+        currRowValues[c] = A * mx * mx + B * mx * nextMathY + C * nextMathY * nextMathY + D * mx + E * nextMathY + F;
+      }
+
+      for (let c = 0; c < cols; c++) {
+        const v0 = prevRowValues[c];
+        const v1 = prevRowValues[c + 1];
+        const v2 = currRowValues[c + 1];
+        const v3 = currRowValues[c];
+
+        const px = c * cellSize;
+        const py = r * cellSize;
+
+        const edgePts = [];
+        if ((v0 <= 0 && v1 > 0) || (v0 > 0 && v1 <= 0)) {
+          const t = -v0 / (v1 - v0);
+          edgePts.push([px + t * cellSize, py]);
+        }
+        if ((v1 <= 0 && v2 > 0) || (v1 > 0 && v2 <= 0)) {
+          const t = -v1 / (v2 - v1);
+          edgePts.push([px + cellSize, py + t * cellSize]);
+        }
+        if ((v3 <= 0 && v2 > 0) || (v3 > 0 && v2 <= 0)) {
+          const t = -v3 / (v2 - v3);
+          edgePts.push([px + t * cellSize, py + cellSize]);
+        }
+        if ((v0 <= 0 && v3 > 0) || (v0 > 0 && v3 <= 0)) {
+          const t = -v0 / (v3 - v0);
+          edgePts.push([px, py + t * cellSize]);
+        }
+
+        if (edgePts.length >= 2) {
+          ctx.moveTo(edgePts[0][0], edgePts[0][1]);
+          ctx.lineTo(edgePts[1][0], edgePts[1][1]);
+        }
+      }
+      prevRowValues = currRowValues;
+    }
+    ctx.stroke();
+
+    // 7. Center & Foci / Vertices Markers
+    if (showCenterFoci && conicMetrics.hasCenter) {
+      const { xc, yc, foci, vertices } = conicMetrics;
+      const cPx = centerX + xc * scale;
+      const cPy = centerY - yc * scale;
+
+      if (cPx >= -20 && cPx <= width + 20 && cPy >= -20 && cPy <= height + 20) {
+        ctx.fillStyle = "#e11d48";
+        ctx.beginPath();
+        ctx.arc(cPx, cPy, 4.5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.font = "bold 11px Inter, sans-serif";
+        ctx.fillText(`Center (${xc.toFixed(2)}, ${yc.toFixed(2)})`, cPx + 8, cPy - 6);
+      }
+
+      foci.forEach(([fx, fy], idx) => {
+        const fPx = centerX + fx * scale;
+        const fPy = centerY - fy * scale;
+        if (fPx >= 0 && fPx <= width && fPy >= 0 && fPy <= height) {
+          ctx.fillStyle = "#8b5cf6";
+          ctx.beginPath();
+          ctx.arc(fPx, fPy, 4, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.font = "bold 10px Inter, sans-serif";
+          ctx.fillText(`F${idx + 1}(${fx.toFixed(1)}, ${fy.toFixed(1)})`, fPx + 7, fPy + 4);
+        }
+      });
+
+      vertices.forEach(([vx, vy]) => {
+        const vPx = centerX + vx * scale;
+        const vPy = centerY - vy * scale;
+        if (vPx >= 0 && vPx <= width && vPy >= 0 && vPy <= height) {
+          ctx.fillStyle = "#059669";
+          ctx.beginPath();
+          ctx.arc(vPx, vPy, 3.5, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      });
+    }
+
+    // 8. Interactive Tangent Line & Normal Vector Inspector
+    if (showTangentInspector && hover2D && hover2D.onCurve) {
+      const { ptX, ptY, tangentSlope, normalVec } = hover2D;
+      const pPx = centerX + ptX * scale;
+      const pPy = centerY - ptY * scale;
+
+      // Tangent Line
+      ctx.strokeStyle = "#a855f7";
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      if (tangentSlope !== null) {
+        const x1 = -maxUnitsX;
+        const y1 = ptY + tangentSlope * (x1 - ptX);
+        const x2 = maxUnitsX;
+        const y2 = ptY + tangentSlope * (x2 - ptX);
+        ctx.moveTo(centerX + x1 * scale, centerY - y1 * scale);
+        ctx.lineTo(centerX + x2 * scale, centerY - y2 * scale);
+      } else {
+        ctx.moveTo(pPx, 0);
+        ctx.lineTo(pPx, height);
+      }
+      ctx.stroke();
+
+      // Normal Vector Arrow
+      if (normalVec) {
+        const normLen = Math.hypot(normalVec[0], normalVec[1]);
+        if (normLen > 1e-4) {
+          const arrowLen = 45;
+          const nx = (normalVec[0] / normLen) * arrowLen;
+          const ny = -(normalVec[1] / normLen) * arrowLen;
+          ctx.strokeStyle = "#10b981";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(pPx, pPy);
+          ctx.lineTo(pPx + nx, pPy + ny);
+          ctx.stroke();
+          drawArrow2D(pPx, pPy, pPx + nx, pPy + ny, "#10b981");
+
+          ctx.fillStyle = "#10b981";
+          ctx.font = "bold 11px Inter, sans-serif";
+          ctx.fillText("∇F (Normal)", pPx + nx + 6, pPy + ny);
+        }
+      }
+
+      // Point on curve
+      ctx.fillStyle = "#a855f7";
+      ctx.beginPath();
+      ctx.arc(pPx, pPy, 5.5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // 9. Corner Live Coordinate Badge
+    if (hover2D) {
+      ctx.font = "600 11px 'JetBrains Mono', monospace";
+      ctx.fillStyle = darkMode ? "#94a3b8" : "#475569";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `Cursor: (${hover2D.x.toFixed(2)}, ${hover2D.y.toFixed(2)}) | F(x,y) = ${hover2D.F_val.toFixed(2)}`,
+        12,
+        height - 12
+      );
+    }
+  }, [
+    A, B, C, D, E, F,
+    rotAngleRad, rotAngleDeg,
+    zoom2D, showRotatedAxes, showCenterFoci, showAsymptotes, showTangentInspector,
+    hover2D, conicMetrics, darkMode
+  ]);
+
+  // Handle 2D Canvas Mouse Interactions
+  const handleMouseMove2D = useCallback((e) => {
+    const canvas = canvas2dRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top) * scaleY;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const mathX = (cx - centerX) / zoom2D;
+    const mathY = (centerY - cy) / zoom2D;
+
+    const F_val = A * mathX * mathX + B * mathX * mathY + C * mathY * mathY + D * mathX + E * mathY + F;
+    const F_x = 2 * A * mathX + B * mathY + D;
+    const F_y = B * mathX + 2 * C * mathY + E;
+    const gradNorm = Math.hypot(F_x, F_y);
+
+    const distToCurve = gradNorm > 1e-4 ? F_val / gradNorm : 999;
+    const isNearCurve = Math.abs(distToCurve) < 0.8;
+
+    let ptX = mathX;
+    let ptY = mathY;
+    let tangentSlope = null;
+    let normalVec = null;
+
+    if (isNearCurve && gradNorm > 1e-4) {
+      ptX = mathX - distToCurve * (F_x / gradNorm);
+      ptY = mathY - distToCurve * (F_y / gradNorm);
+      const exactFx = 2 * A * ptX + B * ptY + D;
+      const exactFy = B * ptX + 2 * C * ptY + E;
+      tangentSlope = Math.abs(exactFy) > 1e-4 ? -exactFx / exactFy : null;
+      normalVec = [exactFx, exactFy];
+    }
+
+    setHover2D({
+      x: mathX,
+      y: mathY,
+      canvasX: cx,
+      canvasY: cy,
+      onCurve: isNearCurve,
+      ptX,
+      ptY,
+      tangentSlope,
+      normalVec,
+      F_val,
+    });
+  }, [A, B, C, D, E, F, zoom2D]);
+
+  const handleMouseLeave2D = useCallback(() => {
+    setHover2D(null);
+  }, []);
 
   // Draw Polar Conic Canvas
   const drawPolarConic = useCallback(() => {
@@ -275,38 +695,122 @@ export default function AnalyticVectorLab() {
 
     const centerX = width / 2;
     const centerY = height / 2;
-    const scale = 24;
+    const scale = zoomPolar; // pixels per unit
 
-    // Concentric polar grid
-    ctx.strokeStyle = darkMode ? "#1e293b" : "#e2e8f0";
+    // 1. Concentric Polar Circles & Radii Labels
+    ctx.strokeStyle = darkMode ? "rgba(30, 41, 59, 0.6)" : "rgba(226, 232, 240, 0.85)";
     ctx.lineWidth = 1;
-    for (let r = 1; r <= 8; r++) {
+    ctx.font = "600 10px 'JetBrains Mono', monospace";
+    ctx.fillStyle = darkMode ? "#64748b" : "#94a3b8";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+
+    const maxR = Math.min(10, Math.floor(Math.min(width, height) / (2 * scale)));
+    for (let r = 1; r <= maxR; r++) {
       ctx.beginPath();
       ctx.arc(centerX, centerY, r * scale, 0, 2 * Math.PI);
       ctx.stroke();
+      if (r % 2 === 0) {
+        ctx.fillText(`r=${r}`, centerX + r * scale + 3, centerY - 6);
+      }
     }
 
-    // Axes
+    // 2. 12 Radial Spokes with Radians / Degrees Labels
+    if (showPolarRays) {
+      ctx.strokeStyle = darkMode ? "rgba(51, 65, 85, 0.4)" : "rgba(203, 213, 225, 0.6)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 4]);
+
+      const angles = [
+        { rad: 0, label: "0°" },
+        { rad: Math.PI / 6, label: "30° (π/6)" },
+        { rad: Math.PI / 4, label: "45° (π/4)" },
+        { rad: Math.PI / 3, label: "60° (π/3)" },
+        { rad: Math.PI / 2, label: "90° (π/2)" },
+        { rad: (2 * Math.PI) / 3, label: "120°" },
+        { rad: (3 * Math.PI) / 4, label: "135°" },
+        { rad: (5 * Math.PI) / 6, label: "150°" },
+        { rad: Math.PI, label: "180° (π)" },
+        { rad: (7 * Math.PI) / 6, label: "210°" },
+        { rad: (5 * Math.PI) / 4, label: "225°" },
+        { rad: (4 * Math.PI) / 3, label: "240°" },
+        { rad: (3 * Math.PI) / 2, label: "270° (3π/2)" },
+        { rad: (5 * Math.PI) / 3, label: "300°" },
+        { rad: (7 * Math.PI) / 4, label: "315°" },
+        { rad: (11 * Math.PI) / 6, label: "330°" },
+      ];
+
+      const rayRadius = Math.min(width, height) * 0.46;
+      angles.forEach(({ rad, label }) => {
+        const rx = centerX + rayRadius * Math.cos(rad);
+        const ry = centerY - rayRadius * Math.sin(rad);
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(rx, ry);
+        ctx.stroke();
+
+        ctx.font = "500 9px 'JetBrains Mono', monospace";
+        ctx.fillStyle = darkMode ? "#94a3b8" : "#64748b";
+        ctx.fillText(label, rx + 4 * Math.cos(rad), ry - 4 * Math.sin(rad));
+      });
+      ctx.setLineDash([]);
+    }
+
+    // 3. Axes
     ctx.strokeStyle = darkMode ? "#94a3b8" : "#64748b";
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1.6;
     ctx.beginPath();
     ctx.moveTo(0, centerY); ctx.lineTo(width, centerY);
     ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height);
     ctx.stroke();
 
-    // Plot Polar Curve r = e*d / (1 ± e * (cos or sin) theta)
+    // 4. Directrix Line: x = ±d or y = ±d
+    if (showDirectrix) {
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 5]);
+
+      const sgn = polarSign === "+" ? 1 : -1;
+      const dirDist = sgn * polarD;
+
+      if (polarFunc === "cos") {
+        const dirPx = centerX + dirDist * scale;
+        ctx.beginPath();
+        ctx.moveTo(dirPx, 0);
+        ctx.lineTo(dirPx, height);
+        ctx.stroke();
+
+        ctx.font = "bold 11px Inter, sans-serif";
+        ctx.fillStyle = "#f59e0b";
+        ctx.fillText(`Directrix: x = ${dirDist.toFixed(1)}`, dirPx + 6, 20);
+      } else {
+        const dirPy = centerY - dirDist * scale;
+        ctx.beginPath();
+        ctx.moveTo(0, dirPy);
+        ctx.lineTo(width, dirPy);
+        ctx.stroke();
+
+        ctx.font = "bold 11px Inter, sans-serif";
+        ctx.fillStyle = "#f59e0b";
+        ctx.fillText(`Directrix: y = ${dirDist.toFixed(1)}`, 14, dirPy - 8);
+      }
+      ctx.setLineDash([]);
+    }
+
+    // 5. Polar Conic Trajectory: r = e*d / (1 ± e * [cos|sin] θ)
     ctx.strokeStyle = darkMode ? "#38bdf8" : "#0284c7";
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2.6;
     ctx.beginPath();
     let started = false;
 
-    for (let theta = 0; theta <= 2 * Math.PI; theta += 0.01) {
+    const sgn = polarSign === "+" ? 1 : -1;
+    for (let theta = 0; theta <= 2 * Math.PI + 0.02; theta += 0.005) {
       const denomTerm = polarFunc === "cos" ? Math.cos(theta) : Math.sin(theta);
-      const denom = 1 + (polarSign === "+" ? 1 : -1) * polarE * denomTerm;
+      const denom = 1 + sgn * polarE * denomTerm;
 
-      if (Math.abs(denom) > 0.01) {
+      if (Math.abs(denom) > 0.03) {
         const r = (polarE * polarD) / denom;
-        if (r > 0 && r < 18) {
+        if (r > 0 && r < 35) {
           const x = r * Math.cos(theta);
           const y = r * Math.sin(theta);
           const px = centerX + x * scale;
@@ -326,7 +830,105 @@ export default function AnalyticVectorLab() {
       }
     }
     ctx.stroke();
-  }, [polarE, polarD, polarFunc, polarSign, darkMode]);
+
+    // 6. Focus & Vertex Markers
+    if (showPolarFocus) {
+      ctx.fillStyle = "#38bdf8";
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.font = "bold 11px Inter, sans-serif";
+      ctx.fillStyle = darkMode ? "#38bdf8" : "#0284c7";
+      ctx.fillText("Focus F₁(0,0)", centerX + 8, centerY + 14);
+
+      const computeVertex = (th) => {
+        const trm = polarFunc === "cos" ? Math.cos(th) : Math.sin(th);
+        const dnm = 1 + sgn * polarE * trm;
+        if (dnm > 0.01) {
+          const vr = (polarE * polarD) / dnm;
+          const vx = vr * Math.cos(th);
+          const vy = vr * Math.sin(th);
+          return [vx, vy];
+        }
+        return null;
+      };
+
+      const primaryTheta = polarFunc === "cos" ? 0 : Math.PI / 2;
+      const oppositeTheta = polarFunc === "cos" ? Math.PI : (3 * Math.PI) / 2;
+
+      const v1 = computeVertex(primaryTheta);
+      const v2 = computeVertex(oppositeTheta);
+
+      [v1, v2].forEach((vt, i) => {
+        if (vt) {
+          const vPx = centerX + vt[0] * scale;
+          const vPy = centerY - vt[1] * scale;
+          if (vPx >= 0 && vPx <= width && vPy >= 0 && vPy <= height) {
+            ctx.fillStyle = "#10b981";
+            ctx.beginPath();
+            ctx.arc(vPx, vPy, 4.5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.font = "bold 10px Inter, sans-serif";
+            ctx.fillText(`V${i + 1}(${vt[0].toFixed(1)}, ${vt[1].toFixed(1)})`, vPx + 6, vPy - 6);
+          }
+        }
+      });
+    }
+
+    // 7. Polar Hover Cursor Readout
+    if (hoverPolar) {
+      ctx.font = "600 11px 'JetBrains Mono', monospace";
+      ctx.fillStyle = darkMode ? "#94a3b8" : "#475569";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `Polar: (r: ${hoverPolar.r.toFixed(2)}, θ: ${hoverPolar.thetaDeg.toFixed(1)}°) | Cartesian: (${hoverPolar.x.toFixed(2)}, ${hoverPolar.y.toFixed(2)})`,
+        12,
+        height - 12
+      );
+    }
+  }, [
+    polarE, polarD, polarFunc, polarSign,
+    zoomPolar, showPolarRays, showDirectrix, showPolarFocus,
+    hoverPolar, darkMode
+  ]);
+
+  // Handle Polar Canvas Mouse Interactions
+  const handleMouseMovePolar = useCallback((e) => {
+    const canvas = polarCanvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top) * scaleY;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const mathX = (cx - centerX) / zoomPolar;
+    const mathY = (centerY - cy) / zoomPolar;
+
+    const r = Math.hypot(mathX, mathY);
+    let thetaRad = Math.atan2(mathY, mathX);
+    if (thetaRad < 0) thetaRad += 2 * Math.PI;
+    const thetaDeg = (thetaRad * 180) / Math.PI;
+
+    setHoverPolar({
+      x: mathX,
+      y: mathY,
+      r,
+      thetaDeg,
+      thetaRad,
+      canvasX: cx,
+      canvasY: cy,
+    });
+  }, [zoomPolar]);
+
+  const handleMouseLeavePolar = useCallback(() => {
+    setHoverPolar(null);
+  }, []);
 
   // ====================================================
   // Math Calculations: 3D Vector Geometry
@@ -786,6 +1388,29 @@ export default function AnalyticVectorLab() {
 
             <MathBlock math="Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0" />
 
+            {/* Quick Presets Bar */}
+            <div className="avl-presets-wrapper">
+              <span className="avl-presets-label">⚡ Presets:</span>
+              {CONIC_PRESETS.map((p) => (
+                <button
+                  key={p.name}
+                  type="button"
+                  className="avl-preset-btn"
+                  onClick={() => {
+                    setCoefA(p.A);
+                    setCoefB(p.B);
+                    setCoefC(p.C);
+                    setCoefD(p.D);
+                    setCoefE(p.E);
+                    setCoefF(p.F);
+                  }}
+                  title={p.desc}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+
             {/* Inputs */}
             <div className="avl-inputs-row">
               <div className="avl-input-group">
@@ -877,18 +1502,127 @@ export default function AnalyticVectorLab() {
               )}
             </div>
 
-            {/* Interactive Canvas */}
+            {/* Interactive 2D Canvas */}
             <div className="avl-canvas-wrapper">
               <div className="avl-canvas-header">
-                <span>Original (x,y) &amp; Rotated (x',y') Plane</span>
-                <span style={{ color: darkMode ? "#38bdf8" : "#0284c7" }}>Sky Blue = Rotated Axes</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <span>2D Conic &amp; Rotated Axes Viewport</span>
+                  <span
+                    className="avl-badge-pill"
+                    style={{
+                      background: darkMode ? "rgba(56, 189, 248, 0.15)" : "rgba(0, 86, 210, 0.1)",
+                      color: darkMode ? "#38bdf8" : "#0056D2",
+                      fontSize: "0.72rem",
+                    }}
+                  >
+                    🎯 Interactive Tangent Inspector
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showRotatedAxes ? "active" : ""}`}
+                    onClick={() => setShowRotatedAxes((prev) => !prev)}
+                    title="Toggle Rotated Axes (x', y')"
+                  >
+                    📐 Rotated Axes
+                  </button>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showCenterFoci ? "active" : ""}`}
+                    onClick={() => setShowCenterFoci((prev) => !prev)}
+                    title="Toggle Center & Foci"
+                  >
+                    📍 Center/Foci
+                  </button>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showAsymptotes ? "active" : ""}`}
+                    onClick={() => setShowAsymptotes((prev) => !prev)}
+                    title="Toggle Hyperbolic Asymptotes"
+                  >
+                    〰️ Asymptotes
+                  </button>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showTangentInspector ? "active" : ""}`}
+                    onClick={() => setShowTangentInspector((prev) => !prev)}
+                    title="Toggle Tangent & Normal Vector Inspector on Hover"
+                  >
+                    🎯 Tangent Line
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoom2D((z) => Math.min(48, z + 4))}
+                    title="Zoom In"
+                  >
+                    🔍+
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoom2D((z) => Math.max(12, z - 4))}
+                    title="Zoom Out"
+                  >
+                    🔍-
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoom2D(24)}
+                    title="Reset Zoom"
+                  >
+                    ↺
+                  </button>
+                </div>
               </div>
-              <canvas
-                ref={canvas2dRef}
-                width={500}
-                height={320}
-                className="avl-canvas"
-              />
+
+              <div style={{ position: "relative" }}>
+                <canvas
+                  ref={canvas2dRef}
+                  width={720}
+                  height={440}
+                  className="avl-canvas avl-canvas-2d"
+                  onMouseMove={handleMouseMove2D}
+                  onMouseLeave={handleMouseLeave2D}
+                />
+
+                {/* Floating 2D Tangent & Normal Inspector Tooltip */}
+                {showTangentInspector && hover2D && hover2D.onCurve && (
+                  <div
+                    className="avl-2d-tooltip"
+                    style={{
+                      left: Math.min(Math.max(hover2D.canvasX + 15, 10), 450),
+                      top: Math.min(Math.max(hover2D.canvasY - 70, 10), 340),
+                      borderColor: "#a855f7",
+                    }}
+                  >
+                    <div style={{ color: "#c084fc", fontWeight: 800, marginBottom: "2px" }}>
+                      🎯 Point on Curve: P({hover2D.ptX.toFixed(2)}, {hover2D.ptY.toFixed(2)})
+                    </div>
+                    <div>
+                      <strong>Tangent Slope m:</strong>{" "}
+                      {hover2D.tangentSlope !== null ? hover2D.tangentSlope.toFixed(3) : "Undefined (Vertical)"}
+                    </div>
+                    {hover2D.tangentSlope !== null && (
+                      <div>
+                        <strong>Tangent Eq:</strong> y - ({hover2D.ptY.toFixed(2)}) = {hover2D.tangentSlope.toFixed(2)}[x - ({hover2D.ptX.toFixed(2)})]
+                      </div>
+                    )}
+                    {hover2D.normalVec && (
+                      <div style={{ color: "#34d399", fontSize: "0.76rem", marginTop: "2px" }}>
+                        <strong>Normal ∇F:</strong> ⟨{hover2D.normalVec[0].toFixed(2)}, {hover2D.normalVec[1].toFixed(2)}⟩
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="avl-3d-hint">
+                  🖱️ Hover near curve to inspect Tangent &amp; Normal Vector · Use zoom buttons
+                </div>
+              </div>
             </div>
           </div>
 
@@ -910,6 +1644,26 @@ export default function AnalyticVectorLab() {
             </div>
 
             <MathBlock math={`r = \\frac{e \\cdot d}{1 ${polarSign} e\\${polarFunc}(\\theta)}`} />
+
+            {/* Quick Polar Presets Bar */}
+            <div className="avl-presets-wrapper">
+              <span className="avl-presets-label">⚡ Presets:</span>
+              {POLAR_PRESETS.map((p) => (
+                <button
+                  key={p.name}
+                  type="button"
+                  className="avl-preset-btn"
+                  onClick={() => {
+                    setPolarE(p.e);
+                    setPolarD(p.d);
+                    setPolarFunc(p.func);
+                    setPolarSign(p.sign);
+                  }}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
 
             {/* Sliders and Selects */}
             <div style={{ display: "flex", flexDirection: "column", gap: "1.15rem" }}>
@@ -977,15 +1731,103 @@ export default function AnalyticVectorLab() {
             {/* Polar Canvas */}
             <div className="avl-canvas-wrapper">
               <div className="avl-canvas-header">
-                <span>Polar Radar Plot (Focus at Origin)</span>
-                <span style={{ color: darkMode ? "#38bdf8" : "#0284c7" }}>Curve Trajectory</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <span>Polar Radar Plot (Focus at Origin)</span>
+                  <span
+                    className="avl-badge-pill"
+                    style={{
+                      background: darkMode ? "rgba(56, 189, 248, 0.15)" : "rgba(0, 86, 210, 0.1)",
+                      color: darkMode ? "#38bdf8" : "#0056D2",
+                      fontSize: "0.72rem",
+                    }}
+                  >
+                    r = ed / (1 ± e·trig(θ))
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showPolarRays ? "active" : ""}`}
+                    onClick={() => setShowPolarRays((prev) => !prev)}
+                    title="Toggle 12 Radial Angle Spokes"
+                  >
+                    📐 Radial Rays
+                  </button>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showDirectrix ? "active" : ""}`}
+                    onClick={() => setShowDirectrix((prev) => !prev)}
+                    title="Toggle Directrix Line"
+                  >
+                    📏 Directrix
+                  </button>
+                  <button
+                    type="button"
+                    className={`avl-canvas-ctrl-btn ${showPolarFocus ? "active" : ""}`}
+                    onClick={() => setShowPolarFocus((prev) => !prev)}
+                    title="Toggle Focus & Vertices"
+                  >
+                    🎯 Focus/Vertices
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoomPolar((z) => Math.min(50, z + 4))}
+                    title="Zoom In"
+                  >
+                    🔍+
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoomPolar((z) => Math.max(12, z - 4))}
+                    title="Zoom Out"
+                  >
+                    🔍-
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setZoomPolar(26)}
+                    title="Reset Zoom"
+                  >
+                    ↺
+                  </button>
+                </div>
               </div>
-              <canvas
-                ref={polarCanvasRef}
-                width={500}
-                height={320}
-                className="avl-canvas"
-              />
+
+              <div style={{ position: "relative" }}>
+                <canvas
+                  ref={polarCanvasRef}
+                  width={720}
+                  height={440}
+                  className="avl-canvas avl-canvas-2d"
+                  onMouseMove={handleMouseMovePolar}
+                  onMouseLeave={handleMouseLeavePolar}
+                />
+
+                {hoverPolar && (
+                  <div
+                    className="avl-2d-tooltip"
+                    style={{
+                      left: Math.min(Math.max(hoverPolar.canvasX + 15, 10), 450),
+                      top: Math.min(Math.max(hoverPolar.canvasY - 50, 10), 360),
+                    }}
+                  >
+                    <div>
+                      <strong style={{ color: "#38bdf8" }}>Polar Coordinates:</strong> (r = {hoverPolar.r.toFixed(2)}, θ = {hoverPolar.thetaDeg.toFixed(1)}°)
+                    </div>
+                    <div style={{ fontSize: "0.76rem", color: "#94a3b8" }}>
+                      Cartesian: x = {hoverPolar.x.toFixed(2)}, y = {hoverPolar.y.toFixed(2)}
+                    </div>
+                  </div>
+                )}
+
+                <div className="avl-3d-hint">
+                  🖱️ Move cursor over polar radar to inspect radius and angle in real time
+                </div>
+              </div>
             </div>
           </div>
         </div>
