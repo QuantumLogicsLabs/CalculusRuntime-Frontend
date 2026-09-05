@@ -77,6 +77,18 @@ export default function AnalyticVectorLab() {
   const [wY, setWY] = useState(2);
   const [wZ, setWZ] = useState(4);
 
+  // 3D Interactive Viewport State (Mouse Orbit, Hover & Zoom)
+  const [rotPitch, setRotPitch] = useState(24); // vertical elevation angle (-85° to 85°)
+  const [rotYaw, setRotYaw] = useState(45);     // horizontal azimuth angle (0° to 360°)
+  const [zoom3D, setZoom3D] = useState(20);     // scale (pixels per unit)
+  const [autoRotate3D, setAutoRotate3D] = useState(false);
+  const [hoveredVector, setHoveredVector] = useState(null); // 'u' | 'v' | 'w' | null
+  const [hoverInfo, setHoverInfo] = useState(null);
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0, pitch: 24, yaw: 45 });
+  const hoverOffsetRef = useRef({ pitch: 0, yaw: 0 });
+  const projectedEndpointsRef = useRef({ u: [0, 0], v: [0, 0], w: [0, 0] });
+
   // 3D Skew Lines
   // L1: P1 + t * V1
   const [p1X, setP1X] = useState(1);
@@ -330,6 +342,7 @@ export default function AnalyticVectorLab() {
   ];
   const magU = Math.sqrt(u[0] * u[0] + u[1] * u[1] + u[2] * u[2]);
   const magV = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+  const magW = Math.sqrt(w[0] * w[0] + w[1] * w[1] + w[2] * w[2]);
   const magCross = Math.sqrt(crossUV[0] * crossUV[0] + crossUV[1] * crossUV[1] + crossUV[2] * crossUV[2]);
 
   let angleDeg = 0;
@@ -401,7 +414,7 @@ export default function AnalyticVectorLab() {
       ? Math.abs(plA * Pt[0] + plB * Pt[1] + plC * Pt[2] + plD) / planeNormMag
       : 0;
 
-  // Draw 3D Vector Isometric Canvas
+  // Draw 3D Vector Interactive Viewport
   const draw3DVectors = useCallback(() => {
     const canvas = vector3dCanvasRef.current;
     if (!canvas) return;
@@ -414,35 +427,105 @@ export default function AnalyticVectorLab() {
     ctx.fillRect(0, 0, width, height);
 
     const originX = width / 2;
-    const originY = height / 2 + 40;
+    const originY = height / 2 + 20;
+
+    // Spherical Euler projection angles (base + hover parallax offset)
+    const effPitch = ((rotPitch + hoverOffsetRef.current.pitch) * Math.PI) / 180;
+    const effYaw = ((rotYaw + hoverOffsetRef.current.yaw) * Math.PI) / 180;
+
+    const cosYaw = Math.cos(effYaw);
+    const sinYaw = Math.sin(effYaw);
+    const cosPitch = Math.cos(effPitch);
+    const sinPitch = Math.sin(effPitch);
 
     const project = (x, y, z) => {
-      const s = 18; // scale
-      const px = originX + (y - x) * Math.cos(Math.PI / 6) * s;
-      const py = originY + (x + y) * Math.sin(Math.PI / 6) * s - z * s;
-      return [px, py];
+      // 1. Rotate around Z axis (azimuth / yaw)
+      const x1 = x * cosYaw - y * sinYaw;
+      const y1 = x * sinYaw + y * cosYaw;
+      const z1 = z;
+
+      // 2. Rotate around X axis (elevation / pitch)
+      const x2 = x1;
+      const y2 = y1 * cosPitch - z1 * sinPitch;
+      const z2 = y1 * sinPitch + z1 * cosPitch;
+
+      // 3. Screen coordinates
+      const px = originX + x2 * zoom3D;
+      const py = originY - z2 * zoom3D;
+      return [px, py, y2];
     };
 
-    // Draw coordinate axes
-    ctx.lineWidth = 1.5;
-    // X axis (red)
-    const [xAx, xAy] = project(6, 0, 0);
-    ctx.strokeStyle = "#ef4444";
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(xAx, xAy); ctx.stroke();
-    // Y axis (emerald)
-    const [yAx, yAy] = project(0, 6, 0);
-    ctx.strokeStyle = "#10b981";
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(yAx, yAy); ctx.stroke();
-    // Z axis (blue)
-    const [zAx, zAy] = project(0, 0, 6);
-    ctx.strokeStyle = "#0056D2";
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(zAx, zAy); ctx.stroke();
+    // Helper: Draw 3D Arrowhead
+    const drawArrowHead = (fromP, toP, color, size = 11) => {
+      const dx = toP[0] - fromP[0];
+      const dy = toP[1] - fromP[1];
+      const len = Math.hypot(dx, dy);
+      if (len < 1e-3) return;
+      const udx = dx / len;
+      const udy = dy / len;
+      const perpX = -udy;
+      const perpY = udx;
 
-    // Draw Parallelepiped edges formed by u, v, w
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(toP[0], toP[1]);
+      ctx.lineTo(toP[0] - udx * size + perpX * (size * 0.42), toP[1] - udy * size + perpY * (size * 0.42));
+      ctx.lineTo(toP[0] - udx * (size * 0.7), toP[1] - udy * (size * 0.7));
+      ctx.lineTo(toP[0] - udx * size - perpX * (size * 0.42), toP[1] - udy * size - perpY * (size * 0.42));
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    // 1. Draw 3D Ground Plane Grid (XY-Plane at z=0)
+    ctx.strokeStyle = darkMode ? "rgba(51, 65, 85, 0.4)" : "rgba(226, 232, 240, 0.8)";
+    ctx.lineWidth = 1;
+    const gridSpan = 6;
+    for (let i = -gridSpan; i <= gridSpan; i += 2) {
+      const [g1x, g1y] = project(i, -gridSpan, 0);
+      const [g2x, g2y] = project(i, gridSpan, 0);
+      ctx.beginPath(); ctx.moveTo(g1x, g1y); ctx.lineTo(g2x, g2y); ctx.stroke();
+
+      const [g3x, g3y] = project(-gridSpan, i, 0);
+      const [g4x, g4y] = project(gridSpan, i, 0);
+      ctx.beginPath(); ctx.moveTo(g3x, g3y); ctx.lineTo(g4x, g4y); ctx.stroke();
+    }
+
+    // 2. Draw Coordinate Axes (X Red, Y Green, Z Blue)
+    const axisLen = 7;
+    const [xAx, xAy] = project(axisLen, 0, 0);
+    const [yAx, yAy] = project(0, axisLen, 0);
+    const [zAx, zAy] = project(0, 0, axisLen);
+
+    // Negative dashed axes
+    ctx.setLineDash([2, 4]);
     ctx.strokeStyle = darkMode ? "#334155" : "#cbd5e1";
     ctx.lineWidth = 1;
-    ctx.setLineDash([3, 3]);
+    const [nxAx, nxAy] = project(-axisLen, 0, 0);
+    const [nyAx, nyAy] = project(0, -axisLen, 0);
+    const [nzAx, nzAy] = project(0, 0, -axisLen);
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(nxAx, nxAy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(nyAx, nyAy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(nzAx, nzAy); ctx.stroke();
+    ctx.setLineDash([]);
 
+    // Positive Axes
+    ctx.lineWidth = 1.6;
+    // X Axis
+    ctx.strokeStyle = "#ef4444";
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(xAx, xAy); ctx.stroke();
+    drawArrowHead([originX, originY], [xAx, xAy], "#ef4444", 8);
+
+    // Y Axis
+    ctx.strokeStyle = "#10b981";
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(yAx, yAy); ctx.stroke();
+    drawArrowHead([originX, originY], [yAx, yAy], "#10b981", 8);
+
+    // Z Axis
+    ctx.strokeStyle = "#0284c7";
+    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(zAx, zAy); ctx.stroke();
+    drawArrowHead([originX, originY], [zAx, zAy], "#0284c7", 8);
+
+    // 3. Draw Parallelepiped 3D Solid Shading and Edges
     const corners = [
       project(0, 0, 0),
       project(u[0], u[1], u[2]),
@@ -454,12 +537,34 @@ export default function AnalyticVectorLab() {
       project(u[0] + v[0] + w[0], u[1] + v[1] + w[1], u[2] + v[2] + w[2]),
     ];
 
+    const faces = [
+      [0, 1, 3, 2],
+      [4, 5, 7, 6],
+      [0, 1, 5, 4],
+      [2, 3, 7, 6],
+      [0, 2, 6, 4],
+      [1, 3, 7, 5],
+    ];
+
+    faces.forEach((f) => {
+      ctx.fillStyle = darkMode ? "rgba(56, 189, 248, 0.05)" : "rgba(0, 86, 210, 0.04)";
+      ctx.beginPath();
+      ctx.moveTo(corners[f[0]][0], corners[f[0]][1]);
+      for (let k = 1; k < f.length; k++) {
+        ctx.lineTo(corners[f[k]][0], corners[f[k]][1]);
+      }
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    ctx.strokeStyle = darkMode ? "rgba(148, 163, 184, 0.35)" : "rgba(100, 116, 139, 0.35)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
     const edges = [
       [0, 1], [0, 2], [1, 3], [2, 3],
       [4, 5], [4, 6], [5, 7], [6, 7],
       [0, 4], [1, 5], [2, 6], [3, 7],
     ];
-
     edges.forEach(([i, j]) => {
       ctx.beginPath();
       ctx.moveTo(corners[i][0], corners[i][1]);
@@ -468,34 +573,149 @@ export default function AnalyticVectorLab() {
     });
     ctx.setLineDash([]);
 
-    // Draw Vector u (Blue)
+    // 4. Project and store Vector Endpoints
     const [uxP, uyP] = project(u[0], u[1], u[2]);
-    ctx.strokeStyle = darkMode ? "#60a5fa" : "#0056D2";
-    ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(uxP, uyP); ctx.stroke();
-
-    // Draw Vector v (Emerald)
     const [vxP, vyP] = project(v[0], v[1], v[2]);
-    ctx.strokeStyle = darkMode ? "#34d399" : "#10b981";
-    ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(vxP, vyP); ctx.stroke();
-
-    // Draw Vector w (Purple)
     const [wxP, wyP] = project(w[0], w[1], w[2]);
-    ctx.strokeStyle = darkMode ? "#c084fc" : "#7c3aed";
-    ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(originX, originY); ctx.lineTo(wxP, wyP); ctx.stroke();
+    projectedEndpointsRef.current = {
+      u: [uxP, uyP],
+      v: [vxP, vyP],
+      w: [wxP, wyP],
+    };
 
-    // Labels
-    ctx.font = "bold 12px Inter, sans-serif";
-    ctx.fillStyle = darkMode ? "#60a5fa" : "#0056D2"; ctx.fillText("u", uxP + 6, uyP - 4);
-    ctx.fillStyle = darkMode ? "#34d399" : "#10b981"; ctx.fillText("v", vxP + 6, vyP - 4);
-    ctx.fillStyle = darkMode ? "#c084fc" : "#7c3aed"; ctx.fillText("w", wxP + 6, wyP - 4);
-    ctx.fillStyle = darkMode ? "#cbd5e1" : "#64748b";
-    ctx.fillText("x", xAx - 12, xAy + 4);
-    ctx.fillText("y", yAx + 6, yAy + 4);
-    ctx.fillText("z", zAx - 4, zAy - 8);
-  }, [u, v, w, darkMode]);
+    // Helper: Draw interactive glowing vector
+    const renderVector = (fromP, toP, baseColor, isHovered, label) => {
+      ctx.save();
+      if (isHovered) {
+        ctx.shadowColor = baseColor;
+        ctx.shadowBlur = 18;
+        ctx.strokeStyle = baseColor;
+        ctx.lineWidth = 5;
+      } else {
+        ctx.strokeStyle = baseColor;
+        ctx.lineWidth = 3.2;
+      }
+      ctx.beginPath();
+      ctx.moveTo(fromP[0], fromP[1]);
+      ctx.lineTo(toP[0], toP[1]);
+      ctx.stroke();
+
+      drawArrowHead(fromP, toP, baseColor, isHovered ? 14 : 11);
+
+      // Endpoint pulsing dot
+      ctx.fillStyle = baseColor;
+      ctx.beginPath();
+      ctx.arc(toP[0], toP[1], isHovered ? 5.5 : 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Vector Label
+      ctx.font = isHovered ? "bold 14px Inter, sans-serif" : "bold 12px Inter, sans-serif";
+      ctx.fillStyle = baseColor;
+      ctx.fillText(label, toP[0] + 8, toP[1] - 6);
+      ctx.restore();
+    };
+
+    // Render Vector u (Royal Blue)
+    renderVector([originX, originY], [uxP, uyP], darkMode ? "#60a5fa" : "#0056D2", hoveredVector === "u", "u");
+
+    // Render Vector v (Emerald Green)
+    renderVector([originX, originY], [vxP, vyP], darkMode ? "#34d399" : "#10b981", hoveredVector === "v", "v");
+
+    // Render Vector w (Purple)
+    renderVector([originX, originY], [wxP, wyP], darkMode ? "#c084fc" : "#7c3aed", hoveredVector === "w", "w");
+
+    // Coordinate Axes Labels
+    ctx.font = "bold 11px Inter, sans-serif";
+    ctx.fillStyle = "#ef4444"; ctx.fillText("+X", xAx + 6, xAy + 4);
+    ctx.fillStyle = "#10b981"; ctx.fillText("+Y", yAx + 6, yAy + 4);
+    ctx.fillStyle = "#0284c7"; ctx.fillText("+Z", zAx - 4, zAy - 8);
+  }, [u, v, w, rotPitch, rotYaw, zoom3D, darkMode, hoveredVector]);
+
+  // Auto-rotation loop
+  useEffect(() => {
+    if (!autoRotate3D || activeTab !== "vectors3d") return undefined;
+    let animId;
+    const loop = () => {
+      setRotYaw((prev) => (prev + 0.55) % 360);
+      animId = requestAnimationFrame(loop);
+    };
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [autoRotate3D, activeTab]);
+
+  const handlePointerDown3D = (e) => {
+    isDraggingRef.current = true;
+    dragStartRef.current = { x: e.clientX, y: e.clientY, pitch: rotPitch, yaw: rotYaw };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handlePointerMove3D = (e) => {
+    const canvas = vector3dCanvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    if (isDraggingRef.current) {
+      const dx = e.clientX - dragStartRef.current.x;
+      const dy = e.clientY - dragStartRef.current.y;
+      setRotYaw((dragStartRef.current.yaw - dx * 0.65) % 360);
+      setRotPitch(Math.max(-85, Math.min(85, dragStartRef.current.pitch + dy * 0.65)));
+    } else {
+      // Interactive mouse hover parallax tilt (subtle ±7° angle shift as mouse moves)
+      const normX = (mx - rect.width / 2) / (rect.width / 2);
+      const normY = (my - rect.height / 2) / (rect.height / 2);
+      hoverOffsetRef.current = { yaw: -normX * 7, pitch: normY * 7 };
+      draw3DVectors();
+
+      // Check distance to vector endpoints for hover tooltip & glow
+      const endpoints = projectedEndpointsRef.current;
+      if (endpoints) {
+        const dU = Math.hypot(mx - endpoints.u[0], my - endpoints.u[1]);
+        const dV = Math.hypot(mx - endpoints.v[0], my - endpoints.v[1]);
+        const dW = Math.hypot(mx - endpoints.w[0], my - endpoints.w[1]);
+
+        if (dU < 26) {
+          setHoveredVector("u");
+          setHoverInfo({ name: "u", color: "#0056D2", val: u, mag: magU, x: mx, y: my });
+        } else if (dV < 26) {
+          setHoveredVector("v");
+          setHoverInfo({ name: "v", color: "#10b981", val: v, mag: magV, x: mx, y: my });
+        } else if (dW < 26) {
+          setHoveredVector("w");
+          setHoverInfo({ name: "w", color: "#7c3aed", val: w, mag: magW, x: mx, y: my });
+        } else {
+          setHoveredVector(null);
+          setHoverInfo(null);
+        }
+      }
+    }
+  };
+
+  const handlePointerUp3D = (e) => {
+    isDraggingRef.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handlePointerLeave3D = () => {
+    isDraggingRef.current = false;
+    hoverOffsetRef.current = { yaw: 0, pitch: 0 };
+    setHoveredVector(null);
+    setHoverInfo(null);
+    draw3DVectors();
+  };
+
+  const handleWheel3D = (e) => {
+    e.preventDefault();
+    setZoom3D((prev) => Math.max(12, Math.min(42, prev - Math.sign(e.deltaY) * 2)));
+  };
 
   // Redraw canvases on tab or theme change
   useEffect(() => {
@@ -872,18 +1092,83 @@ export default function AnalyticVectorLab() {
               </div>
             </div>
 
-            {/* 3D Isometric Canvas */}
+            {/* Interactive 3D Vector Viewport */}
             <div className="avl-canvas-wrapper">
               <div className="avl-canvas-header">
-                <span>3D Isometric Projection View</span>
-                <span>Blue = u, Green = v, Purple = w</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <span>Interactive 3D Vector Viewport</span>
+                  <span
+                    className="avl-badge-pill"
+                    style={{
+                      background: darkMode ? "rgba(56, 189, 248, 0.15)" : "rgba(0, 86, 210, 0.1)",
+                      color: darkMode ? "#38bdf8" : "#0056D2",
+                      fontSize: "0.72rem",
+                    }}
+                  >
+                    🖱️ Hover &amp; Orbit Active
+                  </span>
+                </div>
+                <div style={{ display: "flex", gap: "0.4rem" }}>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => setAutoRotate3D((prev) => !prev)}
+                    title="Toggle continuous 3D rotation"
+                  >
+                    {autoRotate3D ? "⏸ Pause" : "▶ Auto-Orbit"}
+                  </button>
+                  <button
+                    type="button"
+                    className="avl-canvas-ctrl-btn"
+                    onClick={() => {
+                      setRotPitch(24);
+                      setRotYaw(45);
+                      setZoom3D(20);
+                      hoverOffsetRef.current = { yaw: 0, pitch: 0 };
+                    }}
+                    title="Reset to default isometric angle"
+                  >
+                    ↺ Reset
+                  </button>
+                </div>
               </div>
-              <canvas
-                ref={vector3dCanvasRef}
-                width={500}
-                height={300}
-                className="avl-canvas"
-              />
+
+              <div style={{ position: "relative" }}>
+                <canvas
+                  ref={vector3dCanvasRef}
+                  width={500}
+                  height={320}
+                  className="avl-canvas avl-canvas-3d"
+                  onPointerDown={handlePointerDown3D}
+                  onPointerMove={handlePointerMove3D}
+                  onPointerUp={handlePointerUp3D}
+                  onPointerLeave={handlePointerLeave3D}
+                  onWheel={handleWheel3D}
+                />
+
+                {/* Floating 3D Vector Hover Tooltip */}
+                {hoverInfo && (
+                  <div
+                    className="avl-3d-tooltip"
+                    style={{
+                      left: Math.min(hoverInfo.x + 10, 320),
+                      top: Math.max(hoverInfo.y - 45, 10),
+                      borderColor: hoverInfo.color,
+                    }}
+                  >
+                    <span style={{ fontWeight: 800, color: hoverInfo.color }}>
+                      Vector {hoverInfo.name}:
+                    </span>{" "}
+                    ⟨{hoverInfo.val[0]}, {hoverInfo.val[1]}, {hoverInfo.val[2]}⟩ ·{" "}
+                    <strong>|{hoverInfo.name}| = {hoverInfo.mag.toFixed(2)}</strong>
+                  </div>
+                )}
+
+                {/* Subtitle helper badge */}
+                <div className="avl-3d-hint">
+                  🖱️ Move mouse to hover-tilt · Drag to 3D orbit · Scroll to zoom
+                </div>
+              </div>
             </div>
           </div>
 

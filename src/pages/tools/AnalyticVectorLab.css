@@ -365,6 +365,96 @@
   background: #0b1120 !important;
 }
 
+/* 3D Interactive Viewport Styles */
+.avl-canvas-3d {
+  cursor: grab;
+  touch-action: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.avl-canvas-3d:active {
+  cursor: grabbing;
+  box-shadow: 0 0 0 3px rgba(0, 86, 210, 0.2);
+}
+
+[data-theme="dark"] .avl-canvas-3d:active {
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.avl-canvas-ctrl-btn {
+  background: var(--cv-bg-subtle, #f1f5f9);
+  border: 1px solid var(--cv-border, #cbd5e1);
+  border-radius: 7px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  color: var(--cv-text-primary, #0f172a);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.avl-canvas-ctrl-btn:hover {
+  background: #0056D2;
+  color: #ffffff;
+  border-color: #0056D2;
+}
+
+[data-theme="dark"] .avl-canvas-ctrl-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .avl-canvas-ctrl-btn:hover {
+  background: #38bdf8;
+  color: #0b1120;
+  border-color: #38bdf8;
+}
+
+.avl-3d-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(15, 23, 42, 0.94);
+  color: #f8fafc;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: var(--cv-font-mono, monospace);
+  border: 1.5px solid #38bdf8;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+  animation: avl-fade-in 0.12s ease-out;
+}
+
+.avl-3d-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  pointer-events: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes avl-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* --------------------------------------------------------------------------
    Steps & Method Breakdown
    -------------------------------------------------------------------------- */
