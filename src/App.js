@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./pages/courses/ProgressContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Layout from "./components/common/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import ErrorBoundary from "./components/common/ErrorBoundary";
@@ -39,6 +40,8 @@ import ExtremeValueFunction from "./pages/tools/ExtremeValueFinder";
 import VolumeCalculator from "./pages/tools/VolumeCalculator";
 import DerivativeTool from "./components/tools/DerivativeTool";
 import VectorFieldVisualizer from "./pages/tools/VectorFieldVisualizer";
+import AnalyticVectorLab from "./pages/tools/AnalyticVectorLab";
+
 import CheatSheet from "./pages/courses/CheatSheet";
 import Leaderboard from "./pages/dashboard/Leaderboard";
 import Certificate from "./pages/calculus/Certificate";
@@ -96,8 +99,9 @@ import {
 
 function App() {
   return (
-    <AuthProvider>
-      <ProgressProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ProgressProvider>
         <BrowserRouter>
           <ErrorBoundary>
             <ScrollToTop />
@@ -169,6 +173,7 @@ function App() {
               <Route path="/taylor-series/2" element={<Layout body={<TaylorPart2 />} />} />
 
               <Route path="/certificates" element={<Layout body={<MyCertificates />} />} />
+              <Route path="/my-certificates" element={<Navigate to="/certificates" replace />} />
               <Route path="/verify" element={<Layout body={<VerifyCertificate />} />} />
               <Route path="/certificate/:courseId" element={<Layout body={<Certificate />} />} />
               <Route path="/quiz/:courseId" element={<Layout body={<CourseQuiz />} />} />
@@ -242,7 +247,9 @@ function App() {
               <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
+              <Route path="/analytic-vector-lab" element={<Layout body={<AnalyticVectorLab />} />} />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
+
               <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
               <Route path="/cheatsheet" element={<Layout body={<CheatSheet />} />} />
 
@@ -264,6 +271,7 @@ function App() {
         </BrowserRouter>
       </ProgressProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

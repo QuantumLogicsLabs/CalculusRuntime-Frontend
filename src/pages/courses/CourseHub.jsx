@@ -194,8 +194,8 @@ function CourseHub() {
                   aria-disabled="true"
                 >
                   <div className="guide-card-icon">🔒</div>
-                  <span>Locked</span>
                   <h3>{mod.title}</h3>
+                  <span className="guide-card-meta">Locked</span>
                   <p>
                     Complete the {remaining.length} remaining section
                     {remaining.length === 1 ? "" : "s"} in this course to
@@ -211,9 +211,13 @@ function CourseHub() {
                 key={mod.path}
                 to={mod.path}
               >
-                <div className="guide-card-icon">{mod.icon}</div>
-                <span>{mod.meta}</span>
+                {mod.logo ? (
+                  <div className="guide-card-logo">{mod.logo}</div>
+                ) : (
+                  <div className="guide-card-icon">{mod.icon || "✦"}</div>
+                )}
                 <h3>{mod.title}</h3>
+                <span className="guide-card-meta">{mod.meta}</span>
                 <p>{mod.description}</p>
               </Link>
             );

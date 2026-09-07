@@ -246,6 +246,85 @@ function SectionMI4() {
           </div>
         </div>
       </div>
+            <div className="guide-subsection">
+        <h3>Triple Integrals in Cartesian Coordinates</h3>
+
+        <p>
+          A triple integral extends the idea of a double integral into three
+          dimensions. It can be used to calculate quantities such as volume,
+          mass, and charge distributed throughout a three-dimensional region.
+        </p>
+
+        <p>
+          In Cartesian coordinates, the differential volume element is
+          <strong> dV = dx dy dz</strong>. Thus, a triple integral over a region
+          E can be written as
+        </p>
+
+        <div className="formula">
+          ∭<sub>E</sub> f(x, y, z) dV
+        </div>
+
+        <p>
+          For a region described by rectangular bounds, the integral can be
+          evaluated as
+        </p>
+
+        <div className="formula">
+          ∫<sub>a</sub><sup>b</sup> ∫<sub>c</sub><sup>d</sup> ∫<sub>e</sub><sup>f</sup>
+          f(x, y, z) dz dy dx
+        </div>
+
+        <h4>How to Set Up a Triple Integral</h4>
+
+        <ol>
+          <li>Identify the three-dimensional region of integration.</li>
+          <li>Choose the order of integration.</li>
+          <li>Determine the limits for the innermost variable.</li>
+          <li>Determine the limits for the middle variable.</li>
+          <li>Determine the limits for the outermost variable.</li>
+          <li>Write the integrand together with the appropriate volume element dV.</li>
+        </ol>
+
+        <h4>Worked Example</h4>
+
+        <p>
+          Find the volume of the rectangular box
+          <strong> 0 ≤ x ≤ 2, 0 ≤ y ≤ 3, 0 ≤ z ≤ 4</strong>.
+        </p>
+
+        <div className="formula">
+          V = ∫<sub>0</sub><sup>2</sup> ∫<sub>0</sub><sup>3</sup> ∫<sub>0</sub><sup>4</sup>
+          1 dz dy dx
+        </div>
+
+        <p>Evaluate from the inside outward:</p>
+
+        <div className="formula">
+          ∫<sub>0</sub><sup>4</sup> 1 dz = 4
+        </div>
+
+        <div className="formula">
+          ∫<sub>0</sub><sup>3</sup> 4 dy = 12
+        </div>
+
+        <div className="formula">
+          ∫<sub>0</sub><sup>2</sup> 12 dx = 24
+        </div>
+
+        <p>
+          Therefore, the volume of the box is <strong>24 cubic units</strong>.
+          This agrees with the geometric formula
+          <strong> 2 × 3 × 4 = 24</strong>.
+        </p>
+
+        <div className="callout">
+          <strong>Key idea:</strong> In Cartesian coordinates, the volume
+          element is simply <strong>dV = dx dy dz</strong>. The main challenge
+          is usually describing the region correctly and choosing appropriate
+          limits of integration.
+        </div>
+      </div>
     </section>
   );
 }
@@ -350,6 +429,238 @@ function SectionMI7() {
           <li>{"Use spherical when the solid is symmetric about the origin (e.g. spheres, cones with vertex at the origin)."}</li>
           <li>{"A cone $z = \\sqrt{x^2+y^2}$ becomes the simple equation $\\phi = \\pi/4$ in spherical — often the deciding factor."}</li>
         </ul>
+      </div>
+            <div className="guide-subsection">
+        <h3>Jacobians and Change of Variables</h3>
+
+        <p>
+          A Jacobian describes how a change of variables stretches or
+          compresses area or volume. It is especially useful when changing
+          from Cartesian coordinates to polar, cylindrical, or spherical
+          coordinates.
+        </p>
+
+        <h4>The Jacobian Determinant</h4>
+
+        <p>
+          Suppose x and y are functions of new variables u and v:
+        </p>
+
+        <div className="formula">
+          x = x(u, v), &nbsp;&nbsp; y = y(u, v)
+        </div>
+
+        <p>
+          The two-dimensional Jacobian determinant is
+        </p>
+
+        <div className="formula">
+          J = ∂(x,y)/∂(u,v) =
+          | ∂x/∂u &nbsp; ∂x/∂v |
+          | ∂y/∂u &nbsp; ∂y/∂v |
+        </div>
+
+        <p>
+          Therefore,
+        </p>
+
+        <div className="formula">
+          J = (∂x/∂u)(∂y/∂v) − (∂x/∂v)(∂y/∂u)
+        </div>
+
+        <h4>Change-of-Variables Formula</h4>
+
+        <p>
+          When changing variables in a double integral, the area element
+          changes according to the absolute value of the Jacobian:
+        </p>
+
+        <div className="formula">
+          dA = |J| du dv
+        </div>
+
+        <p>
+          Thus,
+        </p>
+
+        <div className="formula">
+          ∬<sub>R</sub> f(x,y) dA
+          = ∬<sub>S</sub> f(x(u,v), y(u,v)) |J| du dv
+        </div>
+
+        <div className="callout">
+          <strong>Why the absolute value?</strong> The Jacobian can be
+          negative when the transformation reverses orientation, but area
+          and volume must remain nonnegative. Therefore, the change-of-
+          variables formula uses <strong>|J|</strong>.
+        </div>
+
+        <h4>Worked Example — Polar Coordinates</h4>
+
+        <p>
+          For polar coordinates,
+        </p>
+
+        <div className="formula">
+          x = r cos(θ), &nbsp;&nbsp; y = r sin(θ)
+        </div>
+
+        <p>
+          The Jacobian is
+        </p>
+
+        <div className="formula">
+          J = ∂(x,y)/∂(r,θ)
+          = | cos(θ) &nbsp; −r sin(θ) |
+          | sin(θ) &nbsp;&nbsp; r cos(θ) |
+        </div>
+
+        <p>
+          Computing the determinant gives
+        </p>
+
+        <div className="formula">
+          J = r cos²(θ) + r sin²(θ) = r
+        </div>
+
+        <p>
+          Therefore,
+        </p>
+
+        <div className="formula">
+          dA = r dr dθ
+        </div>
+
+        <p>
+          This explains why the factor <strong>r</strong> appears in polar
+          coordinate double integrals.
+        </p>
+
+        <h4>Jacobian Workflow</h4>
+
+        <ol>
+          <li>Define the transformation between the old and new variables.</li>
+          <li>Compute all required partial derivatives.</li>
+          <li>Form the Jacobian determinant.</li>
+          <li>Take its absolute value when applying the change-of-variables formula.</li>
+          <li>Transform the region of integration into the new variables.</li>
+          <li>Replace the original area or volume element with the transformed element.</li>
+        </ol>
+
+        <div className="callout">
+          <strong>Key idea:</strong> A Jacobian is the scaling factor that
+          accounts for how a coordinate transformation changes area or
+          volume. In polar coordinates, it produces the familiar factor
+          <strong> r</strong>; in cylindrical and spherical coordinates,
+          the corresponding volume factors arise from the three-dimensional
+          Jacobian.
+        </div>
+      </div>
+            <div className="guide-subsection">
+        <h3>Three-Dimensional Jacobians</h3>
+
+        <p>
+          The same change-of-variables idea extends to triple integrals.
+          When transforming from Cartesian coordinates to another coordinate
+          system, the three-dimensional Jacobian determines how the volume
+          element changes.
+        </p>
+
+        <h4>Cylindrical Coordinates</h4>
+
+        <p>
+          The transformation from Cartesian to cylindrical coordinates is
+        </p>
+
+        <div className="formula">
+          x = r cos(θ), &nbsp;&nbsp; y = r sin(θ), &nbsp;&nbsp; z = z
+        </div>
+
+        <p>
+          The corresponding three-dimensional Jacobian is
+        </p>
+
+        <div className="formula">
+          ∂(x,y,z)/∂(r,θ,z) = r
+        </div>
+
+        <p>
+          Therefore, the Cartesian volume element becomes
+        </p>
+
+        <div className="formula">
+          dV = r dr dθ dz
+        </div>
+
+        <h4>Spherical Coordinates</h4>
+
+        <p>
+          In spherical coordinates,
+        </p>
+
+        <div className="formula">
+          x = ρ sin(φ) cos(θ)
+        </div>
+
+        <div className="formula">
+          y = ρ sin(φ) sin(θ)
+        </div>
+
+        <div className="formula">
+          z = ρ cos(φ)
+        </div>
+
+        <p>
+          The three-dimensional Jacobian for this transformation is
+        </p>
+
+        <div className="formula">
+          ∂(x,y,z)/∂(ρ,φ,θ) = ρ² sin(φ)
+        </div>
+
+        <p>
+          Therefore, the volume element becomes
+        </p>
+
+        <div className="formula">
+          dV = ρ² sin(φ) dρ dφ dθ
+        </div>
+
+        <h4>Choosing the Coordinate System</h4>
+
+        <ul>
+          <li>
+            <strong>Cartesian:</strong> Best for boxes and regions bounded by
+            planes such as x = a, y = b, and z = c.
+          </li>
+          <li>
+            <strong>Cylindrical:</strong> Useful for regions with circular
+            symmetry around the z-axis, such as cylinders and circular
+            paraboloids.
+          </li>
+          <li>
+            <strong>Spherical:</strong> Useful for regions with spherical
+            symmetry, such as spheres and spherical shells.
+          </li>
+        </ul>
+
+        <h4>Coordinate Transformation Workflow</h4>
+
+        <ol>
+          <li>Identify the geometric symmetry of the region.</li>
+          <li>Choose Cartesian, cylindrical, or spherical coordinates.</li>
+          <li>Transform the coordinates and the boundaries of the region.</li>
+          <li>Rewrite the integrand using the new variables.</li>
+          <li>Replace dV with the appropriate Jacobian factor.</li>
+          <li>Evaluate the transformed triple integral.</li>
+        </ol>
+
+        <div className="callout">
+          <strong>Key idea:</strong> A coordinate transformation changes not
+          only the variables and the limits of integration, but also the
+          differential volume element. The Jacobian supplies the required
+          scaling factor.
+        </div>
       </div>
     </section>
   );

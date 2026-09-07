@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SubmitToLeaderboard from "../../components/SubmitToLeaderboard";
 import "../dashboard/Leaderboard.css";
 import "./PractiseSection.css";
@@ -151,12 +151,30 @@ export default function PractiseSection() {
     };
   }, [chosenDifficulty, chosenTopic]);
 
+  const autoAdvanceTimerRef = useRef(null);
+
   const resetQuizTurn = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     setSelectedAnswer(null);
     setIsSubmitted(false);
   };
 
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleSelectionReset = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     setChosenDifficulty(null);
     setChosenTopic(null);
     setPoolProblems([]);
@@ -165,29 +183,68 @@ export default function PractiseSection() {
     resetQuizTurn();
   };
 
-  const handleAnswerClick = (index) => {
-    if (isSubmitted) return;
-    setSelectedAnswer(index);
-  };
-
-  const handleSubmit = () => {
-    if (selectedAnswer === null || isSubmitted) return;
-    const currentProblem = poolProblems[currentIndex];
-    const correct = selectedAnswer === currentProblem.correctAnswer;
-    setScore(prev => ({
-      correct: prev.correct + (correct ? 1 : 0),
-      total: prev.total + 1
-    }));
-    setIsSubmitted(true);
-  };
-
   // PROGRESSIVE QUIZ FLOW: Move to the next question or complete quiz
   const handleNextQuestion = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     if (currentIndex < poolProblems.length - 1) {
       setCurrentIndex(prev => prev + 1);
       resetQuizTurn();
     } else {
       setIsQuizCompleted(true);
+    }
+  };
+
+  const handleAnswerClick = (index) => {
+    if (isSubmitted) return;
+    setSelectedAnswer(index);
+
+    const currentProblem = poolProblems[currentIndex];
+    if (!currentProblem) return;
+
+    const correct = index === currentProblem.correctAnswer;
+    setScore((prev) => ({
+      correct: prev.correct + (correct ? 1 : 0),
+      total: prev.total + 1,
+    }));
+    setIsSubmitted(true);
+
+    // If answer is correct, automatically advance to next MCQ after short confirmation delay!
+    if (correct) {
+      autoAdvanceTimerRef.current = setTimeout(() => {
+        if (currentIndex < poolProblems.length - 1) {
+          setCurrentIndex((prev) => prev + 1);
+          resetQuizTurn();
+        } else {
+          setIsQuizCompleted(true);
+        }
+      }, 750);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedAnswer === null || isSubmitted) return;
+    const currentProblem = poolProblems[currentIndex];
+    if (!currentProblem) return;
+
+    const correct = selectedAnswer === currentProblem.correctAnswer;
+    setScore((prev) => ({
+      correct: prev.correct + (correct ? 1 : 0),
+      total: prev.total + 1,
+    }));
+    setIsSubmitted(true);
+
+    if (correct) {
+      autoAdvanceTimerRef.current = setTimeout(() => {
+        if (currentIndex < poolProblems.length - 1) {
+          setCurrentIndex((prev) => prev + 1);
+          resetQuizTurn();
+        } else {
+          setIsQuizCompleted(true);
+        }
+      }, 750);
     }
   };
 
