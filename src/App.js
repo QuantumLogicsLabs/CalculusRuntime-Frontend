@@ -72,6 +72,17 @@ import {
   SvdPart1,
   SvdPart2,
 } from "./pages/linearAlgebra/LaParts";
+import {
+  MatrixDecompositionsOverview,
+  LUDecompositionPart1,
+  LUDecompositionPart2,
+  CholeskyDecompositionPart1,
+  CholeskyDecompositionPart2,
+  JordanNormalFormPart1,
+  JordanNormalFormPart2,
+  MatrixNormsPart1,
+  MatrixNormsPart2
+} from "./pages/linearAlgebra";
 import MatrixSandbox from "./pages/linearAlgebra/MatrixSandbox";
 import LinearAlgebraOverview from "./pages/linearAlgebra/LinearAlgebraOverview";
 import CalculusOverview from "./pages/calculus/CalculusOverview";
@@ -270,6 +281,20 @@ function App() {
               <Route path="/linear-algebra/orthogonality/2" element={<Layout body={<OrthoPart2 />} />} />
 
               {/* Singular Value Decomposition */}
+              {/* Module A: keep the existing Linear Algebra layout. */}
+              <Route path="/linear-algebra/matrix-decompositions" element={<Layout body={<MatrixDecompositionsOverview />} />} />
+              <Route path="/linear-algebra/lu-decomposition" element={<Navigate to="/linear-algebra/lu-decomposition/1" replace />} />
+              <Route path="/linear-algebra/lu-decomposition/1" element={<Layout body={<LUDecompositionPart1 />} />} />
+              <Route path="/linear-algebra/lu-decomposition/2" element={<Layout body={<LUDecompositionPart2 />} />} />
+              <Route path="/linear-algebra/cholesky-decomposition" element={<Navigate to="/linear-algebra/cholesky-decomposition/1" replace />} />
+              <Route path="/linear-algebra/cholesky-decomposition/1" element={<Layout body={<CholeskyDecompositionPart1 />} />} />
+              <Route path="/linear-algebra/cholesky-decomposition/2" element={<Layout body={<CholeskyDecompositionPart2 />} />} />
+              <Route path="/linear-algebra/jordan-normal-form" element={<Navigate to="/linear-algebra/jordan-normal-form/1" replace />} />
+              <Route path="/linear-algebra/jordan-normal-form/1" element={<Layout body={<JordanNormalFormPart1 />} />} />
+              <Route path="/linear-algebra/jordan-normal-form/2" element={<Layout body={<JordanNormalFormPart2 />} />} />
+              <Route path="/linear-algebra/matrix-norms-conditioning" element={<Navigate to="/linear-algebra/matrix-norms-conditioning/1" replace />} />
+              <Route path="/linear-algebra/matrix-norms-conditioning/1" element={<Layout body={<MatrixNormsPart1 />} />} />
+              <Route path="/linear-algebra/matrix-norms-conditioning/2" element={<Layout body={<MatrixNormsPart2 />} />} />
               <Route path="/linear-algebra/svd" element={<Navigate to="/linear-algebra/svd/1" replace />} />
               <Route path="/linear-algebra/svd/1" element={<Layout body={<SvdPart1 />} />} />
               <Route path="/linear-algebra/svd/2" element={<Layout body={<SvdPart2 />} />} />
