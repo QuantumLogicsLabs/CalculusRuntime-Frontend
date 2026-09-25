@@ -395,6 +395,14 @@ export const COURSES = [
         logo: <span className="math-logo">A = U Σ V<sup>T</sup></span>,
       },
       {
+        title: "Matrix Decompositions & Factorizations",
+        description: "LU, Cholesky, Jordan normal form, and vector/matrix norms with conditioning. Four topics, worked examples, and 20 MCQs per topic.",
+        path: "/linear-algebra/lu-decomposition/1",
+        meta: "4 topics · 80 checkpoint MCQs",
+        icon: "A",
+        logo: <span className="math-logo">A = LU</span>,
+      },
+      {
         title: "Practice Arena",
         description: "MCQ drills for Linear Algebra topics with leaderboard submit.",
         path: "/practice",
