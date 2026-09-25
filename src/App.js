@@ -73,7 +73,6 @@ import {
   SvdPart2,
 } from "./pages/linearAlgebra/LaParts";
 import {
-  MatrixDecompositionsOverview,
   LUDecompositionPart1,
   LUDecompositionPart2,
   CholeskyDecompositionPart1,
@@ -282,7 +281,6 @@ function App() {
 
               {/* Singular Value Decomposition */}
               {/* Module A: keep the existing Linear Algebra layout. */}
-              <Route path="/linear-algebra/matrix-decompositions" element={<Layout body={<MatrixDecompositionsOverview />} />} />
               <Route path="/linear-algebra/lu-decomposition" element={<Navigate to="/linear-algebra/lu-decomposition/1" replace />} />
               <Route path="/linear-algebra/lu-decomposition/1" element={<Layout body={<LUDecompositionPart1 />} />} />
               <Route path="/linear-algebra/lu-decomposition/2" element={<Layout body={<LUDecompositionPart2 />} />} />

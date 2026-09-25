@@ -16,7 +16,6 @@ export * from "./LaBlocks";
 export * from "./LaMcq";
 
 // Module A: matrix decompositions and factorizations.
-export { default as MatrixDecompositionsOverview } from "./MatrixDecompositionsOverview";
 export { default as LUDecompositionGuide } from "./LUDecompositionGuide";
 export { default as LUDecompositionPart1 } from "./LUDecompositionPart1";
 export { default as LUDecompositionPart2 } from "./LUDecompositionPart2";

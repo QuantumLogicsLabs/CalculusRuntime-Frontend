@@ -397,7 +397,7 @@ export const COURSES = [
       {
         title: "Module A — Matrix Decompositions & Factorizations",
         description: "LU, Cholesky, Jordan normal form, and vector/matrix norms with conditioning. Four topics, worked examples, and 20 MCQs per topic.",
-        path: "/linear-algebra/matrix-decompositions",
+        path: "/linear-algebra/lu-decomposition/1",
         meta: "4 topics · 80 checkpoint MCQs",
         icon: "A",
         logo: <span className="math-logo">A = LU</span>,

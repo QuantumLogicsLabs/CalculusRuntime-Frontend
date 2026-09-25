@@ -9,7 +9,7 @@ export default function MatrixNormsPart2() {
       path="/linear-algebra/matrix-norms-conditioning/2"
       Guide={MatrixNormsGuide}
       part={2}
-      nextPath="/linear-algebra/matrix-decompositions"
+      nextPath="/linear-algebra/overview#module-a"
       nextLabel="Review Module A"
     />
   );

@@ -17,7 +17,7 @@ export default function LUDecompositionGuide({ part = 1 }) {
         {advanced && <a className="sb-link" href="#la-a-lu-method">Method</a>}
         <a className="sb-link" href="#la-a-lu-examples">Worked examples</a>
         {advanced && <a className="sb-link" href="#quiz-la-a-lu-checkpoint">Quiz</a>}
-        <Link className="sb-link" to="/linear-algebra/matrix-decompositions">All four topics</Link>
+        <Link className="sb-link" to="/linear-algebra/overview#module-a">All four topics</Link>
       </nav>
       <main className="main">
         <header className="ch-hdr">
