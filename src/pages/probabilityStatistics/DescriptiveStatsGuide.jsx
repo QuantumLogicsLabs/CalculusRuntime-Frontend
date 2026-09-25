@@ -1,7 +1,15 @@
-import StudyGuideShell from "../StudyGuideShell";
-import "../PartialDerivativesGuide.css";
+import StudyGuideShell from "../courses/StudyGuideShell";
+import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { LaMcqSection } from "../linearAlgebra/LaMcq";
+import {
+  PS_D_CENTER_QUIZ,
+  PS_D_QUANT_QUIZ,
+  PS_D_SPREAD_QUIZ,
+  PS_D_PLOTS_QUIZ,
+} from "../../data/psStatsQuizzes";
 import { TheoryBox, TheoremBox, ProcedureBox, WorkedExample, RealLifeUse, PracticalTheory } from "../linearAlgebra/LaBlocks";
+
+import PsCertificateBoost from "./PsCertificateBoost";
 
 function Divider() {
   return <hr className="divider" />;
@@ -19,6 +27,9 @@ function DescriptiveStatsGuide({ part = 1 }) {
           <a className="sb-link" href="#quiz-ps-d-spread">Quiz</a>
           <a className="sb-link" href="#ps-d-plots">Plots</a>
           <a className="sb-link" href="#quiz-ps-d-plots">Quiz</a>
+          <a className="sb-link" href="#ps-d-sampling">Sampling distributions</a>
+          <a className="sb-link" href="#ps-d-estimation">Point estimation &amp; MLE</a>
+          <a className="sb-link" href="#ps-cert-descriptive-p2">Eight examples</a>
         </nav>
         <main className="main">
           <header className="ch-hdr">
@@ -122,26 +133,7 @@ function DescriptiveStatsGuide({ part = 1 }) {
             title="Spread"
             scoreId="score-ps-d-spread"
             section="ps-d-spread"
-            questions={[
-              {
-                prompt: "Sample variance usually divides by:",
-                options: ["$n$", "$n-1$", "$n+1$"],
-                answer: "B",
-                explanation: "Unbiased sample variance uses $n-1$.",
-              },
-              {
-                prompt: "A z-score of 0 means the value equals:",
-                options: ["The max", "The mean", "The SD"],
-                answer: "B",
-                explanation: "$z=(x-\\bar x)/s$.",
-              },
-              {
-                prompt: "IQR is:",
-                options: ["$Q_3-Q_1$", "$Q_1+Q_3$", "Max − min"],
-                answer: "A",
-                explanation: "Middle 50% width.",
-              },
-            ]}
+            questions={PS_D_SPREAD_QUIZ}
           />
 
           <Divider />
@@ -202,35 +194,85 @@ function DescriptiveStatsGuide({ part = 1 }) {
             title="Plots"
             scoreId="score-ps-d-plots"
             section="ps-d-plots"
-            questions={[
-              {
-                prompt: "Best plot for outliers in one variable:",
-                options: ["Pie chart", "Boxplot", "Venn diagram"],
-                answer: "B",
-                explanation: "Boxplots mark points beyond fences.",
-              },
-              {
-                prompt: "A right-skewed histogram has a long tail to the:",
-                options: ["Left", "Right", "Neither"],
-                answer: "B",
-                explanation: "Skew direction follows the long tail.",
-              },
-              {
-                prompt: "Scatterplots show:",
-                options: ["Only means", "Relationship between two quantitative variables", "Only categories"],
-                answer: "B",
-                explanation: "Each point is a pair $(x,y)$.",
-              },
-              {
-                prompt: "The upper outlier fence is computed as:",
-                options: ["$Q_3+1.5\\,\\mathrm{IQR}$", "$Q_3\\times 1.5$", "Mean$+2\\sigma$"],
-                answer: "A",
-                explanation: "Standard Tukey fence rule using IQR.",
-              },
-            ]}
+            questions={PS_D_PLOTS_QUIZ}
           />
 
           <Divider />
+          <section className="section" id="ps-d-sampling">
+            <div className="sec-badge">Section 3.5</div>
+            <h2 className="sec-title">Sampling Distributions: $Z$, $t$, $\chi^2$, and $F$</h2>
+            <TheoryBox title="Distributions of sample statistics">
+              <p>
+                {"A statistic calculated from a random sample (such as $\\bar{X}$ or $s^2$) is itself a random variable with its own probability distribution, called a sampling distribution. Standard error (SE) is the standard deviation of this sampling distribution."}
+              </p>
+              <p>
+                {"For sample mean $\\bar{X}$ from a population with mean $\\mu$ and variance $\\sigma^2$, the standard error is $\\mathrm{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$. If $\\sigma$ is known, $Z = \\frac{\\bar{X}-\\mu}{\\sigma/\\sqrt{n}} \\sim N(0,1)$."}
+              </p>
+            </TheoryBox>
+            <TheoremBox title="The three fundamental inferential distributions">
+              <p>
+                {"1. Student's $t$-distribution: When population $\\sigma$ is unknown and estimated by sample SD $s$, the standardized statistic follows Student's $t$ with $\\nu = n-1$ degrees of freedom:"}
+              </p>
+              <p>
+                {"$$t = \\frac{\\bar{X} - \\mu}{s / \\sqrt{n}} \\sim t_{\\nu}$$"}
+              </p>
+              <p>
+                {"$t$ is bell-shaped and symmetric with mean 0, but possesses heavier tails than $N(0,1)$ to reflect sampling uncertainty in $s$. As $\\nu \\to \\infty$, $t_{\\nu} \\xrightarrow{d} N(0,1)$."}
+              </p>
+              <p>
+                {"2. Chi-Square ($\\chi^2$) distribution: The sum of $\\nu$ independent squared standard normals follows a Chi-Square distribution with $\\nu$ degrees of freedom. For a normal sample:"}
+              </p>
+              <p>
+                {"$$V = \\frac{(n-1)s^2}{\\sigma^2} \\sim \\chi^2_{n-1}, \\quad E[V] = \\nu, \\quad \\mathrm{Var}(V) = 2\\nu$$"}
+              </p>
+              <p>
+                {"3. Snedecor's $F$-distribution: The ratio of two independent chi-square variates divided by their respective degrees of freedom follows an $F$-distribution: $F = \\frac{U_1/\\nu_1}{U_2/\\nu_2} \\sim F_{\\nu_1, \\nu_2}$. For comparing two independent variances: $F = \\frac{s_1^2/\\sigma_1^2}{s_2^2/\\sigma_2^2}$."}
+              </p>
+            </TheoremBox>
+            <PracticalTheory title="Diagnostic mapping for exams">
+              <p>
+                {"Estimating mean with known $\\sigma$ → $Z$-table. Estimating mean with unknown $\\sigma$ from sample → $t$-table (df $= n-1$). Testing population variance or independence in contingency tables → $\\chi^2$-table. Comparing multiple group means in ANOVA or comparing two variances → $F$-table."}
+              </p>
+            </PracticalTheory>
+          </section>
+
+          <Divider />
+          <section className="section" id="ps-d-estimation">
+            <div className="sec-badge">Section 3.6</div>
+            <h2 className="sec-title">Point Estimation: MLE, Method of Moments, Bias &amp; MSE</h2>
+            <TheoryBox title="Constructing estimators from data">
+              <p>
+                {"A point estimator $\\hat{\\theta} = g(X_1, \\dots, X_n)$ is a rule that assigns a numerical estimate to an unknown population parameter $\\theta$ based on sample data."}
+              </p>
+              <p>
+                {"1. Maximum Likelihood Estimation (MLE): The likelihood of observing the specific sample $x_1, \\dots, x_n$ is $L(\\theta) = \\prod_{i=1}^n f(x_i; \\theta)$. Because the natural logarithm is strictly increasing, maximizing the log-likelihood $\\ell(\\theta) = \\ln L(\\theta) = \\sum_{i=1}^n \\ln f(x_i; \\theta)$ yields identical parameter estimates. We solve the score equation $\\frac{d\\ell}{d\\theta} = 0$ and verify $\\frac{d^2\\ell}{d\\theta^2} < 0$."}
+              </p>
+              <p>
+                {"2. Method of Moments (MoM): Equates sample raw moments $m_k = \\frac{1}{n}\\sum_{i=1}^n X_i^k$ to theoretical population moments $\\mu_k = E[X^k; \\theta]$ and solves the resulting algebraic system for $\\theta$."}
+              </p>
+            </TheoryBox>
+            <TheoremBox title="Estimator properties: Bias, Consistency &amp; MSE">
+              <p>
+                {"Bias: $\\mathrm{Bias}(\\hat{\\theta}) = E[\\hat{\\theta}] - \\theta$. An estimator is unbiased if $E[\\hat{\\theta}] = \\theta$. Sample mean is unbiased: $E[\\bar{X}] = \\mu$. Dividing by $n-1$ in $s^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ corrects the degrees of freedom so that $E[s^2] = \\sigma^2$ (unbiased)."}
+              </p>
+              <p>
+                {"Mean Squared Error (MSE): $\\mathrm{MSE}(\\hat{\\theta}) = E[(\\hat{\\theta} - \\theta)^2] = \\mathrm{Var}(\\hat{\\theta}) + [\\mathrm{Bias}(\\hat{\\theta})]^2$. This fundamental equation captures the bias-variance trade-off in modern predictive modeling."}
+              </p>
+            </TheoremBox>
+            <ProcedureBox
+              title="Solving an MLE problem step-by-step"
+              steps={[
+                { text: "Write the joint likelihood function: $L(\\theta) = f(x_1;\\theta) \\cdot f(x_2;\\theta) \\cdots f(x_n;\\theta)$." },
+                { text: "Take the natural logarithm: $\\ell(\\theta) = \\ln L(\\theta) = \\sum_{i=1}^n \\ln f(x_i; \\theta)$." },
+                { text: "Differentiate with respect to $\\theta$ and set equal to zero: $\\frac{d\\ell(\\theta)}{d\\theta} = 0$." },
+                { text: "Solve for $\\hat{\\theta}$ in terms of the sample values $x_i$ and check $\\frac{d^2\\ell}{d\\theta^2} < 0$ to confirm a local maximum." }
+              ]}
+            />
+          </section>
+
+          <Divider />
+          <PsCertificateBoost topic="descriptive" part={2} />
+
           <section className="section" id="summary">
             <div className="sec-badge">Reference</div>
             <h2 className="sec-title">Part 2 complete</h2>
@@ -252,6 +294,7 @@ function DescriptiveStatsGuide({ part = 1 }) {
         <a className="sb-link" href="#quiz-ps-d-center">Quiz</a>
         <a className="sb-link" href="#ps-d-quant">Quantiles</a>
         <a className="sb-link" href="#quiz-ps-d-quant">Quiz</a>
+        <a className="sb-link" href="#ps-cert-descriptive-p1">Eight examples</a>
       </nav>
       <main className="main">
         <header className="ch-hdr">
@@ -353,26 +396,7 @@ function DescriptiveStatsGuide({ part = 1 }) {
           title="Center"
           scoreId="score-ps-d-center"
           section="ps-d-center"
-          questions={[
-            {
-              prompt: "Most outlier-resistant center:",
-              options: ["Mean", "Median", "Range"],
-              answer: "B",
-              explanation: "Median ignores extreme magnitude.",
-            },
-            {
-              prompt: "Right-skewed data tend to have:",
-              options: ["Mean < median", "Mean > median", "Mean = mode always"],
-              answer: "B",
-              explanation: "Long right tail pulls the mean up.",
-            },
-            {
-              prompt: "Sample mean formula divides the sum by:",
-              options: ["$n-1$", "$n$", "$2n$"],
-              answer: "B",
-              explanation: "$\\bar x=(\\sum x_i)/n$.",
-            },
-          ]}
+          questions={PS_D_CENTER_QUIZ}
         />
 
         <Divider />
@@ -392,29 +416,12 @@ function DescriptiveStatsGuide({ part = 1 }) {
           title="Quantiles"
           scoreId="score-ps-d-quant"
           section="ps-d-quant"
-          questions={[
-            {
-              prompt: "$Q_2$ is the:",
-              options: ["Mean", "Median", "Mode"],
-              answer: "B",
-              explanation: "Second quartile = median.",
-            },
-            {
-              prompt: "The 90th percentile is above roughly:",
-              options: ["10% of data", "90% of data", "50% of data"],
-              answer: "B",
-              explanation: "About 90% lie at or below it.",
-            },
-            {
-              prompt: "Five-number summary uses:",
-              options: ["Only mean/SD", "Min, Q1, median, Q3, max", "Only mode"],
-              answer: "B",
-              explanation: "Classic boxplot ingredients.",
-            },
-          ]}
+          questions={PS_D_QUANT_QUIZ}
         />
 
         <Divider />
+        <PsCertificateBoost topic="descriptive" part={1} />
+
         <section className="section" id="summary">
           <div className="sec-badge">Reference</div>
           <h2 className="sec-title">Part 1 complete</h2>

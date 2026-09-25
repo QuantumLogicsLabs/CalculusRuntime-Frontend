@@ -1,5 +1,5 @@
-import StudyGuideShell from "../StudyGuideShell";
-import "../PartialDerivativesGuide.css";
+import StudyGuideShell from "../courses/StudyGuideShell";
+import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { LaMcqSection } from "../linearAlgebra/LaMcq";
 import { TheoryBox, PracticalTheory, RealLifeUse, ProcedureBox } from "./CalcBlocks";
 import {
@@ -13,6 +13,17 @@ function Divider() {
   return <hr className="divider" />;
 }
 
+function OpeningNote() {
+  return (
+    <div className="opening-note-box">
+      <p className="opening-note">
+        <strong>Operational Blueprint:</strong>{" "}
+        {"This study guide formalizes analytic geometry and the classification of conic sections—parabolas, ellipses, hyperbolas, and circles—arising from plane-cone intersections. We analyze standard geometric locus definitions involving foci, directrices, vertices, and eccentricities ($e = c/a$). The curriculum expands to the general quadratic equation $Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0$, utilizing the discriminant invariant $B^2 - 4AC$ for classification, coordinate translations, and axes rotations through angle $\\theta$. These geometric curves provide the governing equations for celestial orbital mechanics, satellite reflector optics, whispering gallery acoustics, and radar navigation systems in aerospace and telecommunications engineering."}
+      </p>
+    </div>
+  );
+}
+
 export default function ConicsGuide({ part = 1 }) {
   if (part === 2) {
     return (
@@ -22,7 +33,7 @@ export default function ConicsGuide({ part = 1 }) {
           <a className="sb-link" href="#con-class">Classification &amp; applications</a>
           <a className="sb-link" href="#con-proc2">Method</a>
           <a className="sb-link" href="#con-ex-p2">Examples (8)</a>
-          <a className="sb-link" href="#quiz-con-p2">Quiz · 10 Qs</a>
+          <a className="sb-link" href="#quiz-con-p2">Quiz · 20 Qs</a>
           <a className="sb-link" href="#con-life2">Real-life use</a>
         </nav>
         <main className="main">
@@ -33,12 +44,30 @@ export default function ConicsGuide({ part = 1 }) {
             <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
           </header>
 
+          <div className="my-4 p-4 bg-blue-600/10 border border-blue-500/30 rounded-xl text-center">
+            <p className="text-blue-700 dark:text-blue-300 font-bold text-sm sm:text-base">
+              📐 Interactive Tool: Explore the{" "}
+              <a href="/analytic-vector-lab" className="underline hover:text-blue-500 font-extrabold">
+                Analytic Geometry &amp; 3D Vector Lab →
+              </a>
+            </p>
+          </div>
+
+          <OpeningNote />
+          <Divider />
+
+
           <section className="section" id="con-class">
             <div className="sec-badge">Section 2.1</div>
             <h2 className="sec-title">From general equation to the real world</h2>
             <TheoryBox title="Discriminant and applications">
               <p>
                 {"For $Ax^2+Bxy+Cy^2+Dx+Ey+F=0$, the invariant $B^2-4AC$ classifies the nondegenerate type: $<0$ ellipse, $=0$ parabola, $>0$ hyperbola. An $xy$ term is removed by rotating through $\\theta$ with $\\cot 2\\theta=(A-C)/B$. Reflection properties of the parabola, the string property of the ellipse, and the difference property of the hyperbola power dishes, gardens, and LORAN-style navigation. Inverse-square gravity yields conic orbits with a focus at the sun."}
+              </p>
+            </TheoryBox>
+            <TheoryBox title="Polar Form of Conic Sections">
+              <p>
+                {"With a focus at the pole (origin), every conic has the standard polar representation $r = \\frac{ed}{1 \\pm e\\cos\\theta}$ (vertical directrix at $x = \\pm d$) or $r = \\frac{ed}{1 \\pm e\\sin\\theta}$ (horizontal directrix at $y = \\pm d$). The geometric type is unified completely by eccentricity: $e < 1$ is an ellipse, $e = 1$ is a parabola, and $e > 1$ is a hyperbola."}
               </p>
             </TheoryBox>
             <PracticalTheory title="Exam / design workflow">
@@ -75,7 +104,7 @@ export default function ConicsGuide({ part = 1 }) {
           <LaMcqSection
             id="quiz-con-p2"
             badge="Quiz"
-            title="General conics & applications (10 questions)"
+            title="General conics & applications (20 questions)"
             scoreId="score-con-p2"
             section="con-p2"
             questions={CONICS_P2_QUIZ}
@@ -103,7 +132,7 @@ export default function ConicsGuide({ part = 1 }) {
         <a className="sb-link" href="#con-theory">Lines, circles, conics</a>
         <a className="sb-link" href="#con-proc1">Method</a>
         <a className="sb-link" href="#con-ex-p1">Examples (8)</a>
-        <a className="sb-link" href="#quiz-con-p1">Quiz · 10 Qs</a>
+        <a className="sb-link" href="#quiz-con-p1">Quiz · 20 Qs</a>
         <a className="sb-link" href="#con-life1">Real-life use</a>
       </nav>
       <main className="main">
@@ -113,6 +142,19 @@ export default function ConicsGuide({ part = 1 }) {
           <p className="ch-sub">Distance/midpoint, circle, parabola, ellipse, hyperbola, eccentricity</p>
           <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
         </header>
+
+        <div className="my-4 p-4 bg-blue-600/10 border border-blue-500/30 rounded-xl text-center">
+          <p className="text-blue-700 dark:text-blue-300 font-bold text-sm sm:text-base">
+            📐 Interactive Tool: Explore the{" "}
+            <a href="/analytic-vector-lab" className="underline hover:text-blue-500 font-extrabold">
+              Analytic Geometry &amp; 3D Vector Lab →
+            </a>
+          </p>
+        </div>
+
+        <OpeningNote />
+        <Divider />
+
 
         <section className="section" id="con-theory">
           <div className="sec-badge">Section 1.1</div>
@@ -155,7 +197,7 @@ export default function ConicsGuide({ part = 1 }) {
         <LaMcqSection
           id="quiz-con-p1"
           badge="Quiz"
-          title="Distance, circles & standard conics (10 questions)"
+          title="Distance, circles & standard conics (20 questions)"
           scoreId="score-con-p1"
           section="con-p1"
           questions={CONICS_P1_QUIZ}

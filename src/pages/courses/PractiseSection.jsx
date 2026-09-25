@@ -1,0 +1,499 @@
+import React, { useState, useEffect, useRef } from "react";
+import SubmitToLeaderboard from "../../components/SubmitToLeaderboard";
+import "../dashboard/Leaderboard.css";
+import "./PractiseSection.css";
+
+// Practice banks are fetched on demand so the full question library does not ship
+// in the main bundle. Available question counts vary by topic.
+const BANK_LOADERS = {
+  calcAg: () => import('../../data/calcAgPracticeBank').then((m) => m.CALC_AG_PRACTICE_BANK),
+  mv: () => import('../../data/mvPracticeBank').then((m) => m.MV_PRACTICE_BANK),
+  la: () => import('../../data/laPracticeBank').then((m) => m.LA_PRACTICE_BANK),
+  ps: () => import('../../data/psPracticeBank').then((m) => m.PS_PRACTICE_BANK),
+};
+
+const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
+
+const TOPICS = [
+  'Lagrange Multipliers',
+  'Divergence & Curl',
+  "Stokes' Theorem",
+  "Green's Theorem",
+  'Taylor & Maclaurin Series',
+  'Maclaurin Series',
+  'Taylor Series for Multivariable Functions',
+  'Partial Derivatives',
+  'Vector Calculus',
+  'Limits and Continuity',
+  'Differentiation',
+  'Integration',
+  'Sequences and Infinite Series',
+  'Conic Sections and Analytic Geometry',
+  '3D Analytic Geometry & Vectors',
+  'Space Curves & Advanced Multivariable Mappings',
+  '2D Lines & Systems of Lines',
+  'Circles & Conic Tangents',
+  'Advanced Single-Variable Calculus',
+  'Ordinary Differential Equations (ODEs)',
+  'Multiple Integrals',
+  'Vectors & Vector Spaces',
+  'Matrices & Determinants',
+  'Systems of Linear Equations',
+  'Fundamental Subspaces & Rank-Nullity',
+  'Eigenvalues & Eigenvectors',
+  'Linear Transformations',
+  'Orthogonality & Least Squares',
+  'Singular Value Decomposition',
+  'Probability Basics',
+  'Random Variables & Distributions',
+  'Descriptive Statistics',
+  'Hypothesis Testing',
+  'Regression & Correlation',
+];
+
+const TOPIC_ALIASES = {
+  'Limits & Continuity': 'Limits and Continuity',
+  'Differentiation & Applications': 'Differentiation',
+  'Integration & Techniques': 'Integration',
+  'Sequences, Series & Taylor': 'Sequences and Infinite Series',
+  'Conics & 2D Analytic Geometry': 'Conic Sections and Analytic Geometry',
+  '3D Analytic Geometry & Vectors': '3D Analytic Geometry & Vectors',
+};
+
+const TOPIC_BANK = {
+  'Limits and Continuity': 'calcAg',
+  'Limits & Continuity': 'calcAg',
+  Differentiation: 'calcAg',
+  'Differentiation & Applications': 'calcAg',
+  Integration: 'calcAg',
+  'Integration & Techniques': 'calcAg',
+  'Sequences and Infinite Series': 'calcAg',
+  'Sequences, Series & Taylor': 'calcAg',
+  'Conic Sections and Analytic Geometry': 'calcAg',
+  'Conics & 2D Analytic Geometry': 'calcAg',
+  '3D Analytic Geometry & Vectors': 'calcAg',
+  '2D Lines & Systems of Lines': 'calcAg',
+  'Circles & Conic Tangents': 'calcAg',
+  'Advanced Single-Variable Calculus': 'calcAg',
+  'Ordinary Differential Equations (ODEs)': 'calcAg',
+  'Taylor Series for Multivariable Functions': 'calcAg',
+  'Taylor & Maclaurin Series': 'calcAg',
+  'Maclaurin Series': 'calcAg',
+  'Partial Derivatives': 'mv',
+  'Vector Calculus': 'mv',
+  'Multiple Integrals': 'mv',
+  'Lagrange Multipliers': 'mv',
+  'Divergence & Curl': 'mv',
+  "Stokes' Theorem": 'mv',
+  "Green's Theorem": 'mv',
+  'Space Curves & Advanced Multivariable Mappings': 'mv',
+  'Vectors & Vector Spaces': 'la',
+  'Matrices & Determinants': 'la',
+  'Systems of Linear Equations': 'la',
+  'Fundamental Subspaces & Rank-Nullity': 'la',
+  'Eigenvalues & Eigenvectors': 'la',
+  'Linear Transformations': 'la',
+  'Orthogonality & Least Squares': 'la',
+  'Singular Value Decomposition': 'la',
+  'Probability Basics': 'ps',
+  'Random Variables & Distributions': 'ps',
+  'Descriptive Statistics': 'ps',
+  'Hypothesis Testing': 'ps',
+  'Regression & Correlation': 'ps',
+};
+
+function shuffled(list) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+function shuffleQuestionOptions(question) {
+  const choices = question.options.map((option, originalIndex) => ({
+    option,
+    originalIndex,
+  }));
+  const randomizedChoices = shuffled(choices);
+  return {
+    ...question,
+    options: randomizedChoices.map((choice) => choice.option),
+    correctAnswer: randomizedChoices.findIndex(
+      (choice) => choice.originalIndex === question.correctAnswer
+    ),
+  };
+}
+
+export default function PractiseSection() {
+  // --- LAYER 1: DIFFICULTY SELECTION ---
+  const [chosenDifficulty, setChosenDifficulty] = useState(null);
+
+  // --- LAYER 2: TOPIC SELECTION ---
+  const [chosenTopic, setChosenTopic] = useState(null);
+
+  // --- CORE GAMEPLAY STATE ---
+  const [poolProblems, setPoolProblems] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+
+  // --- RUNNING SCORE PERSISTENCE ---
+  const [score, setScore] = useState(() => {
+    const saved = localStorage.getItem('arena_score_tracker');
+    return saved ? JSON.parse(saved) : { correct: 0, total: 0 };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('arena_score_tracker', JSON.stringify(score));
+  }, [score]);
+
+  const [isLoadingBank, setIsLoadingBank] = useState(false);
+
+  // Handle building the problem pool based on selection matrices
+  useEffect(() => {
+    if (!chosenDifficulty || !chosenTopic) return undefined;
+
+    let cancelled = false;
+    const loader = BANK_LOADERS[TOPIC_BANK[chosenTopic]];
+    setIsLoadingBank(true);
+    setPoolProblems([]);
+    setCurrentIndex(0);
+    setIsQuizCompleted(false);
+    resetQuizTurn();
+
+    Promise.resolve(loader ? loader() : [])
+      .then((bank) => {
+        if (cancelled) return;
+        const canonicalTopic = TOPIC_ALIASES[chosenTopic] || chosenTopic;
+        const filtered = bank.filter((p) => {
+          if (p.difficulty !== chosenDifficulty) return false;
+          if (p.topic === chosenTopic || p.topic === canonicalTopic) return true;
+          if (
+            (canonicalTopic === 'Taylor Series for Multivariable Functions' ||
+              canonicalTopic === 'Taylor & Maclaurin Series' ||
+              canonicalTopic === 'Maclaurin Series') &&
+            (p.topic === 'Taylor Series for Multivariable Functions' ||
+              p.topic === 'Taylor & Maclaurin Series' ||
+              p.topic === 'Maclaurin Series')
+          ) {
+            return true;
+          }
+          return false;
+        });
+        setPoolProblems(shuffled(filtered).map(shuffleQuestionOptions));
+      })
+      .catch((error) => {
+        console.error("Failed to load practice question bank:", error);
+        if (!cancelled) setPoolProblems([]);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingBank(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [chosenDifficulty, chosenTopic]);
+
+  const autoAdvanceTimerRef = useRef(null);
+
+  const resetQuizTurn = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    setSelectedAnswer(null);
+    setIsSubmitted(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleSelectionReset = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    setChosenDifficulty(null);
+    setChosenTopic(null);
+    setPoolProblems([]);
+    setCurrentIndex(0);
+    setIsQuizCompleted(false);
+    resetQuizTurn();
+  };
+
+  // PROGRESSIVE QUIZ FLOW: Move to the next question or complete quiz
+  const handleNextQuestion = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    if (currentIndex < poolProblems.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+      resetQuizTurn();
+    } else {
+      setIsQuizCompleted(true);
+    }
+  };
+
+  const handleAnswerClick = (index) => {
+    if (isSubmitted) return;
+    setSelectedAnswer(index);
+
+    const currentProblem = poolProblems[currentIndex];
+    if (!currentProblem) return;
+
+    const correct = index === currentProblem.correctAnswer;
+    setScore((prev) => ({
+      correct: prev.correct + (correct ? 1 : 0),
+      total: prev.total + 1,
+    }));
+    setIsSubmitted(true);
+
+    // If answer is correct, automatically advance to next MCQ after short confirmation delay!
+    if (correct) {
+      autoAdvanceTimerRef.current = setTimeout(() => {
+        if (currentIndex < poolProblems.length - 1) {
+          setCurrentIndex((prev) => prev + 1);
+          resetQuizTurn();
+        } else {
+          setIsQuizCompleted(true);
+        }
+      }, 750);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedAnswer === null || isSubmitted) return;
+    const currentProblem = poolProblems[currentIndex];
+    if (!currentProblem) return;
+
+    const correct = selectedAnswer === currentProblem.correctAnswer;
+    setScore((prev) => ({
+      correct: prev.correct + (correct ? 1 : 0),
+      total: prev.total + 1,
+    }));
+    setIsSubmitted(true);
+
+    if (correct) {
+      autoAdvanceTimerRef.current = setTimeout(() => {
+        if (currentIndex < poolProblems.length - 1) {
+          setCurrentIndex((prev) => prev + 1);
+          resetQuizTurn();
+        } else {
+          setIsQuizCompleted(true);
+        }
+      }, 750);
+    }
+  };
+
+  const currentProblem = poolProblems[currentIndex] || null;
+
+  return (
+    <div className="practice-page">
+      <div className="practice-hud">
+        <div>
+          <h1>Focused Practice Arena</h1>
+          <p>Comprehensive testing workspace for Advanced Calculus and Mathematics modules.</p>
+        </div>
+        <div className="practice-score">
+          <div>
+            <span className="practice-score-label">Total Score</span>
+            <div className="practice-score-value">
+              {score.correct} <span>/</span> {score.total}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="practice-reset"
+            onClick={() => setScore({ correct: 0, total: 0 })}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {!chosenDifficulty && (
+        <div className="practice-panel">
+          <h2>Select Targeted Practice Tier</h2>
+          <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>
+            Choose a difficulty tier to unlock the specific topic modules.
+          </p>
+          <div className="practice-tier-grid">
+            {DIFFICULTIES.map((level) => (
+              <button
+                key={level}
+                type="button"
+                onClick={() => setChosenDifficulty(level)}
+                className={`practice-tier-btn practice-tier-btn--${level.toLowerCase()}`}
+              >
+                {level} Mode
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {chosenDifficulty && !chosenTopic && (
+        <div className="practice-panel">
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
+            <span className="practice-crumb">
+              Difficulty Tier: <span className="practice-crumb-pill">{chosenDifficulty}</span>
+            </span>
+            <button type="button" className="practice-back" onClick={handleSelectionReset}>
+              ← Back to Tiers
+            </button>
+          </div>
+          <h3>Select Practice Topic</h3>
+          <div className="practice-topic-grid">
+            {TOPICS.map((topic) => (
+              <button
+                key={topic}
+                type="button"
+                className="practice-topic-btn"
+                onClick={() => setChosenTopic(topic)}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {chosenDifficulty && chosenTopic && (
+        <div>
+          <div className="practice-toolbar">
+            <div className="practice-crumb">
+              <span className="practice-crumb-pill">{chosenDifficulty}</span>
+              <span>/</span>
+              <span style={{ color: 'var(--ink)' }}>{chosenTopic}</span>
+            </div>
+            <div className="practice-toolbar-actions">
+              <button
+                type="button"
+                className="practice-tool-btn"
+                onClick={handleSelectionReset}
+              >
+                Change Topic
+              </button>
+            </div>
+          </div>
+
+          <div className="practice-panel">
+            {!isQuizCompleted && currentProblem ? (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <p className="practice-kicker" style={{ margin: 0 }}>
+                    Question Workspace
+                  </p>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+                    Question {currentIndex + 1} of {poolProblems.length}
+                  </span>
+                </div>
+
+                <h2 className="practice-question">{currentProblem.question}</h2>
+
+                <div className="practice-options" role="listbox" aria-label="Answer choices">
+                  {currentProblem.options.map((option, idx) => {
+                    let stateClass = '';
+                    if (selectedAnswer === idx && !isSubmitted) {
+                      stateClass = 'practice-option--selected';
+                    }
+                    if (isSubmitted) {
+                      if (idx === currentProblem.correctAnswer) {
+                        stateClass = 'practice-option--correct';
+                      } else if (selectedAnswer === idx) {
+                        stateClass = 'practice-option--wrong';
+                      } else {
+                        stateClass = 'practice-option--muted';
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        role="option"
+                        aria-selected={selectedAnswer === idx}
+                        disabled={isSubmitted}
+                        onClick={() => handleAnswerClick(idx)}
+                        className={`practice-option ${stateClass}`.trim()}
+                      >
+                        <span className="practice-option__letter">
+                          {String.fromCharCode(65 + idx)}
+                        </span>
+                        <span className="practice-option__text">{option}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="practice-actions">
+                  {!isSubmitted ? (
+                    <button
+                      type="button"
+                      className="practice-submit"
+                      onClick={handleSubmit}
+                      disabled={selectedAnswer === null}
+                    >
+                      Submit Verification
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="practice-next"
+                      onClick={handleNextQuestion}
+                    >
+                      {currentIndex < poolProblems.length - 1 ? 'Next Question →' : 'Finish Quiz & View Score'}
+                    </button>
+                  )}
+                </div>
+
+                {isSubmitted && (
+                  <div className="practice-insight">
+                    <h4>Solution Insight</h4>
+                    <p>{currentProblem.explanation}</p>
+                  </div>
+                )}
+              </div>
+            ) : isQuizCompleted ? (
+              <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                <h2>Quiz Complete!</h2>
+                <p>You have finished all questions for <strong>{chosenTopic}</strong> ({chosenDifficulty}).</p>
+                <div style={{ margin: '1.5rem 0' }}>
+                  <SubmitToLeaderboard
+                    quizId={`practice-${chosenTopic}-${chosenDifficulty}`}
+                    score={score.correct}
+                    total={Math.max(score.total, 1)}
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="practice-tool-btn practice-tool-btn--accent"
+                  onClick={handleSelectionReset}
+                  style={{ marginTop: '1rem' }}
+                >
+                  Choose Another Topic
+                </button>
+              </div>
+            ) : isLoadingBank ? (
+              <div className="practice-empty">Loading question bank…</div>
+            ) : (
+              <div className="practice-empty">
+                No questions populated matching this configuration choice.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

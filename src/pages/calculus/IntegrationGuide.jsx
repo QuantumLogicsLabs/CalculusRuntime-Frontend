@@ -1,5 +1,5 @@
-import StudyGuideShell from "../StudyGuideShell";
-import "../PartialDerivativesGuide.css";
+import StudyGuideShell from "../courses/StudyGuideShell";
+import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { LaMcqSection } from "../linearAlgebra/LaMcq";
 import {
   TheoryBox,
@@ -14,6 +14,73 @@ import {
 } from "../../data/calcAgLengthyExamples";
 import { INT_FUND_QUIZ, INT_TECH_QUIZ } from "../../data/calcAgStudyQuizzes";
 
+function Divider() {
+  return <hr className="divider" />;
+}
+
+function OpeningNote() {
+  return (
+    <div className="opening-note-box">
+      <p className="opening-note">
+        <strong>Operational Blueprint:</strong>{" "}
+        {"This study guide formalizes integral calculus, bridging accumulation concepts with the Fundamental Theorem of Calculus. Definite integrals quantify net signed area, accumulated physical quantities, and continuous volume sums via Riemann limits $\\int_a^b f(x)dx = \\lim_{n \\to \\infty} \\sum_{i=1}^n f(x_i^*)\\Delta x$. The curriculum develops systematic integration strategies including $u$-substitution, integration by parts ($\\int u\\,dv = uv - \\int v\\,du$), trigonometric substitutions, partial fraction decompositions, and improper integral convergence evaluations. These integral tools provide the essential mathematical machinery for computing physical work, fluid pressure, centers of mass, structural stress distributions, and probability density functions in engineering science."}
+      </p>
+    </div>
+  );
+}
+
+function SectionIntTechniques() {
+  return (
+    <section className="section" id="int-tech-deep">
+      <div className="sec-badge">Section 2.2</div>
+      <h2 className="sec-title">Deep Dive: Advanced Integration Techniques</h2>
+      <TheoryBox title="Integration by Parts">
+        <p>
+          {"Derived from the product rule: $\\int u\\,dv = uv - \\int v\\,du$. Use the LIATE rule to choose $u$ (Logarithmic, Inverse trig, Algebraic, Trigonometric, Exponential)."}
+        </p>
+      </TheoryBox>
+      <TheoryBox title="Trigonometric Substitution">
+        <p>
+          {"Used to evaluate integrals containing radicals of the form $\\sqrt{a^2-x^2}$, $\\sqrt{x^2-a^2}$, or $\\sqrt{x^2+a^2}$. By substituting $x$ with $a\\sin\\theta$, $a\\sec\\theta$, or $a\\tan\\theta$ respectively, we leverage trig identities (like $1-\\sin^2\\theta = \\cos^2\\theta$) to eliminate the root."}
+        </p>
+      </TheoryBox>
+      <TheoryBox title="Partial Fractions">
+        <p>
+          {"A method to integrate rational functions $\\frac{P(x)}{Q(x)}$. We decompose the fraction into simpler sums of fractions with linear or irreducible quadratic denominators, which can then be integrated using natural logs or arctangents."}
+        </p>
+      </TheoryBox>
+    </section>
+  );
+}
+
+function SectionIntImproperApps() {
+  return (
+    <section className="section" id="int-apps">
+      <div className="sec-badge">Section 2.3</div>
+      <h2 className="sec-title">Improper Integrals & Physical Applications</h2>
+      <TheoryBox title="Improper Integrals & Convergence">
+        <p>
+          {"Integrals with infinite limits (e.g., $\\int_1^\\infty \\frac{1}{x^2} dx$) or infinite discontinuities (e.g., $\\int_0^1 \\frac{1}{\\sqrt{x}} dx$) are evaluated using limits: $\\lim_{t \\to \\infty} \\int_1^t \\frac{1}{x^2} dx$. If the limit exists and is finite, the integral **converges**. Otherwise, it **diverges**."}
+        </p>
+      </TheoryBox>
+      <PracticalTheory title="Real-World Uses: Length, Area, Volume">
+        <p>
+          {"**Arc Length**: The length of a curve $y=f(x)$ from $a$ to $b$ is $L = \\int_a^b \\sqrt{1 + [f'(x)]^2} dx$."}
+        </p>
+        <p>
+          {"**Volumes of Revolution**: "}<br/>
+          {"- *Disk Method*: $V = \\pi \\int_a^b [f(x)]^2 dx$"}<br/>
+          {"- *Washer Method*: $V = \\pi \\int_a^b ([R(x)]^2 - [r(x)]^2) dx$"}<br/>
+          {"- *Shell Method*: $V = 2\\pi \\int_a^b x f(x) dx$"}
+        </p>
+        <p>
+          {"**Surface Area**: Revolve a curve around the x-axis: $S = \\int_a^b 2\\pi f(x) \\sqrt{1 + [f'(x)]^2} dx$."}
+        </p>
+      </PracticalTheory>
+    </section>
+  );
+}
+
 export default function IntegrationGuide({ part = 1 }) {
   if (part === 2) {
     return (
@@ -21,9 +88,11 @@ export default function IntegrationGuide({ part = 1 }) {
         <nav className="sidebar">
           <div className="sb-brand"><div className="sb-title">Integration - Part 2</div></div>
           <a className="sb-link" href="#int-tech">Techniques</a>
+          <a className="sb-link" href="#int-tech-deep">Deep Dive</a>
+          <a className="sb-link" href="#int-apps">Improper & Apps</a>
           <a className="sb-link" href="#int-proc2">Method</a>
           <a className="sb-link" href="#int-ex-p2">Examples (8)</a>
-          <a className="sb-link" href="#quiz-int-tech">Quiz 1 - 10 Qs</a>
+          <a className="sb-link" href="#quiz-int-tech">Quiz 1 - 20 Qs</a>
           <a className="sb-link" href="#int-life2">Real-life use</a>
         </nav>
         <main className="main">
@@ -33,6 +102,9 @@ export default function IntegrationGuide({ part = 1 }) {
             <p className="ch-sub">Substitution, parts, partial fractions, improper integrals</p>
             <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
           </header>
+
+          <OpeningNote />
+          <Divider />
 
           <section className="section" id="int-tech">
             <div className="sec-badge">Section 2.1</div>
@@ -52,6 +124,9 @@ export default function IntegrationGuide({ part = 1 }) {
               dead end - the same judgment HEC markers score when they ask "which method?".
             </RealLifeUse>
           </section>
+
+          <SectionIntTechniques />
+          <SectionIntImproperApps />
 
           <section className="section" id="int-proc2">
             <ProcedureBox
@@ -78,7 +153,7 @@ export default function IntegrationGuide({ part = 1 }) {
           <LaMcqSection
             id="quiz-int-tech"
             badge="Quiz 1"
-            title="Techniques (10 questions)"
+            title="Techniques (20 questions)"
             scoreId="score-int-tech"
             section="int-tech"
             questions={INT_TECH_QUIZ}
@@ -105,7 +180,7 @@ export default function IntegrationGuide({ part = 1 }) {
         <a className="sb-link" href="#int-theory">Theory</a>
         <a className="sb-link" href="#int-proc1">Method</a>
         <a className="sb-link" href="#int-ex-p1">Examples (8)</a>
-        <a className="sb-link" href="#quiz-int-fund">Quiz 1 - 10 Qs</a>
+        <a className="sb-link" href="#quiz-int-fund">Quiz 1 - 20 Qs</a>
         <a className="sb-link" href="#int-life1">Real-life use</a>
       </nav>
       <main className="main">
@@ -115,6 +190,9 @@ export default function IntegrationGuide({ part = 1 }) {
           <p className="ch-sub">Area, net change, and the Fundamental Theorem</p>
           <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
         </header>
+
+        <OpeningNote />
+        <Divider />
 
         <section className="section" id="int-theory">
           <div className="sec-badge">Section 1.1</div>
@@ -132,6 +210,11 @@ export default function IntegrationGuide({ part = 1 }) {
               {`Translate first ("net displacement", "total mass"), then reverse differentiation rules. Always differentiate your antiderivative as a one-line check.`}
             </p>
           </PracticalTheory>
+          <TheoryBox title="Average Value of a Function">
+            <p>
+              {`The average (mean) value of an integrable function $f$ over $[a, b]$ is $f_{\\text{avg}} = \\frac{1}{b-a}\\int_a^b f(x)\\,dx$. By the Mean Value Theorem for Definite Integrals, if $f$ is continuous, there is some $c \\in [a, b]$ where $f(c) = f_{\\text{avg}}$.`}
+            </p>
+          </TheoryBox>
           <RealLifeUse>
             The FTC is why a flow meter's rate curve can be turned into total volume delivered - the
             same move as "integrate velocity to get net displacement."
@@ -163,7 +246,7 @@ export default function IntegrationGuide({ part = 1 }) {
         <LaMcqSection
           id="quiz-int-fund"
           badge="Quiz 1"
-          title="Foundations (10 questions)"
+          title="Foundations (20 questions)"
           scoreId="score-int-fund"
           section="int-fund"
           questions={INT_FUND_QUIZ}

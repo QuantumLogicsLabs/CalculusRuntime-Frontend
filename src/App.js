@@ -1,53 +1,62 @@
-import MultiVariableCalculus from "./pages/MultiVariableCalculus";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { ProgressProvider } from "./pages/ProgressContext";
-import Layout from "./components/Layout";
+import { ProgressProvider } from "./pages/courses/ProgressContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import Layout from "./components/common/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
-import ErrorBoundary from "./components/ErrorBoundary";
-import SiteThemeManager from "./components/SiteThemeManager";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import SiteThemeManager from "./components/common/SiteThemeManager";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import AISolver from "./pages/AISolver";
-import NotFound from "./pages/NotFound";
-import CourseHub from "./pages/CourseHub";
-import SimpleConcepts from "./pages/SimpleConcepts";
-import ConceptExplore from "./pages/ConceptExplore";
+import Home from "./pages/home/Home";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import Dashboard from "./pages/dashboard/Dashboard";
+import AISolver from "./pages/tools/AISolver";
+import NotFound from "./pages/system/NotFound";
+import CourseHub from "./pages/courses/CourseHub";
+import SimpleConcepts from "./pages/courses/SimpleConcepts";
+import ConceptExplore from "./pages/courses/ConceptExplore";
 
-import IntegralsPart1 from "./pages/IntegralsPart1";
-import IntegralsPart2 from "./pages/IntegralsPart2";
-import PartialPart1 from "./pages/PartialPart1";
-import PartialPart2 from "./pages/PartialPart2";
-import VectorPart1 from "./pages/VectorPart1";
-import VectorPart2 from "./pages/VectorPart2";
-import LimitsPart1 from "./pages/LimitsPart1";
-import LimitsPart2 from "./pages/LimitsPart2";
-import TaylorPart1 from "./pages/TaylorPart1";
-import TaylorPart2 from "./pages/TaylorPart2";
-import LagrangePart1 from "./pages/LagrangePart1";
-import LagrangePart2 from "./pages/LagrangePart2";
-import StokesPart1 from "./pages/StokesPart1";
-import StokesPart2 from "./pages/StokesPart2";
-import DivergencePart1 from "./pages/DivergencePart1";
-import DivergencePart2 from "./pages/DivergencePart2";
-import PractiseSection from "./pages/PractiseSection";
-import PersonalizedStudyPlan from "./pages/PersonalizedStudyPlan";
-import ContinuityFinder from "./pages/ContinuityFinder";
-import ExtremeValueFunction from "./pages/ExtremeValueFinder";
-import VolumeCalculator from "./pages/VolumeCalculator";
-import DerivativeTool from "./components/DerivativeTool";
-import VectorFieldVisualizer from "./pages/VectorFieldVisualizer";
-import CheatSheet from "./pages/CheatSheet";
-import Leaderboard from "./pages/Leaderboard";
-import SavedForLater from "./pages/SavedForLater";
+import IntegralsPart1 from "./pages/multivariableCalculus/IntegralsPart1";
+import IntegralsPart2 from "./pages/multivariableCalculus/IntegralsPart2";
+import PartialPart1 from "./pages/multivariableCalculus/PartialPart1";
+import PartialPart2 from "./pages/multivariableCalculus/PartialPart2";
+import VectorPart1 from "./pages/multivariableCalculus/VectorPart1";
+import VectorPart2 from "./pages/multivariableCalculus/VectorPart2";
+import LimitsPart1 from "./pages/multivariableCalculus/LimitsPart1";
+import LimitsPart2 from "./pages/multivariableCalculus/LimitsPart2";
+import TaylorPart1 from "./pages/multivariableCalculus/TaylorPart1";
+import TaylorPart2 from "./pages/multivariableCalculus/TaylorPart2";
+import LagrangePart1 from "./pages/multivariableCalculus/LagrangePart1";
+import LagrangePart2 from "./pages/multivariableCalculus/LagrangePart2";
+import StokesPart1 from "./pages/multivariableCalculus/StokesPart1";
+import StokesPart2 from "./pages/multivariableCalculus/StokesPart2";
+import DivergencePart1 from "./pages/multivariableCalculus/DivergencePart1";
+import DivergencePart2 from "./pages/multivariableCalculus/DivergencePart2";
+import Geometry3DPart1 from "./pages/multivariableCalculus/Geometry3DPart1";
+import Geometry3DPart2 from "./pages/multivariableCalculus/Geometry3DPart2";
+import PractiseSection from "./pages/courses/PractiseSection";
+import PersonalizedStudyPlan from "./pages/courses/PersonalizedStudyPlan";
+import ContinuityFinder from "./pages/tools/ContinuityFinder";
+import ExtremeValueFunction from "./pages/tools/ExtremeValueFinder";
+import VolumeCalculator from "./pages/tools/VolumeCalculator";
+import DerivativeTool from "./components/tools/DerivativeTool";
+import VectorFieldVisualizer from "./pages/tools/VectorFieldVisualizer";
+import AnalyticVectorLab from "./pages/tools/AnalyticVectorLab";
+
+import CheatSheet from "./pages/courses/CheatSheet";
+import Leaderboard from "./pages/dashboard/Leaderboard";
 import Certificate from "./pages/calculus/Certificate";
+import CourseQuiz from "./pages/courses/CourseQuiz";
+import MyCertificates from "./pages/certificates/MyCertificates";
+import VerifyCertificate from "./pages/certificates/VerifyCertificate";
+import SavedForLater from "./pages/dashboard/SavedForLater";
 import Chatbot from "./components/Chatbot/Chatbot";
-import BackToTop from "./components/BackToTop";
+import BackToTop from "./components/common/BackToTop";
 
 import {
+  LinearEquationsPart1,
+  LinearEquationsPart2,
   VectorsPart1,
   VectorsPart2,
   MatricesPart1,
@@ -63,8 +72,12 @@ import {
   SvdPart1,
   SvdPart2,
 } from "./pages/linearAlgebra/LaParts";
-
 import MatrixSandbox from "./pages/linearAlgebra/MatrixSandbox";
+import LinearAlgebraOverview from "./pages/linearAlgebra/LinearAlgebraOverview";
+import CalculusOverview from "./pages/calculus/CalculusOverview";
+import MultivariableOverview from "./pages/multivariableCalculus/MultivariableOverview";
+import ProbabilityStatisticsOverview from "./pages/probabilityStatistics/ProbabilityStatisticsOverview";
+
 import BayesLab from "./pages/probabilityStatistics/BayesLab";
 
 import {
@@ -89,12 +102,21 @@ import {
   SeriesPart2,
   ConicsPart1,
   ConicsPart2,
+  LinesPart1,
+  LinesPart2,
+  CirclesPart1,
+  CirclesPart2,
+  AdvCalcPart1,
+  AdvCalcPart2,
+  OdePart1,
+  OdePart2,
 } from "./pages/calculus/CalcParts";
 
 function App() {
   return (
-    <AuthProvider>
-      <ProgressProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ProgressProvider>
         <BrowserRouter>
           <ErrorBoundary>
             <ScrollToTop />
@@ -107,9 +129,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Layout body={<Dashboard />} />} />
+              <Route path="/saved" element={<Layout body={<SavedForLater />} />} />
 
               {/* Course hubs */}
-              <Route path="/courses/multivariable-calculus" element={<Layout body={<MultiVariableCalculus />} />} />
               <Route path="/courses/:courseId" element={<Layout body={<CourseHub />} />} />
 
               {/* Simple Concepts */}
@@ -118,6 +140,10 @@ function App() {
 
               {/* AI Solver */}
               <Route path="/ai-solver" element={<Layout body={<AISolver />} />} />
+
+              {/* Multivariable Calculus Overview */}
+              <Route path="/multivariable-calculus/overview" element={<Layout body={<MultivariableOverview />} />} />
+              <Route path="/courses/multivariable-calculus/overview" element={<Layout body={<MultivariableOverview />} />} />
 
               {/* Partial Derivatives */}
               <Route path="/partial-derivatives" element={<Navigate to="/partial-derivatives/1" replace />} />
@@ -129,6 +155,10 @@ function App() {
               <Route path="/vector-calculus/1" element={<Layout body={<VectorPart1 />} />} />
               <Route path="/vector-calculus/2" element={<Layout body={<VectorPart2 />} />} />
               <Route path="/vectorfield" element={<Layout body={<VectorFieldVisualizer />} />} />
+
+              {/* Calculus & Analytical Geometry Overview */}
+              <Route path="/calculus/overview" element={<Layout body={<CalculusOverview />} />} />
+              <Route path="/courses/calculus-analytical-geometry/overview" element={<Layout body={<CalculusOverview />} />} />
 
               {/* Limits & Continuity */}
               <Route path="/limits-continuity" element={<Navigate to="/limits-continuity/1" replace />} />
@@ -145,12 +175,12 @@ function App() {
               <Route path="/integration/1" element={<Layout body={<IntPart1 />} />} />
               <Route path="/integration/2" element={<Layout body={<IntPart2 />} />} />
 
-              {/* Sequences & Infinite Series */}
+              {/* Sequences & Series */}
               <Route path="/sequences-series" element={<Navigate to="/sequences-series/1" replace />} />
               <Route path="/sequences-series/1" element={<Layout body={<SeriesPart1 />} />} />
               <Route path="/sequences-series/2" element={<Layout body={<SeriesPart2 />} />} />
 
-              {/* Conic Sections & Analytic Geometry */}
+              {/* Conic Sections */}
               <Route path="/conic-sections" element={<Navigate to="/conic-sections/1" replace />} />
               <Route path="/conic-sections/1" element={<Layout body={<ConicsPart1 />} />} />
               <Route path="/conic-sections/2" element={<Layout body={<ConicsPart2 />} />} />
@@ -165,12 +195,41 @@ function App() {
               <Route path="/taylor-series/1" element={<Layout body={<TaylorPart1 />} />} />
               <Route path="/taylor-series/2" element={<Layout body={<TaylorPart2 />} />} />
 
+              {/* Module A: Lines & Analytical Geometry */}
+              <Route path="/lines-geometry" element={<Navigate to="/lines-geometry/1" replace />} />
+              <Route path="/lines-geometry/1" element={<Layout body={<LinesPart1 />} />} />
+              <Route path="/lines-geometry/2" element={<Layout body={<LinesPart2 />} />} />
+
+              {/* Module B: Circle & Conic Tangents */}
+              <Route path="/circles-tangents" element={<Navigate to="/circles-tangents/1" replace />} />
+              <Route path="/circles-tangents/1" element={<Layout body={<CirclesPart1 />} />} />
+              <Route path="/circles-tangents/2" element={<Layout body={<CirclesPart2 />} />} />
+
+              {/* Module C: Advanced Single-Variable Calculus */}
+              <Route path="/advanced-calculus" element={<Navigate to="/advanced-calculus/1" replace />} />
+              <Route path="/advanced-calculus/1" element={<Layout body={<AdvCalcPart1 />} />} />
+              <Route path="/advanced-calculus/2" element={<Layout body={<AdvCalcPart2 />} />} />
+
+              {/* Module D: Ordinary Differential Equations */}
+              <Route path="/differential-equations" element={<Navigate to="/differential-equations/1" replace />} />
+              <Route path="/differential-equations/1" element={<Layout body={<OdePart1 />} />} />
+              <Route path="/differential-equations/2" element={<Layout body={<OdePart2 />} />} />
+
+              <Route path="/certificates" element={<Layout body={<MyCertificates />} />} />
+              <Route path="/my-certificates" element={<Navigate to="/certificates" replace />} />
+              <Route path="/verify" element={<Layout body={<VerifyCertificate />} />} />
               <Route path="/certificate/:courseId" element={<Layout body={<Certificate />} />} />
+              <Route path="/quiz/:courseId" element={<Layout body={<CourseQuiz />} />} />
 
               {/* Lagrange Multipliers */}
               <Route path="/lagrange-multipliers" element={<Navigate to="/lagrange-multipliers/1" replace />} />
               <Route path="/lagrange-multipliers/1" element={<Layout body={<LagrangePart1 />} />} />
               <Route path="/lagrange-multipliers/2" element={<Layout body={<LagrangePart2 />} />} />
+
+              {/* 3D Analytical Geometry & Quadric Surfaces */}
+              <Route path="/3d-geometry" element={<Navigate to="/3d-geometry/1" replace />} />
+              <Route path="/3d-geometry/1" element={<Layout body={<Geometry3DPart1 />} />} />
+              <Route path="/3d-geometry/2" element={<Layout body={<Geometry3DPart2 />} />} />
 
               {/* Stokes Theorem */}
               <Route path="/stokes-theorem" element={<Navigate to="/stokes-theorem/1" replace />} />
@@ -183,6 +242,11 @@ function App() {
               <Route path="/divergence-curl/2" element={<Layout body={<DivergencePart2 />} />} />
 
               {/* Linear Algebra */}
+              <Route path="/linear-algebra/overview" element={<Layout body={<LinearAlgebraOverview />} />} />
+              <Route path="/courses/linear-algebra/overview" element={<Layout body={<LinearAlgebraOverview />} />} />
+              <Route path="/linear-algebra/linear-equations" element={<Navigate to="/linear-algebra/linear-equations/1" replace />} />
+              <Route path="/linear-algebra/linear-equations/1" element={<Layout body={<LinearEquationsPart1 />} />} />
+              <Route path="/linear-algebra/linear-equations/2" element={<Layout body={<LinearEquationsPart2 />} />} />
               <Route path="/linear-algebra/vectors" element={<Navigate to="/linear-algebra/vectors/1" replace />} />
               <Route path="/linear-algebra/vectors/1" element={<Layout body={<VectorsPart1 />} />} />
               <Route path="/linear-algebra/vectors/2" element={<Layout body={<VectorsPart2 />} />} />
@@ -199,12 +263,12 @@ function App() {
               <Route path="/linear-algebra/transformations" element={<Navigate to="/linear-algebra/transformations/1" replace />} />
               <Route path="/linear-algebra/transformations/1" element={<Layout body={<TransformPart1 />} />} />
               <Route path="/linear-algebra/transformations/2" element={<Layout body={<TransformPart2 />} />} />
-              
+
               {/* Orthogonality & Least Squares */}
               <Route path="/linear-algebra/orthogonality" element={<Navigate to="/linear-algebra/orthogonality/1" replace />} />
               <Route path="/linear-algebra/orthogonality/1" element={<Layout body={<OrthoPart1 />} />} />
               <Route path="/linear-algebra/orthogonality/2" element={<Layout body={<OrthoPart2 />} />} />
-              
+
               {/* Singular Value Decomposition */}
               <Route path="/linear-algebra/svd" element={<Navigate to="/linear-algebra/svd/1" replace />} />
               <Route path="/linear-algebra/svd/1" element={<Layout body={<SvdPart1 />} />} />
@@ -212,9 +276,12 @@ function App() {
               <Route path="/linear-algebra/matrix-sandbox" element={<Layout body={<MatrixSandbox />} />} />
 
               {/* Probability & Statistics */}
+              <Route path="/probability-statistics/overview" element={<Layout body={<ProbabilityStatisticsOverview />} />} />
+              <Route path="/courses/probability-statistics/overview" element={<Layout body={<ProbabilityStatisticsOverview />} />} />
               <Route path="/probability-statistics/probability-basics" element={<Navigate to="/probability-statistics/probability-basics/1" replace />} />
               <Route path="/probability-statistics/probability-basics/1" element={<Layout body={<ProbBasicsPart1 />} />} />
               <Route path="/probability-statistics/probability-basics/2" element={<Layout body={<ProbBasicsPart2 />} />} />
+              <Route path="/probability-statistics/bayes-lab" element={<Layout body={<BayesLab />} />} />
               <Route path="/probability-statistics/random-variables" element={<Navigate to="/probability-statistics/random-variables/1" replace />} />
               <Route path="/probability-statistics/random-variables/1" element={<Layout body={<RandomVarsPart1 />} />} />
               <Route path="/probability-statistics/random-variables/2" element={<Layout body={<RandomVarsPart2 />} />} />
@@ -227,13 +294,14 @@ function App() {
               <Route path="/probability-statistics/regression-correlation" element={<Navigate to="/probability-statistics/regression-correlation/1" replace />} />
               <Route path="/probability-statistics/regression-correlation/1" element={<Layout body={<RegressionPart1 />} />} />
               <Route path="/probability-statistics/regression-correlation/2" element={<Layout body={<RegressionPart2 />} />} />
-              <Route path="/probability-statistics/bayes-lab" element={<Layout body={<BayesLab />} />} />
 
               {/* Tools */}
               <Route path="/test" element={<Layout body={<ContinuityFinder />} />} />
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
+              <Route path="/analytic-vector-lab" element={<Layout body={<AnalyticVectorLab />} />} />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
+
               <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
               <Route path="/cheatsheet" element={<Layout body={<CheatSheet />} />} />
 
@@ -246,9 +314,6 @@ function App() {
               {/* Peer Leaderboard */}
               <Route path="/leaderboard" element={<Layout body={<Leaderboard />} />} />
 
-              {/* Objective 4 — Save for Later */}
-              <Route path="/saved-for-later" element={<Layout body={<SavedForLater />} />} />
-
               {/* Catch-all */}
               <Route path="*" element={<Layout body={<NotFound />} />} />
             </Routes>
@@ -258,6 +323,7 @@ function App() {
         </BrowserRouter>
       </ProgressProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,5 @@
-import StudyGuideShell from "../StudyGuideShell";
-import "../PartialDerivativesGuide.css";
+import StudyGuideShell from "../courses/StudyGuideShell";
+import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { LaMcqSection } from "../linearAlgebra/LaMcq";
 import { TheoryBox, PracticalTheory, RealLifeUse, ProcedureBox } from "./CalcBlocks";
 import {
@@ -13,6 +13,69 @@ function Divider() {
   return <hr className="divider" />;
 }
 
+function OpeningNote() {
+  return (
+    <div className="opening-note-box">
+      <p className="opening-note">
+        <strong>Operational Blueprint:</strong>{" "}
+        {"This study guide establishes the theory of infinite sequences, infinite series, and power series representations in calculus. Sequences represent ordered lists of real numbers whose limits dictate asymptotic stability. An infinite series sums infinite discrete terms $\\sum a_n$, requiring rigorous convergence testing. We master essential diagnostic tests—the Divergence Test, Integral Test, Direct and Limit Comparison Tests, Alternating Series Test, Ratio Test, and Root Test—while distinguishing absolute from conditional convergence. Finally, power series $\\sum c_n(x-a)^n$ establish functional representations with explicit radii and intervals of convergence, underpinning Fourier analysis, financial annuities, and digital signal processing algorithms."}
+      </p>
+    </div>
+  );
+}
+
+function SectionMonotoneIntegral() {
+  return (
+    <section className="section" id="ser-mct-tests">
+      <div className="sec-badge">Section 1.2</div>
+      <h2 className="sec-title">Convergence Theorems & Basic Tests</h2>
+      <TheoryBox title="Monotone Convergence Theorem">
+        <p>
+          {"Every bounded, monotonic (entirely non-increasing or non-decreasing) sequence converges. This guarantees a sequence settles down to a finite value even if we don't know the exact limit."}
+        </p>
+      </TheoryBox>
+      <TheoryBox title="Integral & Comparison Tests">
+        <p>
+          {"**Integral Test**: If $f(n) = a_n$ is continuous, positive, and decreasing on $[1, \\infty)$, then $\\sum_{n=1}^\\infty a_n$ converges if and only if $\\int_1^\\infty f(x) dx$ converges."}
+        </p>
+        <p>
+          {"**Direct Comparison Test**: If $0 \\leq a_n \\leq b_n$, and $\\sum b_n$ converges, then $\\sum a_n$ converges. If $\\sum a_n$ diverges, then $\\sum b_n$ diverges."}
+        </p>
+        <p>
+          {"**Limit Comparison Test**: If $\\lim_{n \\to \\infty} \\frac{a_n}{b_n} = c$ where $c > 0$ and finite, both series converge or both diverge."}
+        </p>
+      </TheoryBox>
+    </section>
+  );
+}
+
+function SectionTaylorMaclaurin() {
+  return (
+    <section className="section" id="ser-taylor">
+      <div className="sec-badge">Section 2.2</div>
+      <h2 className="sec-title">Taylor and Maclaurin Series</h2>
+      <TheoryBox title="Function Representation & Error">
+        <p>
+          {"A **Taylor Series** represents a function as an infinite sum evaluated at a point $a$: "}<br/>
+          {"$f(x) = \\sum_{n=0}^\\infty \\frac{f^{(n)}(a)}{n!} (x-a)^n$."}<br/>
+          {"When $a=0$, it is called a **Maclaurin Series**."}
+        </p>
+        <p>
+          {"**Taylor's Inequality (Error Estimation)**: When we approximate $f(x)$ using a finite Taylor polynomial $T_n(x)$ of degree $n$, the remainder $R_n(x)$ satisfies $|R_n(x)| \\leq \\frac{M}{(n+1)!}|x-a|^{n+1}$ where $M$ is an upper bound on $|f^{(n+1)}(x)|$ between $a$ and $x$."}
+        </p>
+      </TheoryBox>
+      <PracticalTheory title="Common Maclaurin Series">
+        <p>
+          {"$e^x = 1 + x + \\frac{x^2}{2!} + \\frac{x^3}{3!} + \\dots$"}<br/>
+          {"$\\sin x = x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots$"}<br/>
+          {"$\\cos x = 1 - \\frac{x^2}{2!} + \\frac{x^4}{4!} - \\dots$"}<br/>
+          {"$\\frac{1}{1-x} = 1 + x + x^2 + x^3 + \\dots \\quad (|x| < 1)$"}
+        </p>
+      </PracticalTheory>
+    </section>
+  );
+}
+
 export default function SequencesSeriesGuide({ part = 1 }) {
   if (part === 2) {
     return (
@@ -20,9 +83,10 @@ export default function SequencesSeriesGuide({ part = 1 }) {
         <nav className="sidebar">
           <div className="sb-brand"><div className="sb-title">Series · Part 2</div></div>
           <a className="sb-link" href="#ser-tests">Convergence tests</a>
+          <a className="sb-link" href="#ser-taylor">Taylor Series</a>
           <a className="sb-link" href="#ser-proc2">Method</a>
           <a className="sb-link" href="#ser-ex-p2">Examples (8)</a>
-          <a className="sb-link" href="#quiz-ser-p2">Quiz · 10 Qs</a>
+          <a className="sb-link" href="#quiz-ser-p2">Quiz · 20 Qs</a>
           <a className="sb-link" href="#ser-life2">Real-life use</a>
         </nav>
         <main className="main">
@@ -33,12 +97,20 @@ export default function SequencesSeriesGuide({ part = 1 }) {
             <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
           </header>
 
+          <OpeningNote />
+          <Divider />
+
           <section className="section" id="ser-tests">
             <div className="sec-badge">Section 2.1</div>
             <h2 className="sec-title">Stronger tests and power series</h2>
             <TheoryBox title="Ratio, root, AST, absolute convergence">
               <p>
                 {"The ratio and root tests look at $L=\\lim|a_{n+1}/a_n|$ or $\\limsup|a_n|^{1/n}$: $L<1$ absolute convergence, $L>1$ divergence, $L=1$ inconclusive. The alternating series test (AST) needs $|b_n|$ eventually decreasing to $0$. Absolute convergence ($\\sum|a_n|$ converges) implies ordinary convergence; conditional convergence means $\\sum a_n$ converges but $\\sum|a_n|$ does not. A power series $\\sum c_n(x-a)^n$ has a radius $R$; inside $|x-a|<R$ you may differentiate and integrate termwise."}
+              </p>
+            </TheoryBox>
+            <TheoryBox title="Alternating Series Remainder (Error Bound)">
+              <p>
+                {"If an alternating series $\\sum_{n=1}^\\infty (-1)^{n+1} b_n$ satisfies the conditions of the Alternating Series Test ($b_{n+1} \\le b_n$ and $b_n \\to 0$), the error in approximating the total sum $S$ by the $N$-th partial sum $S_N$ is strictly bounded by the size of the first neglected term: $|R_N| = |S - S_N| \\le b_{N+1}$."}
               </p>
             </TheoryBox>
             <PracticalTheory title="Which test do you reach for?">
@@ -52,6 +124,8 @@ export default function SequencesSeriesGuide({ part = 1 }) {
               with a radius large enough for every real input.
             </RealLifeUse>
           </section>
+
+          <SectionTaylorMaclaurin />
 
           <section className="section" id="ser-proc2">
             <ProcedureBox
@@ -76,7 +150,7 @@ export default function SequencesSeriesGuide({ part = 1 }) {
           <LaMcqSection
             id="quiz-ser-p2"
             badge="Quiz"
-            title="Series tests & power series (10 questions)"
+            title="Series tests & power series (20 questions)"
             scoreId="score-ser-p2"
             section="ser-p2"
             questions={SERIES_P2_QUIZ}
@@ -102,9 +176,10 @@ export default function SequencesSeriesGuide({ part = 1 }) {
       <nav className="sidebar">
         <div className="sb-brand"><div className="sb-title">Series · Part 1</div></div>
         <a className="sb-link" href="#ser-theory">Sequences &amp; series</a>
+        <a className="sb-link" href="#ser-mct-tests">MCT &amp; Tests</a>
         <a className="sb-link" href="#ser-proc1">Method</a>
         <a className="sb-link" href="#ser-ex-p1">Examples (8)</a>
-        <a className="sb-link" href="#quiz-ser-p1">Quiz · 10 Qs</a>
+        <a className="sb-link" href="#quiz-ser-p1">Quiz · 20 Qs</a>
         <a className="sb-link" href="#ser-life1">Real-life use</a>
       </nav>
       <main className="main">
@@ -114,6 +189,9 @@ export default function SequencesSeriesGuide({ part = 1 }) {
           <p className="ch-sub">Limits of sequences, geometric &amp; $p$-series, telescoping, term test</p>
           <span className="ch-orn">✦ &nbsp; ✦ &nbsp; ✦</span>
         </header>
+
+        <OpeningNote />
+        <Divider />
 
         <section className="section" id="ser-theory">
           <div className="sec-badge">Section 1.1</div>
@@ -133,6 +211,8 @@ export default function SequencesSeriesGuide({ part = 1 }) {
             perpetual payment stream are everyday geometric series in disguise.
           </RealLifeUse>
         </section>
+
+        <SectionMonotoneIntegral />
 
         <section className="section" id="ser-proc1">
           <ProcedureBox
@@ -156,7 +236,7 @@ export default function SequencesSeriesGuide({ part = 1 }) {
         <LaMcqSection
           id="quiz-ser-p1"
           badge="Quiz"
-          title="Sequences & basic series (10 questions)"
+          title="Sequences & basic series (20 questions)"
           scoreId="score-ser-p1"
           section="ser-p1"
           questions={SERIES_P1_QUIZ}
