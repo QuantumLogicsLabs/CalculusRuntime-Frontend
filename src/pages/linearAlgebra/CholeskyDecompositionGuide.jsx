@@ -12,7 +12,7 @@ export default function CholeskyDecompositionGuide({ part = 1 }) {
   return (
     <StudyGuideShell key={part} guideClass="partial-derivatives-guide" title={`${"Cholesky Decomposition"} (Part ${part})`}>
       <nav className="sidebar">
-        <div className="sb-brand"><div className="sb-title">Module A · Topic 2</div></div>
+        <div className="sb-brand"><div className="sb-title">Topic 2</div></div>
         <a className="sb-link" href="#la-a-cholesky-theory">Theory</a>
         {advanced && <a className="sb-link" href="#la-a-cholesky-method">Method</a>}
         <a className="sb-link" href="#la-a-cholesky-examples">Worked examples</a>
@@ -21,10 +21,10 @@ export default function CholeskyDecompositionGuide({ part = 1 }) {
       </nav>
       <main className="main">
         <header className="ch-hdr">
-          <div className="ch-eye">Module A · Matrix Decompositions &amp; Factorizations</div>
+          <div className="ch-eye">Matrix Decompositions &amp; Factorizations</div>
           <h1 className="ch-title">Cholesky Decomposition</h1>
           <p className="ch-sub">Positive-definite structure, square-root factors, and efficient symmetric solves</p>
-          <p>Curriculum: University Linear Algebra · Developer 1, Module A.</p>
+          <p>Curriculum: University Linear Algebra.</p>
           <p><Link to="/linear-algebra/matrices/1">Review prerequisites</Link> · Part {part} of 2</p>
         </header>
         <section className="section" id="la-a-cholesky-theory">

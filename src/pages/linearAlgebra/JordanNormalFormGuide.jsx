@@ -12,7 +12,7 @@ export default function JordanNormalFormGuide({ part = 1 }) {
   return (
     <StudyGuideShell key={part} guideClass="partial-derivatives-guide" title={`${"Jordan Normal Form"} (Part ${part})`}>
       <nav className="sidebar">
-        <div className="sb-brand"><div className="sb-title">Module A · Topic 3</div></div>
+        <div className="sb-brand"><div className="sb-title">Topic 3</div></div>
         <a className="sb-link" href="#la-a-jordan-theory">Theory</a>
         {advanced && <a className="sb-link" href="#la-a-jordan-method">Method</a>}
         <a className="sb-link" href="#la-a-jordan-examples">Worked examples</a>
@@ -21,10 +21,10 @@ export default function JordanNormalFormGuide({ part = 1 }) {
       </nav>
       <main className="main">
         <header className="ch-hdr">
-          <div className="ch-eye">Module A · Matrix Decompositions &amp; Factorizations</div>
+          <div className="ch-eye">Matrix Decompositions &amp; Factorizations</div>
           <h1 className="ch-title">Jordan Normal Form</h1>
           <p className="ch-sub">Generalized eigenvectors, chain structure, matrix powers, and exact canonical form</p>
-          <p>Curriculum: University Linear Algebra · Developer 1, Module A.</p>
+          <p>Curriculum: University Linear Algebra.</p>
           <p><Link to="/linear-algebra/eigen/2">Review prerequisites</Link> · Part {part} of 2</p>
         </header>
         <section className="section" id="la-a-jordan-theory">

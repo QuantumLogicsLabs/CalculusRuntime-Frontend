@@ -101,8 +101,8 @@ function LinearAlgebraOverview() {
       </section>
 
       <section className="guide-section" id="module-a" aria-labelledby="module-a-heading">
-        <div className="section-kicker">Linear Algebra · Module A</div>
-        <h2 id="module-a-heading">Module A — Matrix Decompositions &amp; Factorizations</h2>
+        <div className="section-kicker">Linear Algebra</div>
+        <h2 id="module-a-heading">Matrix Decompositions &amp; Factorizations</h2>
         <p className="la-overview-lead">Learn how matrix structure turns a difficult calculation into simpler ones. Start with reusable elimination, specialize to positive-definite systems, study defective eigenvalues, and finish by measuring numerical sensitivity.</p>
         <p>Each topic has two reading parts, four worked examples, and a 20-question checkpoint at the end of Part 2. Answer every question and score at least 80% to unlock that part’s completion.</p>
         <ol className="la-roadmap">
@@ -147,7 +147,7 @@ function LinearAlgebraOverview() {
             </Link>
           </li>
         </ol>
-        <h3>Before you begin Module A</h3>
+        <h3>Before you begin</h3>
         <p>Review elimination and triangular matrices for LU, symmetric matrices for Cholesky, eigenspaces for Jordan form, and singular values for conditioning.</p>
         <p><Link to="/linear-algebra/systems/1">Linear systems</Link> · <Link to="/linear-algebra/eigen/2">Diagonalization</Link> · <Link to="/linear-algebra/svd/1">Singular values</Link></p>
       </section>
