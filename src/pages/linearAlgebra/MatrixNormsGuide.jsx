@@ -4,7 +4,7 @@ import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { GuideMcqSection } from "../../components/GuideMcq";
 import { useProgress } from "../../context/ProgressContext";
 import { TheoryBox, ProcedureBox, WorkedExample } from "./LaBlocks";
-import { LA_A_NORMS_QUIZ } from "../../data/laModuleAQuizzes";
+import { LA_A_NORMS_QUIZ } from "../../data/laQuizzes";
 
 export default function MatrixNormsGuide({ part = 1 }) {
   const { saveQuizScore } = useProgress();

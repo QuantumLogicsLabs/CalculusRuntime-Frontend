@@ -4,7 +4,7 @@ import "../multivariableCalculus/PartialDerivativesGuide.css";
 import { GuideMcqSection } from "../../components/GuideMcq";
 import { useProgress } from "../../context/ProgressContext";
 import { TheoryBox, ProcedureBox, WorkedExample } from "./LaBlocks";
-import { LA_A_CHOLESKY_QUIZ } from "../../data/laModuleAQuizzes";
+import { LA_A_CHOLESKY_QUIZ } from "../../data/laQuizzes";
 
 export default function CholeskyDecompositionGuide({ part = 1 }) {
   const { saveQuizScore } = useProgress();
