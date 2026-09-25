@@ -1,4 +1,7 @@
-/** Practice Arena bank for P&S (Dev 4): 15 Easy + 15 Medium + 15 Hard per topic. */
+/** Practice Arena bank for P&S (Dev 4): 15 Easy + 15 Medium + 15 Hard per topic,
+ *  plus Module K/L university-depth (50 Easy + 50 Medium + 50 Hard each).
+ */
+import { PS_MODULE_KL_PRACTICE_BANK } from "./psModuleKL_PracticeBank";
 
 function pack(startId, topic, difficulty, rows) {
   return rows.map((row, i) => ({
@@ -288,4 +291,5 @@ export const PS_PRACTICE_BANK = [
   ...descriptive,
   ...hypothesis,
   ...regression,
+  ...PS_MODULE_KL_PRACTICE_BANK,   
 ];

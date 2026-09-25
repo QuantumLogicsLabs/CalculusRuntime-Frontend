@@ -1272,7 +1272,7 @@ const PRACTICE_PROBLEMS = [
 
   // Calculus AG certificate track — 15 Easy + 15 Medium + 15 Hard per topic
   ...CALC_AG_PRACTICE_BANK,
-  // Probability & Statistics — 15 Easy + 15 Medium + 15 Hard per topic
+  // Probability & Statistics — existing 15/15/15 plus Module K/L university-depth bank
   ...PS_PRACTICE_BANK,
   // Linear Algebra — 15 Easy + 15 Medium + 15 Hard per topic (Dev 3)
   ...LA_PRACTICE_BANK,
@@ -1305,6 +1305,8 @@ const TOPICS = [
   'Descriptive Statistics',
   'Hypothesis Testing',
   'Regression & Correlation',
+  'Probability Theory & Random Variables',
+  'Mathematical Statistics & Inference',
 ];
 
 export default function PractiseSection() {
