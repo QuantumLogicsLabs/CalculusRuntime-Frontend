@@ -14,3 +14,18 @@ export { default as LaTopicPart } from "./LaTopicPart";
 export { default as LaCertificateBoost } from "./LaCertificateBoost";
 export * from "./LaBlocks";
 export * from "./LaMcq";
+
+// Module A: matrix decompositions and factorizations.
+export { default as MatrixDecompositionsOverview } from "./MatrixDecompositionsOverview";
+export { default as LUDecompositionGuide } from "./LUDecompositionGuide";
+export { default as LUDecompositionPart1 } from "./LUDecompositionPart1";
+export { default as LUDecompositionPart2 } from "./LUDecompositionPart2";
+export { default as CholeskyDecompositionGuide } from "./CholeskyDecompositionGuide";
+export { default as CholeskyDecompositionPart1 } from "./CholeskyDecompositionPart1";
+export { default as CholeskyDecompositionPart2 } from "./CholeskyDecompositionPart2";
+export { default as JordanNormalFormGuide } from "./JordanNormalFormGuide";
+export { default as JordanNormalFormPart1 } from "./JordanNormalFormPart1";
+export { default as JordanNormalFormPart2 } from "./JordanNormalFormPart2";
+export { default as MatrixNormsGuide } from "./MatrixNormsGuide";
+export { default as MatrixNormsPart1 } from "./MatrixNormsPart1";
+export { default as MatrixNormsPart2 } from "./MatrixNormsPart2";
