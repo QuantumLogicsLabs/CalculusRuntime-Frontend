@@ -403,6 +403,14 @@ export const COURSES = [
         logo: <span className="math-logo">A = LU</span>,
       },
       {
+        title: "Complex Vector Spaces",
+        description: "Complex scalars, inner products, Hermitian and unitary matrices, with worked examples and a 20-question quiz.",
+        path: "/linear-algebra/complex-vector-spaces/1",
+        meta: "2 parts · 20 quiz questions",
+        icon: "ℂ",
+        logo: <span className="math-logo">U*U = I</span>,
+      },
+      {
         title: "Practice Arena",
         description: "MCQ drills for Linear Algebra topics with leaderboard submit.",
         path: "/practice",
