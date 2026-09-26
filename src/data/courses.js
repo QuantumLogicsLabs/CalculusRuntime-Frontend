@@ -427,6 +427,14 @@ export const COURSES = [
         logo: <span className="math-logo">P<sup>-1</sup>AP</span>,
       },
       {
+        title: "Affine Transformations & Homogeneous Coordinates",
+        description: "Affine maps, homogeneous-coordinate matrices, transformations about arbitrary points, compositions, inverses, and geometry with worked examples and a 20-question checkpoint.",
+        path: "/linear-algebra/affine-homogeneous/1",
+        meta: "2 parts · 20-question checkpoint",
+        icon: "T",
+        logo: <span className="math-logo">Ax + b</span>,
+      },
+      {
         title: "Practice Arena",
         description: "MCQ drills for Linear Algebra topics with leaderboard submit.",
         path: "/practice",
