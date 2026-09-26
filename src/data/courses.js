@@ -153,6 +153,14 @@ export const COURSES = [
         logo: <span className="math-logo">∂f/∂x, ∂f/∂y</span>,
       },
       {
+        title: "3D Surface Explorer",
+        description: "Rotate, animate and probe surfaces z = f(x, y) with tangent planes.",
+        path: "/surface-explorer",
+        meta: "Interactive tool",
+        icon: "⛰",
+        logo: <span className="math-logo">z = f(x, y)</span>,
+      },
+      {
         title: "Extreme Value Finder",
         description: "Find maxima and minima using the second derivative test.",
         path: "/extreme",

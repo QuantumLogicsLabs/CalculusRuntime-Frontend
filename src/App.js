@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./pages/courses/ProgressContext";
@@ -51,6 +52,7 @@ import VerifyCertificate from "./pages/certificates/VerifyCertificate";
 import SavedForLater from "./pages/dashboard/SavedForLater";
 import Chatbot from "./components/Chatbot/Chatbot";
 import BackToTop from "./components/common/BackToTop";
+import LoadingSpinner from "./components/common/LoadingSpinner";
 
 import {
   LinearEquationsPart1,
@@ -96,6 +98,9 @@ import {
   ConicsPart1,
   ConicsPart2,
 } from "./pages/calculus/CalcParts";
+
+// three.js is large, so the 3D explorer loads in its own chunk only when visited.
+const SurfaceExplorer = lazy(() => import("./pages/tools/SurfaceExplorer"));
 
 function App() {
   return (
@@ -248,6 +253,10 @@ function App() {
               <Route path="/extreme" element={<Layout body={<ExtremeValueFunction />} />} />
               <Route path="/volumecalculator" element={<Layout body={<VolumeCalculator />} />} />
               <Route path="/analytic-vector-lab" element={<Layout body={<AnalyticVectorLab />} />} />
+              <Route
+                path="/surface-explorer"
+                element={<Layout body={<Suspense fallback={<LoadingSpinner size="lg" text="Loading 3D view…" fullPage />}><SurfaceExplorer /></Suspense>} />}
+              />
               <Route path="/derivative-visualizer" element={<Navigate to="/taylorx" replace />} />
 
               <Route path="/taylorx" element={<Layout body={<DerivativeTool />} />} />
