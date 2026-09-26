@@ -891,3 +891,227 @@ export const LA_A_NORMS_QUIZ = [
     "explanation": "Multiplication by $A^{-1}=\\operatorname{diag}(1,10^4)$ amplifies the second component to one."
   }
 ];
+
+// Complex vector spaces, Hermitian matrices and unitary matrices.
+export const LA_COMPLEX_VECTOR_SPACES_QUIZ = [
+  {
+    "prompt": "Which statement correctly describes $\\mathbb C^n$ as a vector space over $\\mathbb C$?",
+    "options": [
+      "Its vectors have complex entries and its scalars may be complex",
+      "Its scalars must be real",
+      "Every vector must have a nonzero imaginary part",
+      "Its dimension is always 2"
+    ],
+    "answer": "A",
+    "explanation": "Coordinates and scalar coefficients may be complex; real vectors are included as a special case."
+  },
+  {
+    "prompt": "What is the complex conjugate of $3-4i$?",
+    "options": [
+      "$-3-4i$",
+      "$3+4i$",
+      "$-3+4i$",
+      "$4-3i$"
+    ],
+    "answer": "B",
+    "explanation": "Conjugation changes the sign of the imaginary part."
+  },
+  {
+    "prompt": "What is $|3-4i|^2$?",
+    "options": [
+      "$5$",
+      "$-7$",
+      "$25$",
+      "$7$"
+    ],
+    "answer": "C",
+    "explanation": "$|z|^2=z\\overline z=3^2+4^2=25$."
+  },
+  {
+    "prompt": "What is the dimension of $\\mathbb C^2$ when regarded as a vector space over $\\mathbb R$?",
+    "options": [
+      "$2$",
+      "$1$",
+      "$8$",
+      "$4$"
+    ],
+    "answer": "D",
+    "explanation": "Each complex coordinate supplies two independent real coordinates."
+  },
+  {
+    "prompt": "In the vector space $\\mathbb C$ over $\\mathbb C$, how are the vectors $1$ and $i$ related?",
+    "options": [
+      "They are linearly dependent because $i=i\\cdot1$",
+      "They are linearly independent",
+      "They form a basis of dimension 2",
+      "Neither belongs to the space"
+    ],
+    "answer": "A",
+    "explanation": "The coefficient i is an allowed complex scalar. Over the real field the answer would differ."
+  },
+  {
+    "prompt": "Why is the set $\\mathbb R^2\\subset\\mathbb C^2$ not a complex subspace?",
+    "options": [
+      "It does not contain zero",
+      "It is not closed under multiplication by $i$",
+      "It is not closed under vector addition",
+      "It contains no basis over $\\mathbb R$"
+    ],
+    "answer": "B",
+    "explanation": "$i(1,0)=(i,0)$ has a nonreal coordinate."
+  },
+  {
+    "prompt": "For $A=\\begin{pmatrix}1&i\\\\2-i&3\\end{pmatrix}$, what is $A^*$?",
+    "options": [
+      "$\\begin{pmatrix}1&2-i\\\\i&3\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&-i\\\\2+i&3\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&2+i\\\\-i&3\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&i\\\\2-i&3\\end{pmatrix}$"
+    ],
+    "answer": "C",
+    "explanation": "Transpose and conjugate every entry."
+  },
+  {
+    "prompt": "Which identity holds for compatible complex matrices?",
+    "options": [
+      "$(AB)^*=A^*B^*$",
+      "$(AB)^*=B^TA$",
+      "$(AB)^*=AB$",
+      "$(AB)^*=B^*A^*$"
+    ],
+    "answer": "D",
+    "explanation": "Taking an adjoint reverses product order, just as transpose does."
+  },
+  {
+    "prompt": "Using $\\langle x,y\\rangle=x^*y$, what is $\\langle (1,i)^T,(i,1)^T\\rangle$?",
+    "options": [
+      "$0$",
+      "$2i$",
+      "$2$",
+      "$-2i$"
+    ],
+    "answer": "A",
+    "explanation": "Conjugating the first vector gives $(1,-i)$, so $i-i=0$."
+  },
+  {
+    "prompt": "What is $\\|(1+i,2i)^T\\|_2$?",
+    "options": [
+      "$\\sqrt2$",
+      "$\\sqrt6$",
+      "$6$",
+      "$2$"
+    ],
+    "answer": "B",
+    "explanation": "The squared norm is $|1+i|^2+|2i|^2=2+4=6$."
+  },
+  {
+    "prompt": "Under $\\langle x,y\\rangle=x^*y$, how does a scalar in the first slot behave?",
+    "options": [
+      "$\\langle\\alpha x,y\\rangle=\\alpha\\langle x,y\\rangle$",
+      "$\\langle\\alpha x,y\\rangle=\\langle x,y\\rangle$",
+      "$\\langle\\alpha x,y\\rangle=\\overline\\alpha\\langle x,y\\rangle$",
+      "$\\langle\\alpha x,y\\rangle=|\\alpha|\\langle x,y\\rangle$"
+    ],
+    "answer": "C",
+    "explanation": "The first slot is conjugate-linear; the second is linear."
+  },
+  {
+    "prompt": "For $q=(1,i)^T/\\sqrt2$ and $v=(1,0)^T$, what is the orthogonal projection of $v$ onto $\\operatorname{span}_{\\mathbb C}\\{q\\}$?",
+    "options": [
+      "$(1/2,-i/2)^T$",
+      "$(1,0)^T$",
+      "$(0,1)^T$",
+      "$(1/2,i/2)^T$"
+    ],
+    "answer": "D",
+    "explanation": "$q^*v=1/\\sqrt2$, hence $q(q^*v)=(1/2,i/2)^T$."
+  },
+  {
+    "prompt": "Which matrix is Hermitian?",
+    "options": [
+      "$\\begin{pmatrix}2&i\\\\-i&3\\end{pmatrix}$",
+      "$\\begin{pmatrix}2&i\\\\i&3\\end{pmatrix}$",
+      "$\\begin{pmatrix}i&0\\\\0&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$"
+    ],
+    "answer": "A",
+    "explanation": "The diagonal is real and the off-diagonal entries are conjugate pairs."
+  },
+  {
+    "prompt": "What must be true of every eigenvalue of a Hermitian matrix?",
+    "options": [
+      "It is positive",
+      "It is real",
+      "It has modulus one",
+      "It is nonzero"
+    ],
+    "answer": "B",
+    "explanation": "Hermitian eigenvalues are real, but may be negative or zero."
+  },
+  {
+    "prompt": "Which statement is guaranteed for every complex matrix $A$?",
+    "options": [
+      "$A^*A$ is always invertible",
+      "$A^*A$ is always unitary",
+      "$A^*A$ is Hermitian positive semidefinite",
+      "$A^*A$ has only negative eigenvalues"
+    ],
+    "answer": "C",
+    "explanation": "$x^*A^*Ax=\\|Ax\\|_2^2\\ge0$. Positive definiteness additionally requires independent columns."
+  },
+  {
+    "prompt": "For a square complex matrix $U$, which condition defines unitarity?",
+    "options": [
+      "$U^TU=I$ for every complex $U$",
+      "$U=U^*$",
+      "$U^2=0$",
+      "$U^*U=I$"
+    ],
+    "answer": "D",
+    "explanation": "Its conjugate transpose is its inverse; ordinary transpose alone is insufficient."
+  },
+  {
+    "prompt": "If $U$ is unitary, what is $\\|Ux\\|_2$?",
+    "options": [
+      "$\\|x\\|_2$",
+      "$\\|x\\|_2^2$",
+      "$2\\|x\\|_2$",
+      "$0$"
+    ],
+    "answer": "A",
+    "explanation": "$\\|Ux\\|_2^2=x^*U^*Ux=x^*x$."
+  },
+  {
+    "prompt": "If $Uv=\\lambda v$ with $v\\ne0$ and $U$ unitary, what follows?",
+    "options": [
+      "$\\lambda=1$",
+      "$|\\lambda|=1$",
+      "$\\lambda\\in\\mathbb R$",
+      "$\\lambda=0$"
+    ],
+    "answer": "B",
+    "explanation": "Norm preservation implies that the eigenvalue has unit modulus, not necessarily that it equals one."
+  },
+  {
+    "prompt": "If $H=Q\\Lambda Q^*$ is a Hermitian spectral decomposition, what are the coordinates of a vector $x$ in the orthonormal eigenvector basis $Q$?",
+    "options": [
+      "$Qx$",
+      "$Hx$",
+      "$Q^*x$",
+      "$Q^Tx$ in all complex cases"
+    ],
+    "answer": "C",
+    "explanation": "Unitary $Q$ has inverse $Q^*$, so $x=Qc$ gives $c=Q^*x$."
+  },
+  {
+    "prompt": "If a matrix is both Hermitian and unitary, what values can its eigenvalues take?",
+    "options": [
+      "Any positive real number",
+      "Any complex number",
+      "$0$ or $i$",
+      "$+1$ or $-1$"
+    ],
+    "answer": "D",
+    "explanation": "Hermitian eigenvalues are real and unitary eigenvalues have modulus one; their intersection is +1 and -1."
+  }
+];
