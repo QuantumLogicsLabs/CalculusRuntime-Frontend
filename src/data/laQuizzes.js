@@ -1564,3 +1564,228 @@ export const LA_CHANGE_BASIS_SIMILARITY_QUIZ = [
     "explanation": "Convert input coordinates from $C$ to $B$, apply $[T]_B$, then convert the result from $B$ to $C$. Thus $[T]_C=P_{C\\leftarrow B}[T]_B P_{B\\leftarrow C}$."
   }
 ];
+
+
+// Affine Transformations & Homogeneous Coordinates checkpoint (20 questions).
+export const LA_AFFINE_HOMOGENEOUS_QUIZ = [
+  {
+    "prompt": "What is the standard form of an affine map from R^n to R^m?",
+    "options": [
+      "$F(x)=Ax+b$ for a matrix A and fixed vector b",
+      "$F(x)=A+x+b$",
+      "$F(x)=Ax$ only",
+      "$F(x)=b$ only"
+    ],
+    "answer": "A",
+    "explanation": "An affine map combines a linear map with a fixed translation; linear maps are the special case b=0."
+  },
+  {
+    "prompt": "What is the size of a homogeneous matrix representing an affine map in two dimensions?",
+    "options": [
+      "2 by 2",
+      "3 by 3",
+      "2 by 3",
+      "4 by 4"
+    ],
+    "answer": "B",
+    "explanation": "The affine matrix has one extra row and column, so a 2D map uses a 3 by 3 matrix."
+  },
+  {
+    "prompt": "How is a finite affine point (x,y) represented in homogeneous coordinates?",
+    "options": [
+      "(x,y,0)^T",
+      "(1,x,y)^T",
+      "(x,y,1)^T",
+      "(x,y)^T"
+    ],
+    "answer": "C",
+    "explanation": "Append a final coordinate 1 to a point so the translation column contributes."
+  },
+  {
+    "prompt": "What homogeneous final coordinate represents a displacement vector?",
+    "options": [
+      "1",
+      "Any nonzero number",
+      "-1 only",
+      "0"
+    ],
+    "answer": "D",
+    "explanation": "Direction vectors use final coordinate 0, so translations do not affect them."
+  },
+  {
+    "prompt": "Under translation by (3,-2), where does point (1,4) go?",
+    "options": [
+      "(4,2)",
+      "(4,6)",
+      "(-2,2)",
+      "(3,-2)"
+    ],
+    "answer": "A",
+    "explanation": "Add the translation componentwise: (1+3,4-2)=(4,2)."
+  },
+  {
+    "prompt": "What is the last row of a 2D affine homogeneous matrix?",
+    "options": [
+      "(b_1,b_2,1)",
+      "(0,0,1)",
+      "(1,0,0)",
+      "(0,1,0)"
+    ],
+    "answer": "B",
+    "explanation": "The standard affine homogeneous form is [[A,b],[0,0,1]] in two dimensions."
+  },
+  {
+    "prompt": "If F and G are affine maps, which matrix represents F composed with G?",
+    "options": [
+      "H_G H_F",
+      "H_F+H_G",
+      "H_F H_G",
+      "H_G^{-1}H_F"
+    ],
+    "answer": "C",
+    "explanation": "Composition F∘G applies G first, so its homogeneous matrix is H_F H_G."
+  },
+  {
+    "prompt": "For invertible A, what is the inverse of F(x)=Ax+b?",
+    "options": [
+      "A^{-1}x+b",
+      "A(x-b)",
+      "A^{-1}x-b",
+      "A^{-1}(x-b)"
+    ],
+    "answer": "D",
+    "explanation": "Solve y=Ax+b for x to get x=A^{-1}(y-b)."
+  },
+  {
+    "prompt": "When is F(x)=Ax+b globally invertible?",
+    "options": [
+      "When det(A) is nonzero",
+      "Whenever b is nonzero",
+      "When A is symmetric",
+      "When A has a zero column"
+    ],
+    "answer": "A",
+    "explanation": "The affine map is bijective exactly when its linear part A is invertible."
+  },
+  {
+    "prompt": "What does a 90-degree counterclockwise rotation about the origin do to (1,0)?",
+    "options": [
+      "(1,0)",
+      "(0,1)",
+      "(0,-1)",
+      "(-1,0)"
+    ],
+    "answer": "B",
+    "explanation": "The standard counterclockwise rotation sends the positive x-axis unit vector to the positive y-axis."
+  },
+  {
+    "prompt": "Rotate (2,1) by 90 degrees counterclockwise about center (1,1). What is the result?",
+    "options": [
+      "(2,2)",
+      "(0,2)",
+      "(1,2)",
+      "(1,0)"
+    ],
+    "answer": "C",
+    "explanation": "Relative to the center the point is (1,0), which rotates to (0,1); adding the center gives (1,2)."
+  },
+  {
+    "prompt": "What does the 2D linear part diag(2,3) do to point (4,1), with no translation?",
+    "options": [
+      "(6,4)",
+      "(8,1)",
+      "(4,3)",
+      "(8,3)"
+    ],
+    "answer": "D",
+    "explanation": "Scale x by 2 and y by 3 to obtain (8,3)."
+  },
+  {
+    "prompt": "Which feature is preserved by every affine map with invertible linear part?",
+    "options": [
+      "Collinearity and parallelism",
+      "All distances",
+      "All angles",
+      "Area exactly"
+    ],
+    "answer": "A",
+    "explanation": "Invertible affine maps preserve lines, collinearity, and parallelism; they may change metric quantities."
+  },
+  {
+    "prompt": "Does a general affine transformation preserve distances?",
+    "options": [
+      "Yes, always",
+      "No; only special linear parts such as orthogonal matrices preserve distances",
+      "Only if the translation is zero",
+      "Only in 3D"
+    ],
+    "answer": "B",
+    "explanation": "A general linear part can stretch or shear. Orthogonal A preserves distances, and translation does not change them."
+  },
+  {
+    "prompt": "Why does an affine map preserve affine combinations?",
+    "options": [
+      "Because det(A)=1",
+      "Because b must be zero",
+      "The coefficients sum to 1, so the translated terms combine to b once",
+      "Because every affine map is symmetric"
+    ],
+    "answer": "C",
+    "explanation": "For coefficients summing to one, applying Ax+b produces the same weighted combination of transformed points."
+  },
+  {
+    "prompt": "Which matrix represents the shear (x,y) maps to (x+2y,y) in homogeneous coordinates?",
+    "options": [
+      "[[1,0,0],[2,1,0],[0,0,1]]",
+      "[[2,0,0],[0,1,0],[0,0,1]]",
+      "[[1,2,1],[0,1,0],[0,0,1]]",
+      "[[1,2,0],[0,1,0],[0,0,1]]"
+    ],
+    "answer": "D",
+    "explanation": "The linear part is [[1,2],[0,1]] and the translation is zero."
+  },
+  {
+    "prompt": "What is the size of a homogeneous matrix for a 3D affine transformation?",
+    "options": [
+      "4 by 4",
+      "3 by 3",
+      "3 by 4",
+      "5 by 5"
+    ],
+    "answer": "A",
+    "explanation": "Adding one homogeneous coordinate to 3D points gives four-component columns and a 4 by 4 matrix."
+  },
+  {
+    "prompt": "By what factor does a 2D affine map change area?",
+    "options": [
+      "det(A) squared",
+      "The absolute value of det(A)",
+      "The trace of A",
+      "The determinant of the homogeneous matrix only"
+    ],
+    "answer": "B",
+    "explanation": "The area scaling factor is |det(A)|; the sign records orientation reversal."
+  },
+  {
+    "prompt": "If A is singular, what can happen to the affine image?",
+    "options": [
+      "It must be a translation only",
+      "It preserves all dimensions",
+      "It can collapse a plane to a line or point and has no global inverse",
+      "It becomes a rotation"
+    ],
+    "answer": "C",
+    "explanation": "A singular linear part loses at least one dimension, so the map is not invertible."
+  },
+  {
+    "prompt": "In the usual finite affine homogeneous convention, how should a point with last coordinate w≠0 be normalized?",
+    "options": [
+      "Multiply its first coordinates by w",
+      "Set all coordinates to zero",
+      "Discard w without dividing",
+      "Divide all coordinates by w so the last coordinate becomes 1"
+    ],
+    "answer": "D",
+    "explanation": "An affine point is represented with final coordinate 1; a nonzero w can be normalized by division."
+  }
+];
