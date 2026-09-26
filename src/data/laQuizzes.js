@@ -1115,3 +1115,227 @@ export const LA_COMPLEX_VECTOR_SPACES_QUIZ = [
     "explanation": "Hermitian eigenvalues are real and unitary eigenvalues have modulus one; their intersection is +1 and -1."
   }
 ];
+
+// Quadratic Forms & Definiteness checkpoint (20 questions).
+export const LA_QUADRATIC_FORMS_QUIZ = [
+  {
+    "prompt": "Which matrix represents the real quadratic form $q(x)=x^TAx$ without changing its value?",
+    "options": [
+      "The symmetric part $(A+A^T)/2$",
+      "The skew-symmetric part $(A-A^T)/2$",
+      "Any triangular matrix with the same trace",
+      "The inverse of $A$"
+    ],
+    "answer": "A",
+    "explanation": "The skew-symmetric contribution vanishes because $x^TKx=0$ for every real skew-symmetric $K$."
+  },
+  {
+    "prompt": "For $q(x,y)=3x^2+4xy+2y^2$, which symmetric matrix $A$ satisfies $q=[x\\ y]A[x\\ y]^T$?",
+    "options": [
+      "$\\begin{pmatrix}3&4\\\\4&2\\end{pmatrix}$",
+      "$\\begin{pmatrix}3&2\\\\2&2\\end{pmatrix}$",
+      "$\\begin{pmatrix}6&2\\\\2&4\\end{pmatrix}$",
+      "$\\begin{pmatrix}3&0\\\\4&2\\end{pmatrix}$"
+    ],
+    "answer": "B",
+    "explanation": "The mixed term is $2a_{12}xy$, so each off-diagonal entry is 2."
+  },
+  {
+    "prompt": "What is the symmetric matrix of $q(x)=5x_1^2-6x_1x_2+4x_2^2$?",
+    "options": [
+      "$\\begin{pmatrix}5&-6\\\\-6&4\\end{pmatrix}$",
+      "$\\begin{pmatrix}5&3\\\\3&4\\end{pmatrix}$",
+      "$\\begin{pmatrix}5&-3\\\\-3&4\\end{pmatrix}$",
+      "$\\begin{pmatrix}5&-6\\\\0&4\\end{pmatrix}$"
+    ],
+    "answer": "C",
+    "explanation": "The cross coefficient is twice the symmetric off-diagonal entry."
+  },
+  {
+    "prompt": "When is a real symmetric matrix positive definite?",
+    "options": [
+      "Every eigenvalue is nonnegative",
+      "Its determinant is positive",
+      "Its trace is positive",
+      "Every eigenvalue is strictly positive"
+    ],
+    "answer": "D",
+    "explanation": "Strict positivity of all eigenvalues is equivalent to $x^TAx>0$ for all nonzero real $x$."
+  },
+  {
+    "prompt": "Classify $A=\\operatorname{diag}(2,5)$.",
+    "options": [
+      "Positive definite",
+      "Positive semidefinite but not definite",
+      "Indefinite",
+      "Negative definite"
+    ],
+    "answer": "A",
+    "explanation": "Both eigenvalues are strictly positive."
+  },
+  {
+    "prompt": "Classify $A=\\operatorname{diag}(0,3)$.",
+    "options": [
+      "Positive definite",
+      "Positive semidefinite but not positive definite",
+      "Indefinite",
+      "Negative semidefinite"
+    ],
+    "answer": "B",
+    "explanation": "The eigenvalues are nonnegative and one is zero, so the form can vanish on a nonzero vector."
+  },
+  {
+    "prompt": "Classify $A=\\operatorname{diag}(2,-1)$.",
+    "options": [
+      "Positive definite",
+      "Positive semidefinite",
+      "Indefinite",
+      "Negative definite"
+    ],
+    "answer": "C",
+    "explanation": "The form takes positive and negative values on coordinate vectors."
+  },
+  {
+    "prompt": "What does a zero eigenvalue imply for a positive-semidefinite symmetric matrix?",
+    "options": [
+      "The form is automatically indefinite",
+      "The matrix is positive definite",
+      "The trace must be zero",
+      "The form vanishes along a nonzero eigenvector direction"
+    ],
+    "answer": "D",
+    "explanation": "A zero eigenvalue gives a nonzero vector with $q(x)=0$, ruling out positive definiteness."
+  },
+  {
+    "prompt": "For $A=\\begin{pmatrix}a&b\\\\b&c\\end{pmatrix}$, which conditions characterize positive definiteness?",
+    "options": [
+      "$a>0$ and $ac-b^2>0$",
+      "$a\\ge0$ and $c\\ge0$",
+      "$ac-b^2>0$ alone",
+      "$a+c>0$ and $b=0$"
+    ],
+    "answer": "A",
+    "explanation": "The leading principal minors must be positive: $a>0$ and determinant $ac-b^2>0$."
+  },
+  {
+    "prompt": "For a real symmetric matrix, Sylvester’s criterion for positive definiteness requires:",
+    "options": [
+      "All eigenvalues to be nonnegative",
+      "All leading principal minors to be positive",
+      "Only the determinant to be positive",
+      "All entries to be positive"
+    ],
+    "answer": "B",
+    "explanation": "Strict positivity of the leading principal minors is equivalent to positive definiteness."
+  },
+  {
+    "prompt": "Which test correctly guarantees positive semidefiniteness for a real symmetric matrix?",
+    "options": [
+      "Only the leading principal minors are nonnegative",
+      "The trace is positive",
+      "All eigenvalues are nonnegative",
+      "The determinant is nonzero"
+    ],
+    "answer": "C",
+    "explanation": "Nonnegative eigenvalues are equivalent. Checking all principal minors is another equivalent test; leading minors alone do not suffice in the semidefinite case."
+  },
+  {
+    "prompt": "For $A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$, what are the eigenvalues?",
+    "options": [
+      "2 and 2",
+      "4 and 0",
+      "1 and -1",
+      "3 and 1"
+    ],
+    "answer": "D",
+    "explanation": "The characteristic polynomial is $(2-\\lambda)^2-1$, with roots 3 and 1."
+  },
+  {
+    "prompt": "For $A=\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$, what is its definiteness?",
+    "options": [
+      "Indefinite",
+      "Positive definite",
+      "Positive semidefinite",
+      "Negative definite"
+    ],
+    "answer": "A",
+    "explanation": "Its eigenvalues are 3 and -1, so the form has both signs."
+  },
+  {
+    "prompt": "Under an orthogonal change of variables $x=Qy$, with $Q^TQ=I$, how does $A$ transform in $x^TAx$?",
+    "options": [
+      "$A$ becomes $Q^TA$",
+      "$A$ becomes $Q^TAQ$",
+      "$A$ becomes $QAQ^T$ only",
+      "$A$ remains $A$ for every $Q$"
+    ],
+    "answer": "B",
+    "explanation": "Substitution gives $x^TAx=y^TQ^TAQy$."
+  },
+  {
+    "prompt": "For a general invertible real matrix $P$ and substitution $x=Py$, which transformation gives the matrix of the quadratic form in $y$?",
+    "options": [
+      "Similarity $P^{-1}AP$",
+      "Left multiplication $PA$ alone",
+      "Congruence $P^TAP$",
+      "Adding a multiple of the identity"
+    ],
+    "answer": "C",
+    "explanation": "Quadratic forms transform by congruence. Under orthogonal diagonalization congruence and similarity happen to share the same expression."
+  },
+  {
+    "prompt": "What does Sylvester’s law of inertia state?",
+    "options": [
+      "Every quadratic form can be made positive definite",
+      "A congruence preserves every eigenvalue",
+      "The determinant is always unchanged by congruence",
+      "An invertible change of variables preserves the counts of positive, negative and zero squares"
+    ],
+    "answer": "D",
+    "explanation": "Congruence preserves inertia, although eigenvalues themselves need not remain fixed under a general invertible change."
+  },
+  {
+    "prompt": "Complete the square: $q(x,y)=x^2+4xy+5y^2$.",
+    "options": [
+      "$(x+2y)^2+y^2$",
+      "$(x+4y)^2-11y^2$",
+      "$(x+2y)^2- y^2$",
+      "$x^2+(y+2x)^2$"
+    ],
+    "answer": "A",
+    "explanation": "Expanding $(x+2y)^2+y^2$ gives $x^2+4xy+5y^2$."
+  },
+  {
+    "prompt": "How can a positive-definite Hessian at a stationary point classify a twice-differentiable function locally?",
+    "options": [
+      "It gives a strict local maximum",
+      "It gives a strict local minimum",
+      "It proves the point is a saddle",
+      "It gives no second-order information"
+    ],
+    "answer": "B",
+    "explanation": "A positive-definite Hessian makes the second-order change positive in every nonzero direction."
+  },
+  {
+    "prompt": "What does a singular positive-semidefinite Hessian at a stationary point alone imply?",
+    "options": [
+      "It always proves a strict local minimum",
+      "It always proves a local maximum",
+      "The second-derivative test is inconclusive",
+      "It proves the point is a saddle"
+    ],
+    "answer": "C",
+    "explanation": "A semidefinite Hessian may have zero-curvature directions; higher-order terms can determine the behavior."
+  },
+  {
+    "prompt": "For a Hermitian matrix $H$, which condition defines positive definiteness over complex vectors?",
+    "options": [
+      "$z^THz>0$ for every complex $z$",
+      "Every entry of $H$ is positive",
+      "$\\det(H)=0$",
+      "$z^*Hz>0$ for every nonzero $z\\in\\mathbb C^n$"
+    ],
+    "answer": "D",
+    "explanation": "Hermitian quadratic values are real; strict positivity for all nonzero complex vectors defines positive definiteness."
+  }
+];
