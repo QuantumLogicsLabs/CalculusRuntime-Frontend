@@ -28,3 +28,7 @@ export { default as JordanNormalFormPart2 } from "./JordanNormalFormPart2";
 export { default as MatrixNormsGuide } from "./MatrixNormsGuide";
 export { default as MatrixNormsPart1 } from "./MatrixNormsPart1";
 export { default as MatrixNormsPart2 } from "./MatrixNormsPart2";
+
+export { default as ComplexVectorSpacesGuide } from "./ComplexVectorSpacesGuide";
+export { default as ComplexVectorSpacesPart1 } from "./ComplexVectorSpacesPart1";
+export { default as ComplexVectorSpacesPart2 } from "./ComplexVectorSpacesPart2";
