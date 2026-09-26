@@ -73,6 +73,8 @@ export const SECTION_GUIDE_QUIZ_KEYS = {
   "la-eigen-1": ["la-e-intro", "la-e-char"],
   "la-eigen-2": ["la-e-diag", "la-e-apps"],
 
+  "la-complex-1": [],
+  "la-complex-2": ["la-complex-checkpoint"],
   // Module A: Part 1 is reading; each Part 2 has one 20-question checkpoint.
   "la-a-lu-1": [],
   "la-a-lu-2": ["la-a-lu-checkpoint"],
