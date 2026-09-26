@@ -40,3 +40,7 @@ export { default as QuadraticFormsPart2 } from "./QuadraticFormsPart2";
 export { default as ChangeOfBasisGuide } from "./ChangeOfBasisGuide";
 export { default as ChangeOfBasisPart1 } from "./ChangeOfBasisPart1";
 export { default as ChangeOfBasisPart2 } from "./ChangeOfBasisPart2";
+
+export { default as AffineTransformationsGuide } from "./AffineTransformationsGuide";
+export { default as AffineTransformationsPart1 } from "./AffineTransformationsPart1";
+export { default as AffineTransformationsPart2 } from "./AffineTransformationsPart2";
