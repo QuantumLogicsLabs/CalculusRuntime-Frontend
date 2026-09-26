@@ -1339,3 +1339,228 @@ export const LA_QUADRATIC_FORMS_QUIZ = [
     "explanation": "Hermitian quadratic values are real; strict positivity for all nonzero complex vectors defines positive definiteness."
   }
 ];
+
+
+// Change of Basis & Similarity Transformations checkpoint (20 questions).
+export const LA_CHANGE_BASIS_SIMILARITY_QUIZ = [
+  {
+    "prompt": "Let the columns of $P_B$ be the basis vectors of $B$ in standard coordinates. How do you obtain $[x]_B$?",
+    "options": [
+      "$P_B^{-1}x$",
+      "$P_Bx$",
+      "$P_B^Tx$",
+      "$xP_B^{-1}$"
+    ],
+    "answer": "A",
+    "explanation": "The basis matrix synthesizes the vector: $x=P_B[x]_B$. Solving gives $[x]_B=P_B^{-1}x$."
+  },
+  {
+    "prompt": "If $P_B$ and $P_C$ contain the basis vectors in standard coordinates, what converts $[x]_B$ into $[x]_C$?",
+    "options": [
+      "$P_B^{-1}P_C$",
+      "$P_C^{-1}P_B$",
+      "$P_CP_B^{-1}$",
+      "$P_BP_C^{-1}$"
+    ],
+    "answer": "B",
+    "explanation": "Since $x=P_B[x]_B=P_C[x]_C$, we obtain $[x]_C=P_C^{-1}P_B[x]_B$."
+  },
+  {
+    "prompt": "A map has standard matrix $A$, domain basis $B$, and codomain basis $C$. What is its coordinate matrix?",
+    "options": [
+      "$P_B^{-1}AP_C$",
+      "$P_CAP_B^{-1}$",
+      "$P_C^{-1}AP_B$",
+      "$P_C^{-1}P_BA$"
+    ],
+    "answer": "C",
+    "explanation": "Convert the input from $B$ to standard with $P_B$, apply $A$, then convert the output to $C$ with $P_C^{-1}$."
+  },
+  {
+    "prompt": "For one operator with standard matrix $A$, what is its matrix in a new basis with basis matrix $P$?",
+    "options": [
+      "$PAP^{-1}$",
+      "$P^TAP$",
+      "$P^{-1}A$",
+      "$P^{-1}AP$"
+    ],
+    "answer": "D",
+    "explanation": "The input changes by $P$ and the output is converted back by $P^{-1}$, giving $P^{-1}AP$."
+  },
+  {
+    "prompt": "Which quantity is guaranteed to be the same for similar matrices?",
+    "options": [
+      "Their characteristic polynomials, including eigenvalue multiplicities",
+      "Their entries in every position",
+      "Their eigenvectors as coordinate columns",
+      "Their row-reduced forms"
+    ],
+    "answer": "A",
+    "explanation": "Similarity preserves the characteristic polynomial, so eigenvalues with algebraic multiplicities agree; coordinate eigenvectors can change."
+  },
+  {
+    "prompt": "Why is a transition matrix between two bases invertible?",
+    "options": [
+      "Every transition matrix is symmetric",
+      "Each basis uniquely represents every vector",
+      "Its determinant must equal one",
+      "The bases must contain identical vectors"
+    ],
+    "answer": "B",
+    "explanation": "Each coordinate system gives a unique representation, so the coordinate conversion is bijective and its matrix is invertible."
+  },
+  {
+    "prompt": "Let $B=((1,1),(1,-1))$ and $x=(5,1)$. What is $[x]_B$?",
+    "options": [
+      "$(5,1)^T$",
+      "$(2,3)^T$",
+      "$(3,2)^T$",
+      "$(1,5)^T$"
+    ],
+    "answer": "C",
+    "explanation": "Solve $c_1+c_2=5$ and $c_1-c_2=1$. This gives $c_1=3,c_2=2$."
+  },
+  {
+    "prompt": "Let $B=((1,0),(1,1))$ and $C=((1,1),(0,1))$. Find $P_{C\\leftarrow B}$.",
+    "options": [
+      "$\\begin{pmatrix}1&1\\\\1&0\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&-1\\\\0&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&0\\\\1&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&1\\\\-1&0\\end{pmatrix}$"
+    ],
+    "answer": "D",
+    "explanation": "$P_C^{-1}P_B=\\begin{pmatrix}1&1\\\\-1&0\\end{pmatrix}$ for the displayed basis matrices."
+  },
+  {
+    "prompt": "If $P_{C\\leftarrow B}$ converts $B$-coordinates to $C$-coordinates, what converts back?",
+    "options": [
+      "$(P_{C\\leftarrow B})^{-1}$",
+      "$P_{C\\leftarrow B}^T$ in every case",
+      "$-P_{C\\leftarrow B}$",
+      "$P_{C\\leftarrow B}^2$"
+    ],
+    "answer": "A",
+    "explanation": "Reverse a bijective coordinate conversion with its inverse. A transpose works only in special cases such as orthogonal matrices."
+  },
+  {
+    "prompt": "For bases $B,C,D$, which composition rule is correct?",
+    "options": [
+      "$P_{D\\leftarrow C}P_{C\\leftarrow B}=P_{B\\leftarrow D}$",
+      "$P_{D\\leftarrow C}P_{C\\leftarrow B}=P_{D\\leftarrow B}$",
+      "$P_{C\\leftarrow B}P_{D\\leftarrow C}=P_{D\\leftarrow B}$",
+      "$P_{D\\leftarrow C}+P_{C\\leftarrow B}=P_{D\\leftarrow B}$"
+    ],
+    "answer": "B",
+    "explanation": "The rightmost matrix acts first: convert from $B$ to $C$, then $C$ to $D$."
+  },
+  {
+    "prompt": "Let $A=\\operatorname{diag}(2,3)$. In the swapped basis $(e_2,e_1)$, what is $[A]_B$?",
+    "options": [
+      "$\\operatorname{diag}(2,3)$",
+      "$\\begin{pmatrix}2&1\\\\0&3\\end{pmatrix}$",
+      "$\\operatorname{diag}(3,2)$",
+      "$A^{-1}$"
+    ],
+    "answer": "C",
+    "explanation": "The basis matrix swaps the standard coordinates, so $P^{-1}AP=\\operatorname{diag}(3,2)$."
+  },
+  {
+    "prompt": "In $A=PDP^{-1}$, what do the columns of $P$ represent?",
+    "options": [
+      "Rows of $A$ in echelon form",
+      "An orthonormal basis in every case",
+      "Coordinates of the eigenvalues",
+      "A basis of eigenvectors ordered to match $D$"
+    ],
+    "answer": "D",
+    "explanation": "Each column of $P$ is an eigenvector paired with the corresponding diagonal entry of $D$."
+  },
+  {
+    "prompt": "An $n\\times n$ matrix has $n$ distinct eigenvalues over its field. What follows?",
+    "options": [
+      "It is diagonalizable over that field",
+      "It is orthogonal",
+      "It is symmetric",
+      "Its determinant is zero"
+    ],
+    "answer": "A",
+    "explanation": "Eigenvectors belonging to distinct eigenvalues are independent, so the $n$ eigenvectors form a basis."
+  },
+  {
+    "prompt": "Why do equal eigenvalues alone not prove that two matrices are similar?",
+    "options": [
+      "Similarity never preserves eigenvalues",
+      "Matrices with equal eigenvalues always have different determinants",
+      "Their eigenspace dimensions or Jordan structure can differ",
+      "Similar matrices must have different traces"
+    ],
+    "answer": "C",
+    "explanation": "Similarity preserves eigenspace dimensions and Jordan structure as well as eigenvalues. Equal eigenvalues alone are insufficient."
+  },
+  {
+    "prompt": "Which property is preserved by similarity?",
+    "options": [
+      "Individual entries",
+      "Rank",
+      "The chosen coordinate basis",
+      "Every eigenvector coordinate column"
+    ],
+    "answer": "B",
+    "explanation": "If $B=P^{-1}AP$ with invertible $P$, multiplication by invertible matrices preserves rank."
+  },
+  {
+    "prompt": "For $T:V\\to W$ with input basis $B$ and output basis $C$, what is column $j$ of $[T]_{C\\leftarrow B}$?",
+    "options": [
+      "The $B$-coordinates of all vectors in $V$",
+      "The eigenvalues of $T$",
+      "The standard coordinates of the basis vectors of $W$",
+      "$[T(b_j)]_C$"
+    ],
+    "answer": "D",
+    "explanation": "The $j$th column records the output $T(b_j)$ in the chosen codomain basis $C$."
+  },
+  {
+    "prompt": "When coordinates change from $B$ to $C$, what remains fixed?",
+    "options": [
+      "The geometric vector itself",
+      "Its coordinate column",
+      "The basis matrix",
+      "All entries of operator matrices"
+    ],
+    "answer": "A",
+    "explanation": "The vector is independent of coordinates; its coordinate column changes with the basis."
+  },
+  {
+    "prompt": "If $[x]_B=P[x]_{B'}$ and $[y]_C=Q[y]_{C'}$, how does the map matrix change?",
+    "options": [
+      "$Q^{-1}[T]_{C\\leftarrow B}P^{-1}$",
+      "$Q[T]_{C\\leftarrow B}P$",
+      "$Q^{-1}[T]_{C\\leftarrow B}P$",
+      "$P^{-1}[T]_{C\\leftarrow B}Q$"
+    ],
+    "answer": "C",
+    "explanation": "Substitute the new input coordinates and convert output coordinates: $[T]_{C'\\leftarrow B'}=Q^{-1}[T]_{C\\leftarrow B}P$."
+  },
+  {
+    "prompt": "If $P_{C\\leftarrow B}=\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$, what is $P_{B\\leftarrow C}$?",
+    "options": [
+      "$\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&-1\\\\0&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&0\\\\1&1\\end{pmatrix}$"
+    ],
+    "answer": "B",
+    "explanation": "Invert the triangular transition matrix to get $\\begin{pmatrix}1&-1\\\\0&1\\end{pmatrix}$."
+  },
+  {
+    "prompt": "If $P_{C\\leftarrow B}$ converts coordinates from $B$ to $C$, how are matrices of the same operator related?",
+    "options": [
+      "$[T]_C=P_{C\\leftarrow B}[T]_B$",
+      "$[T]_C=[T]_B+P_{C\\leftarrow B}$",
+      "$[T]_C=P_{B\\leftarrow C}[T]_B P_{C\\leftarrow B}$",
+      "$[T]_C=P_{C\\leftarrow B}[T]_B P_{B\\leftarrow C}$"
+    ],
+    "answer": "D",
+    "explanation": "Convert input coordinates from $C$ to $B$, apply $[T]_B$, then convert the result from $B$ to $C$. Thus $[T]_C=P_{C\\leftarrow B}[T]_B P_{B\\leftarrow C}$."
+  }
+];

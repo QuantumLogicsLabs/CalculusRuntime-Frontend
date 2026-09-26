@@ -419,6 +419,14 @@ export const COURSES = [
         logo: <span className="math-logo">x<sup>T</sup>Ax</span>,
       },
       {
+        title: "Change of Basis & Similarity Transformations",
+        description: "Coordinate vectors, transition matrices, operator representations, similarity invariants, and diagonalization, with worked examples and a 20-question checkpoint.",
+        path: "/linear-algebra/change-of-basis-similarity/1",
+        meta: "2 parts · 20-question checkpoint",
+        icon: "P",
+        logo: <span className="math-logo">P<sup>-1</sup>AP</span>,
+      },
+      {
         title: "Practice Arena",
         description: "MCQ drills for Linear Algebra topics with leaderboard submit.",
         path: "/practice",
