@@ -86,7 +86,9 @@ import {
   QuadraticFormsPart1,
   QuadraticFormsPart2,
   ChangeOfBasisPart1,
-  ChangeOfBasisPart2
+  ChangeOfBasisPart2,
+  AffineTransformationsPart1,
+  AffineTransformationsPart2
 } from "./pages/linearAlgebra";
 import MatrixSandbox from "./pages/linearAlgebra/MatrixSandbox";
 import LinearAlgebraOverview from "./pages/linearAlgebra/LinearAlgebraOverview";
@@ -305,6 +307,9 @@ function App() {
               <Route path="/linear-algebra/change-of-basis-similarity" element={<Navigate to="/linear-algebra/change-of-basis-similarity/1" replace />} />
               <Route path="/linear-algebra/change-of-basis-similarity/1" element={<Layout body={<ChangeOfBasisPart1 />} />} />
               <Route path="/linear-algebra/change-of-basis-similarity/2" element={<Layout body={<ChangeOfBasisPart2 />} />} />
+              <Route path="/linear-algebra/affine-homogeneous" element={<Navigate to="/linear-algebra/affine-homogeneous/1" replace />} />
+              <Route path="/linear-algebra/affine-homogeneous/1" element={<Layout body={<AffineTransformationsPart1 />} />} />
+              <Route path="/linear-algebra/affine-homogeneous/2" element={<Layout body={<AffineTransformationsPart2 />} />} />
               <Route path="/linear-algebra/matrix-norms-conditioning" element={<Navigate to="/linear-algebra/matrix-norms-conditioning/1" replace />} />
               <Route path="/linear-algebra/matrix-norms-conditioning/1" element={<Layout body={<MatrixNormsPart1 />} />} />
               <Route path="/linear-algebra/matrix-norms-conditioning/2" element={<Layout body={<MatrixNormsPart2 />} />} />
