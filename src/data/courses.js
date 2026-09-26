@@ -411,6 +411,14 @@ export const COURSES = [
         logo: <span className="math-logo">U*U = I</span>,
       },
       {
+        title: "Quadratic Forms & Definiteness",
+        description: "Quadratic forms, eigenvalue and principal-minor tests, completing squares, congruence, inertia, and Hessian classification. Includes worked examples and a 20-question checkpoint.",
+        path: "/linear-algebra/quadratic-forms-definiteness/1",
+        meta: "2 parts · 20-question checkpoint",
+        icon: "Q",
+        logo: <span className="math-logo">x<sup>T</sup>Ax</span>,
+      },
+      {
         title: "Practice Arena",
         description: "MCQ drills for Linear Algebra topics with leaderboard submit.",
         path: "/practice",
