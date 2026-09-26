@@ -82,7 +82,9 @@ import {
   MatrixNormsPart1,
   MatrixNormsPart2,
   ComplexVectorSpacesPart1,
-  ComplexVectorSpacesPart2
+  ComplexVectorSpacesPart2,
+  QuadraticFormsPart1,
+  QuadraticFormsPart2
 } from "./pages/linearAlgebra";
 import MatrixSandbox from "./pages/linearAlgebra/MatrixSandbox";
 import LinearAlgebraOverview from "./pages/linearAlgebra/LinearAlgebraOverview";
@@ -292,6 +294,9 @@ function App() {
               <Route path="/linear-algebra/jordan-normal-form" element={<Navigate to="/linear-algebra/jordan-normal-form/1" replace />} />
               <Route path="/linear-algebra/jordan-normal-form/1" element={<Layout body={<JordanNormalFormPart1 />} />} />
               <Route path="/linear-algebra/jordan-normal-form/2" element={<Layout body={<JordanNormalFormPart2 />} />} />
+              <Route path="/linear-algebra/quadratic-forms-definiteness" element={<Navigate to="/linear-algebra/quadratic-forms-definiteness/1" replace />} />
+              <Route path="/linear-algebra/quadratic-forms-definiteness/1" element={<Layout body={<QuadraticFormsPart1 />} />} />
+              <Route path="/linear-algebra/quadratic-forms-definiteness/2" element={<Layout body={<QuadraticFormsPart2 />} />} />
               <Route path="/linear-algebra/complex-vector-spaces" element={<Navigate to="/linear-algebra/complex-vector-spaces/1" replace />} />
               <Route path="/linear-algebra/complex-vector-spaces/1" element={<Layout body={<ComplexVectorSpacesPart1 />} />} />
               <Route path="/linear-algebra/complex-vector-spaces/2" element={<Layout body={<ComplexVectorSpacesPart2 />} />} />

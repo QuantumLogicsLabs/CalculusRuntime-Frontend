@@ -32,3 +32,7 @@ export { default as MatrixNormsPart2 } from "./MatrixNormsPart2";
 export { default as ComplexVectorSpacesGuide } from "./ComplexVectorSpacesGuide";
 export { default as ComplexVectorSpacesPart1 } from "./ComplexVectorSpacesPart1";
 export { default as ComplexVectorSpacesPart2 } from "./ComplexVectorSpacesPart2";
+
+export { default as QuadraticFormsGuide } from "./QuadraticFormsGuide";
+export { default as QuadraticFormsPart1 } from "./QuadraticFormsPart1";
+export { default as QuadraticFormsPart2 } from "./QuadraticFormsPart2";
