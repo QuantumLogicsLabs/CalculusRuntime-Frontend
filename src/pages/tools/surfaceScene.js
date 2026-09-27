@@ -102,7 +102,7 @@ function makeLabel(text, { color, halo, height, weight = 700, onTop = true }) {
   return sprite;
 }
 
-function buildAxes({ len, step, theme }) {
+function buildAxes({ len, step, theme, zScale = 1 }) {
   const group = new THREE.Group();
   const ticks = new THREE.Group();
   group.add(ticks);
@@ -110,17 +110,18 @@ function buildAxes({ len, step, theme }) {
   const r = len * 0.0065;
   const coneHeight = r * 11;
   const dotGap = len / 28;
-  const dotsPerHalf = Math.floor((len - coneHeight) / dotGap);
   const dotGeometry = new THREE.SphereGeometry(r * 1.5, 10, 8);
   const coneGeometry = new THREE.ConeGeometry(r * 3.1, coneHeight, 24);
   const tickGeometry = new THREE.SphereGeometry(r * 2.6, 12, 8);
-  const tickValues = [];
-  for (let v = step; v <= len - step * 0.35 + 1e-9; v += step) {
-    tickValues.push(v, -v);
-  }
 
   AXES.forEach(({ key, dir }) => {
     const d = toScene(...dir).normalize();
+    const axisLen = key === 'z' ? len * zScale : len;
+    const dotsPerHalf = Math.floor((axisLen - coneHeight) / dotGap);
+    const tickValues = [];
+    for (let v = step; v <= axisLen - step * 0.35 + 1e-9; v += step) {
+      tickValues.push(v, -v);
+    }
     const material = new THREE.MeshStandardMaterial({ color: theme.axis[key], roughness: 0.35, metalness: 0.1 });
 
     // A dotted line through the origin, running out to both ends of the axis.
@@ -138,7 +139,7 @@ function buildAxes({ len, step, theme }) {
       const outward = d.clone().multiplyScalar(sign);
       const cone = new THREE.Mesh(coneGeometry, material);
       cone.quaternion.setFromUnitVectors(UP, outward);
-      cone.position.copy(outward).multiplyScalar(len - coneHeight / 2);
+      cone.position.copy(outward).multiplyScalar(axisLen - coneHeight / 2);
       group.add(cone);
 
       const label = makeLabel(`${sign > 0 ? '+' : '−'}${key}`, {
@@ -147,7 +148,7 @@ function buildAxes({ len, step, theme }) {
         height: len * 0.1,
         weight: 800,
       });
-      label.position.copy(outward).multiplyScalar(len * 1.1);
+      label.position.copy(outward).multiplyScalar(axisLen + len * 0.1);
       group.add(label);
     });
 
@@ -231,7 +232,16 @@ function buildPlanes({ len, step, theme }) {
   };
 }
 
-export function createSurfaceScene(container, handlers = {}) {
+/**
+ * options.wheelZoom   – zoom on mouse wheel (off for embeds, so the page still scrolls)
+ * options.probe       – hover readout and click-to-pin a point
+ * options.spinSpeed   – auto-rotate speed in radians per second
+ * options.home        – { theta, phi } the view that Reset / double-click returns to
+ * options.distance    – camera distance as a multiple of the axis length
+ * options.zAxis       – length of the z-axis relative to the x- and y-axes
+ */
+export function createSurfaceScene(container, handlers = {}, options = {}) {
+  const { wheelZoom = true, probe: probeEnabled = true, spinSpeed = 0.3, home = CAMERA_VIEWS.iso, distance = 4.1, zAxis = 1 } = options;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
@@ -287,8 +297,8 @@ export function createSurfaceScene(container, handlers = {}) {
     state.needsEval = true;
   };
   const orbit = {
-    theta: CAMERA_VIEWS.iso.theta,
-    phi: CAMERA_VIEWS.iso.phi,
+    theta: home.theta,
+    phi: home.phi,
     radius: 14,
     target: new THREE.Vector3(),
     vTheta: 0,
@@ -500,7 +510,7 @@ export function createSurfaceScene(container, handlers = {}) {
   function rebuildAxes() {
     if (axes) { scene.remove(axes.group); disposeObject(axes.group); }
     if (planes) { Object.values(planes).forEach((plane) => { scene.remove(plane); disposeObject(plane); }); }
-    axes = buildAxes({ len: state.len, step: state.step, theme: state.theme });
+    axes = buildAxes({ len: state.len, step: state.step, theme: state.theme, zScale: zAxis });
     planes = buildPlanes({ len: state.len, step: state.step, theme: state.theme });
     scene.add(axes.group, planes.xy, planes.xz, planes.yz);
     applyVisibility();
@@ -626,7 +636,7 @@ export function createSurfaceScene(container, handlers = {}) {
 
   const minRadius = () => state.len * 0.8;
   const maxRadius = () => state.len * 14;
-  const defaultRadius = () => state.len * 4.1;
+  const defaultRadius = () => state.len * distance;
 
   function updateCamera() {
     const aspect = camera.aspect || 1;
@@ -721,7 +731,7 @@ export function createSurfaceScene(container, handlers = {}) {
 
   function onPointerMove(event) {
     if (!pointers.has(event.pointerId)) {
-      pendingHover = { x: event.clientX, y: event.clientY };
+      if (probeEnabled) pendingHover = { x: event.clientX, y: event.clientY };
       return;
     }
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -763,7 +773,7 @@ export function createSurfaceScene(container, handlers = {}) {
     if (pointers.size > 0) return;
     if (drag && !drag.moved && event.button === 0) {
       const hit = pick(event.clientX, event.clientY);
-      if (hit) handlers.onPick?.(hit);
+      if (hit && probeEnabled) handlers.onPick?.(hit);
     }
     // No fling if the pointer rested before release.
     if (drag && performance.now() - drag.time > 90) {
@@ -803,7 +813,7 @@ export function createSurfaceScene(container, handlers = {}) {
   function onKeyDown(event) {
     if (event.key === '0') {
       event.preventDefault();
-      flyTo(CAMERA_VIEWS.iso);
+      flyTo(home);
       return;
     }
     const action = KEY_ACTIONS[event.key];
@@ -815,7 +825,7 @@ export function createSurfaceScene(container, handlers = {}) {
     state.dirty = true;
   }
 
-  const onDoubleClick = () => flyTo(CAMERA_VIEWS.iso);
+  const onDoubleClick = () => flyTo(home);
   const onContextMenu = (event) => event.preventDefault();
 
   canvas.addEventListener('pointerdown', onPointerDown);
@@ -823,7 +833,7 @@ export function createSurfaceScene(container, handlers = {}) {
   canvas.addEventListener('pointerup', onPointerUp);
   canvas.addEventListener('pointercancel', onPointerUp);
   canvas.addEventListener('pointerleave', onPointerLeave);
-  canvas.addEventListener('wheel', onWheel, { passive: false });
+  if (wheelZoom) canvas.addEventListener('wheel', onWheel, { passive: false });
   canvas.addEventListener('keydown', onKeyDown);
   canvas.addEventListener('dblclick', onDoubleClick);
   canvas.addEventListener('contextmenu', onContextMenu);
@@ -871,7 +881,7 @@ export function createSurfaceScene(container, handlers = {}) {
         state.dirty = true;
       }
       if (state.autoRotate && !drag) {
-        orbit.theta -= dt * 0.3;
+        orbit.theta -= dt * spinSpeed;
         state.dirty = true;
       }
     }
@@ -913,7 +923,7 @@ export function createSurfaceScene(container, handlers = {}) {
         orbit.radius = clamp((orbit.radius * len) / state.len, len * 0.8, len * 14);
         orbit.target.multiplyScalar(len / state.len);
       } else if (!state.len) {
-        orbit.radius = len * 4.1;
+        orbit.radius = len * distance;
       }
       if (len !== state.len) state.needsAxes = true;
       state.range = range;
@@ -967,7 +977,7 @@ export function createSurfaceScene(container, handlers = {}) {
       updateProbe();
     },
     viewFrom(id) {
-      flyTo(CAMERA_VIEWS[id] || CAMERA_VIEWS.iso);
+      flyTo(CAMERA_VIEWS[id] || home);
     },
     zoomBy(factor) {
       orbit.tween = null;
