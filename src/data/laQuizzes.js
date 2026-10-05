@@ -2683,3 +2683,228 @@ export const LA_VECTOR_APPLICATIONS_QUIZ = [
     "explanation": "Preprocessing is fitted using the training set; the same fitted transformation is then applied to held-out observations."
   }
 ];
+
+
+/** Numerical Linear Algebra: Iterative Solvers checkpoint (20 questions). */
+export const LA_ITERATIVE_SOLVERS_QUIZ = [
+  {
+    "prompt": "What distinguishes a stationary iterative solver from a direct factorization?",
+    "options": [
+      "It repeatedly applies a fixed update rule to improve an approximate solution",
+      "It always returns the exact solution in one step",
+      "It must explicitly form the inverse matrix",
+      "It can only solve diagonal systems"
+    ],
+    "answer": "A",
+    "explanation": "A stationary method repeats the same iteration matrix and constant vector; accuracy is assessed using a stopping rule."
+  },
+  {
+    "prompt": "In Jacobi iteration, which values are used for off-diagonal terms during a sweep?",
+    "options": [
+      "Only values updated earlier in the current sweep",
+      "Only values from the previous iterate",
+      "Exact solution values",
+      "Only diagonal entries"
+    ],
+    "answer": "B",
+    "explanation": "Jacobi reads every off-diagonal component from the previous iterate; writing updates into the same input array would change the method."
+  },
+  {
+    "prompt": "In Gauss–Seidel iteration with rows processed from top to bottom, how is component i updated?",
+    "options": [
+      "All components come from the previous iterate",
+      "All components come from the next iterate before it is computed",
+      "Use new components j<i and old components j>i",
+      "Set every off-diagonal term to zero"
+    ],
+    "answer": "C",
+    "explanation": "Gauss–Seidel immediately reuses components already computed during the current sweep."
+  },
+  {
+    "prompt": "Which condition is sufficient for both Jacobi and Gauss–Seidel convergence?",
+    "options": [
+      "Every diagonal entry is positive",
+      "The determinant is nonzero",
+      "The matrix is symmetric",
+      "Strict row diagonal dominance"
+    ],
+    "answer": "D",
+    "explanation": "Strict row diagonal dominance means |a_ii| exceeds the sum of the off-diagonal absolute values in each row. It is sufficient, not necessary."
+  },
+  {
+    "prompt": "For x^(k+1)=Bx^(k)+c with a unique fixed point, convergence from every initial vector is equivalent to:",
+    "options": [
+      "The spectral radius rho(B) being less than 1",
+      "The trace of B being positive",
+      "Every entry of B being less than 1",
+      "The determinant of B being nonzero"
+    ],
+    "answer": "A",
+    "explanation": "The error evolves by e^(k+1)=Be^(k); B^k tends to zero exactly when every eigenvalue lies strictly inside the unit circle."
+  },
+  {
+    "prompt": "Which claim about a real symmetric positive-definite matrix is correct?",
+    "options": [
+      "Both methods always terminate after n sweeps",
+      "Gauss–Seidel converges, but Jacobi is not guaranteed to converge",
+      "Jacobi always converges, but Gauss–Seidel cannot",
+      "Neither method can converge"
+    ],
+    "answer": "B",
+    "explanation": "Positive definiteness guarantees Gauss–Seidel convergence. For Jacobi, a separate convergence check is needed."
+  },
+  {
+    "prompt": "Which SOR parameter gives exactly Gauss–Seidel?",
+    "options": [
+      "omega=0",
+      "omega=2",
+      "omega=1",
+      "omega=-1"
+    ],
+    "answer": "C",
+    "explanation": "At omega=1 the old-value weight vanishes and each SOR update equals the Gauss–Seidel update."
+  },
+  {
+    "prompt": "For a real symmetric positive-definite matrix, which interval guarantees SOR convergence?",
+    "options": [
+      "omega>2",
+      "omega<0",
+      "Every real omega",
+      "0<omega<2"
+    ],
+    "answer": "D",
+    "explanation": "SOR converges for SPD matrices when 0<omega<2; this interval is not a sufficient guarantee for an arbitrary matrix."
+  },
+  {
+    "prompt": "For 4x+y=1 and x+3y=2, Jacobi starting at (0,0) produces which first iterate?",
+    "options": [
+      "(1/4, 2/3)",
+      "(1/4, 7/12)",
+      "(1, 2)",
+      "(1/11, 7/11)"
+    ],
+    "answer": "A",
+    "explanation": "Jacobi uses x=0 and y=0 on the right of both update equations: x_new=1/4 and y_new=2/3."
+  },
+  {
+    "prompt": "For the same system and initial vector, Gauss–Seidel updating x before y produces:",
+    "options": [
+      "(1/4, 2/3)",
+      "(1/4, 7/12)",
+      "(1/12, 7/12)",
+      "(1/11, 7/11)"
+    ],
+    "answer": "B",
+    "explanation": "First x_new=1/4; then y_new=(2-1/4)/3=7/12 using the new x value."
+  },
+  {
+    "prompt": "For 4x+y=1 and x+3y=2, the second Jacobi iterate from (0,0) is:",
+    "options": [
+      "(1/4, 7/12)",
+      "(5/48, 91/144)",
+      "(1/12, 7/12)",
+      "(1/4, 2/3)"
+    ],
+    "answer": "C",
+    "explanation": "Apply the update to (1/4,2/3): x_new=(1-2/3)/4=1/12 and y_new=(2-1/4)/3=7/12."
+  },
+  {
+    "prompt": "For that system, SOR with omega=6/5 from (0,0), updating x before y, gives:",
+    "options": [
+      "(1/4, 7/12)",
+      "(3/10, 4/5)",
+      "(1/5, 3/5)",
+      "(3/10, 17/25)"
+    ],
+    "answer": "D",
+    "explanation": "x_new=(6/5)(1/4)=3/10. Then y_new=(6/5)(2-3/10)/3=17/25."
+  },
+  {
+    "prompt": "For A=[[4,1],[1,3]], b=(1,2), and x_hat=(1/4,2/3), what is b-A*x_hat?",
+    "options": [
+      "(-2/3, -1/4)",
+      "(2/3, 1/4)",
+      "(0, 0)",
+      "(1/4, 2/3)"
+    ],
+    "answer": "A",
+    "explanation": "A*x_hat=(5/3,9/4), so subtraction from b gives (-2/3,-1/4). The residual is not the iterate itself."
+  },
+  {
+    "prompt": "Why is a small residual alone insufficient to guarantee a small solution error?",
+    "options": [
+      "Residuals cannot be computed for sparse matrices",
+      "An ill-conditioned A can amplify residual error through its inverse",
+      "A residual is always exactly zero",
+      "The right-hand side must be positive"
+    ],
+    "answer": "B",
+    "explanation": "If e=x_star-x_hat and r=b-A*x_hat, then Ae=r. A large inverse norm can amplify a small residual."
+  },
+  {
+    "prompt": "For the positive-off-diagonal splitting A=D+L+U, the Jacobi iteration matrix is:",
+    "options": [
+      "D^(-1)(L+U)",
+      "-(D+L)^(-1)U",
+      "-D^(-1)(L+U)",
+      "D+L+U"
+    ],
+    "answer": "C",
+    "explanation": "Rearrange D*x_new=b-(L+U)*x_old. The minus sign follows from this explicitly chosen splitting convention."
+  },
+  {
+    "prompt": "For A=D+L+U, the Gauss–Seidel iteration matrix is:",
+    "options": [
+      "-D^(-1)(L+U)",
+      "D^(-1)L",
+      "(D+U)^(-1)L",
+      "-(D+L)^(-1)U"
+    ],
+    "answer": "D",
+    "explanation": "Gauss–Seidel solves (D+L)*x_new=b-U*x_old; the matrix formula describes a triangular solve, not a recommendation to form an inverse."
+  },
+  {
+    "prompt": "A matrix has a zero diagonal entry. What should happen before applying the usual component formulas?",
+    "options": [
+      "Reorder equations if possible and recheck convergence; otherwise use another method",
+      "Divide by zero and continue",
+      "Replace the zero by an arbitrary tiny number",
+      "Assume the matrix is singular"
+    ],
+    "answer": "A",
+    "explanation": "The formulas divide by a_ii. A zero diagonal does not itself prove singularity; a legitimate reordering must also reorder b and requires a fresh convergence check."
+  },
+  {
+    "prompt": "What happens for Jacobi on A=[[1,2],[2,1]] from a general initial error?",
+    "options": [
+      "Convergence is guaranteed by invertibility",
+      "Convergence from every initial error fails because rho(B)=2",
+      "Convergence is guaranteed by positive entries",
+      "It becomes the identity iteration matrix"
+    ],
+    "answer": "B",
+    "explanation": "The Jacobi matrix [[0,-2],[-2,0]] has eigenvalues 2 and -2. Nonsingularity alone is not a convergence guarantee."
+  },
+  {
+    "prompt": "Which implementation correctly preserves Jacobi semantics?",
+    "options": [
+      "Overwrite x_i immediately and reuse it in later rows",
+      "Compute only the first row repeatedly",
+      "Read from an old vector and write into a separate new vector",
+      "Ignore all off-diagonal coefficients"
+    ],
+    "answer": "C",
+    "explanation": "Two buffers keep every component update based on the same old iterate. Swap buffers after completing the sweep."
+  },
+  {
+    "prompt": "Which stopping policy is most reliable for a practical iteration?",
+    "options": [
+      "Stop after exactly one sweep",
+      "Stop only when consecutive vectors are bit-for-bit equal",
+      "Use only an unscaled update difference for every problem",
+      "Check a scaled residual with absolute tolerance, an iteration cap, and non-finite detection"
+    ],
+    "answer": "D",
+    "explanation": "A residual criterion addresses the original equations; absolute tolerance handles zero or tiny b, and caps/non-finite checks prevent endless or invalid iterations."
+  }
+];
