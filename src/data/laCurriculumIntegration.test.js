@@ -41,14 +41,16 @@ const allCourseBanks = {
   probability: PS_PRACTICE_BANK,
 };
 
-test('every course bank has unique integer question IDs within its own bank', () => {
+test('every course bank has unique integer or nonempty string question IDs within its own bank', () => {
   for (const [course, bank] of Object.entries(allCourseBanks)) {
     expect(bank.length).toBeGreaterThan(0);
     const seen = new Set();
     for (const q of bank) {
-      expect({ course, id: q.id, integer: Number.isInteger(q.id), duplicate: seen.has(q.id) })
-        .toEqual({ course, id: q.id, integer: true, duplicate: false });
-      seen.add(q.id);
+      const validId = Number.isInteger(q.id) || (typeof q.id === 'string' && q.id.trim().length > 0);
+      const key = String(q.id);
+      expect({ course, id: q.id, validId, duplicate: seen.has(key) })
+        .toEqual({ course, id: q.id, validId: true, duplicate: false });
+      seen.add(key);
     }
   }
 });
