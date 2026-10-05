@@ -368,3 +368,15 @@ describe("authentication and certificate quiz integration", () => {
     }
   });
 });
+
+
+test("Numerical Linear Algebra Part 2 loads directly and links back to Part 1", async () => {
+  window.history.replaceState({}, "", "/linear-algebra/numerical-linear-algebra/2");
+  const view = render(<App />);
+  expect(await screen.findByRole("heading", { level: 2, name: "Eigenvalue Algorithms (Power Iteration & QR)" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Open Part 1" })).toHaveAttribute("href", "/linear-algebra/numerical-linear-algebra/1");
+  expect(view.container.querySelector(".katex-error")).toBeNull();
+  fireEvent.click(screen.getByRole("link", { name: "Open Part 1" }));
+  await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/numerical-linear-algebra/1"));
+  expect(await screen.findByRole("heading", { level: 2, name: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)" })).toBeInTheDocument();
+});
