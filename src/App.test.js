@@ -17,6 +17,56 @@ afterEach(() => {
   window.history.replaceState({}, "", "/");
 });
 
+describe("shared interface regressions", () => {
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
+  });
+
+  test("theme toggles update the document and survive navigation and remount", async () => {
+    localStorage.setItem('calculus-dark', 'false');
+    let view = render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to dark mode' }));
+    expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
+    expect(document.documentElement).toHaveClass('dark');
+    expect(document.body).toHaveClass('dark');
+    expect(localStorage.getItem('calculus-dark')).toBe('true');
+    fireEvent.click(screen.getByRole('link', { name: /^Linear Algebra$/ }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Linear Algebra' })).toBeInTheDocument();
+    expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
+    view.unmount();
+    view = render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to light mode' }));
+    expect(document.documentElement).toHaveAttribute('data-theme', 'light');
+    expect(document.documentElement).not.toHaveClass('dark');
+    expect(document.body).not.toHaveClass('dark');
+    expect(localStorage.getItem('calculus-dark')).toBe('false');
+  });
+
+  test("mobile navigation exposes its state and closes on Escape, outside click and route selection", async () => {
+    render(<App />);
+    const toggle = screen.getByRole('button', { name: 'Toggle navigation' });
+    const menu = document.getElementById(toggle.getAttribute('aria-controls'));
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(menu).toHaveAttribute('aria-hidden', 'true');
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(menu).toHaveAttribute('aria-hidden', 'false');
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(toggle);
+    fireEvent.mouseDown(document.body);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(toggle);
+    fireEvent.click(within(menu).getByRole('link', { name: 'Linear Algebra' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Linear Algebra' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Toggle navigation' })).toHaveAttribute('aria-expanded', 'false');
+    expect(document.getElementById('mobile-nav')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+});
+
 test('renders the main app shell', () => {
   render(<App />);
   expect(screen.getByRole('link', { name: /CalcVoyager/i })).toBeInTheDocument();
