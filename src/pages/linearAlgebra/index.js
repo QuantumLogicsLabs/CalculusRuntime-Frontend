@@ -56,3 +56,4 @@ export { default as LinearProgrammingPart1 } from "./LinearProgrammingPart1";
 export { default as LinearProgrammingPart2 } from "./LinearProgrammingPart2";
 
 export { default as IterativeSolversGuide } from "./IterativeSolversGuide";
+export { default as EigenvalueAlgorithmsGuide } from "./EigenvalueAlgorithmsGuide";

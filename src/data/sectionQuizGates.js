@@ -104,6 +104,7 @@ export const SECTION_GUIDE_QUIZ_KEYS = {
 
   // Linear Algebra
   "la-numerical-linear-algebra-1": ["la-iterative-solvers-checkpoint"],
+  "la-numerical-linear-algebra-2": ["la-eigenvalue-algorithms-checkpoint"],
   ...Object.fromEntries(LA_MODULES.flatMap((module) =>
     [1, 2].map((part) => [
       `la-${module.id}-${part}`,

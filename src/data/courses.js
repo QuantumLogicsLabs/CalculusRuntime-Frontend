@@ -668,7 +668,7 @@ export const COURSES = [
         path: getLaModulePath(module),
         icon: module.logo,
         logo: <span className="math-logo">{module.logo}</span>,
-        meta: "Part 1 available · 20 checkpoint MCQs",
+        meta: "2 parts · 2 topics · 40 checkpoint MCQs",
       })),
       {
         title: "Practice Arena",

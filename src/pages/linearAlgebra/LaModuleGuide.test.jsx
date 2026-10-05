@@ -81,9 +81,9 @@ test("all legacy topic URLs land on the correct module part and topic anchor", (
   }
 });
 
-test("all thirteen checkpoints contain twenty questions with four distinct options and valid answers", () => {
+test("all fourteen checkpoints contain twenty questions with four distinct options and valid answers", () => {
   const banks = Object.values(quizzes);
-  expect(banks).toHaveLength(13);
+  expect(banks).toHaveLength(14);
   for (const bank of banks) {
     expect(bank).toHaveLength(20);
     expect(new Set(bank.map((question) => question.prompt)).size).toBe(20);
@@ -161,11 +161,12 @@ test("the grouped Markov topic links back to the existing Stochastic Processes r
 });
 
 
-test("Numerical Linear Algebra publishes only its complete first topic", () => {
+test("Numerical Linear Algebra publishes two parts with one complete topic each", () => {
   const module = LA_EXPANSION_MODULES[0];
-  expect(getLaModuleParts(module)).toEqual([1]);
+  expect(getLaModuleParts(module)).toEqual([1, 2]);
   expect(getLaModuleTopics(module, 1)).toHaveLength(1);
-  expect(getLaModuleTopics(module, 2)).toEqual([]);
+  expect(getLaModuleTopics(module, 2)).toHaveLength(1);
+  expect(getLaTopicPath(module, module.topics[1])).toBe("/linear-algebra/numerical-linear-algebra/2#eigenvalue-algorithms");
   expect(getLaTopicPath(module, module.topics[0])).toBe("/linear-algebra/numerical-linear-algebra/1#iterative-solvers");
   const cards = getCourseById("linear-algebra").modules;
   expect(cards.filter((card) => card.path === getLaModulePath(module))).toHaveLength(1);
@@ -173,7 +174,7 @@ test("Numerical Linear Algebra publishes only its complete first topic", () => {
   expect(screen.getAllByTestId("checkpoint")).toHaveLength(1);
   expect(screen.getByTestId("checkpoint").getAttribute("data-count")).toBe("20");
   expect(container.querySelectorAll(".box.exm")).toHaveLength(5);
-  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).toBeNull();
+  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).not.toBeNull();
   expect(screen.getByTestId("bookmark").getAttribute("href")).toBe(getLaModulePath(module));
   expect(screen.getByTestId("completion").getAttribute("data-section")).toBe("la-numerical-linear-algebra-1");
   const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
@@ -193,8 +194,34 @@ test("the iterative checkpoint requires 16 of 20 and saves the matching score", 
 
 test("the overview links the available expansion topic without claiming certificate eligibility", () => {
   const { container } = render(<LinearAlgebraOverview />);
-  expect(screen.getByText("In progress")).toBeTruthy();
+  expect(screen.getByText("New topics")).toBeTruthy();
   expect(container.querySelector('#numerical-linear-algebra a').getAttribute("href")).toBe("/linear-algebra/numerical-linear-algebra/1");
-  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).toBeNull();
+  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).not.toBeNull();
   expect(getRequiredSections("linear-algebra")).not.toContain("la-numerical-linear-algebra-1");
+});
+
+
+test("the eigenvalue part renders once with independent completion and a return link", () => {
+  const key = "guide-mcq-la-eigenvalue-algorithms-checkpoint";
+  const section = "la-numerical-linear-algebra-2";
+  const scores = { "guide-mcq-la-iterative-solvers-checkpoint": { score: 20, total: 20 } };
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  scores[key] = { score: 15, total: 20 };
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  mockSaveQuizScore.mockImplementation((id, score, total) => { scores[id] = { score, total }; });
+  const { container } = render(<LaModulePart moduleId="numerical-linear-algebra" part={2} />);
+  expect(container.querySelectorAll(".la-module-topic")).toHaveLength(1);
+  expect(container.querySelectorAll(".box.exm")).toHaveLength(5);
+  expect(screen.getAllByTestId("checkpoint")).toHaveLength(1);
+  expect(screen.getByTestId("checkpoint")).toHaveAttribute("data-count", "20");
+  expect(screen.getByTestId("completion")).toHaveAttribute("data-section", section);
+  expect(screen.getByTestId("bookmark")).toHaveAttribute("href", "/linear-algebra/numerical-linear-algebra/2");
+  expect(screen.getByRole("link", { name: "Open Part 1" })).toHaveAttribute("href", "/linear-algebra/numerical-linear-algebra/1");
+  expect(container.textContent).not.toContain("Part 2 planned");
+  const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
+  expect(new Set(ids).size).toBe(ids.length);
+  fireEvent.click(screen.getByRole("button", { name: "Pass la-eigenvalue-algorithms-checkpoint" }));
+  expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
+  expect(getRequiredSections("linear-algebra")).not.toContain(section);
 });
