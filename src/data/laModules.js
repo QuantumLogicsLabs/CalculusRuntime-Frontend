@@ -41,12 +41,30 @@ export const LA_MODULES = [
   },
 ];
 
+// Published expansion topics are separate until certificate/practice integration.
+export const LA_EXPANSION_MODULES = [{
+  id: "numerical-linear-algebra",
+  overviewAnchor: "numerical-linear-algebra",
+  title: "Numerical Linear Algebra",
+  description: "Iterative methods for linear systems: Jacobi, Gauss–Seidel, and successive over-relaxation, with convergence checks and worked examples.",
+  logo: "Ax ≈ b",
+  topicsPerPart: 1,
+  plannedTopicCount: 2,
+  plannedNextTopic: "Eigenvalue Algorithms (Power Iteration & QR)",
+  topics: [{ id: "iterative-solvers", title: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)", quizKey: "la-iterative-solvers-checkpoint", singlePage: true }],
+}];
+
+export function getLaModuleParts(module) {
+  return Array.from({ length: Math.ceil(module.topics.length / (module.topicsPerPart || 2)) }, (_, i) => i + 1);
+}
+
 export function getLaModule(id) {
-  return LA_MODULES.find((module) => module.id === id);
+  return [...LA_MODULES, ...LA_EXPANSION_MODULES].find((module) => module.id === id);
 }
 
 export function getLaModuleTopics(module, part) {
-  return module.topics.slice((part - 1) * 2, part * 2);
+  const size = module.topicsPerPart || 2;
+  return module.topics.slice((part - 1) * size, part * size);
 }
 
 export function getLaModulePath(module, part = 1) {
@@ -54,7 +72,7 @@ export function getLaModulePath(module, part = 1) {
 }
 
 export function getLaTopicPath(module, topic) {
-  const part = module.topics.findIndex((item) => item.id === topic.id) < 2 ? 1 : 2;
+  const part = Math.floor(module.topics.findIndex((item) => item.id === topic.id) / (module.topicsPerPart || 2)) + 1;
   return `${getLaModulePath(module, part)}#${topic.id}`;
 }
 
