@@ -46,12 +46,12 @@ export const LA_EXPANSION_MODULES = [{
   id: "numerical-linear-algebra",
   overviewAnchor: "numerical-linear-algebra",
   title: "Numerical Linear Algebra",
-  description: "Iterative methods for linear systems: Jacobi, Gauss–Seidel, and successive over-relaxation, with convergence checks and worked examples.",
+  description: "Iterative linear solvers and numerical eigenvalue algorithms: Jacobi, Gauss–Seidel, SOR, power iteration, and QR, with worked examples and independent checkpoints.",
   logo: "Ax ≈ b",
   topicsPerPart: 1,
   plannedTopicCount: 2,
-  plannedNextTopic: "Eigenvalue Algorithms (Power Iteration & QR)",
-  topics: [{ id: "iterative-solvers", title: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)", quizKey: "la-iterative-solvers-checkpoint", singlePage: true }],
+  topics: [{ id: "iterative-solvers", title: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)", quizKey: "la-iterative-solvers-checkpoint", singlePage: true },
+    { id: "eigenvalue-algorithms", title: "Eigenvalue Algorithms (Power Iteration & QR)", quizKey: "la-eigenvalue-algorithms-checkpoint", singlePage: true }],
 }];
 
 export function getLaModuleParts(module) {
