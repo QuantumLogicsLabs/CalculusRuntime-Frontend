@@ -103,6 +103,7 @@ export const SECTION_GUIDE_QUIZ_KEYS = {
   "geo3d-2": ["geo-line3d", "geo-skew", "geo-quadric"],
 
   // Linear Algebra
+  "la-numerical-linear-algebra-1": ["la-iterative-solvers-checkpoint"],
   ...Object.fromEntries(LA_MODULES.flatMap((module) =>
     [1, 2].map((part) => [
       `la-${module.id}-${part}`,
