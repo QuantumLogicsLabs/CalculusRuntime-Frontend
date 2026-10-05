@@ -194,6 +194,7 @@ test("representative guide redirects navigate and render across all four courses
     ["/differentiation", "/differentiation/1", "Differentiation & Rules"],
     ["/partial-derivatives", "/partial-derivatives/1", "Partial Derivatives"],
     ["/linear-algebra/vectors", "/linear-algebra/vectors/1", "Vectors & Vector Spaces"],
+    ["/linear-algebra/numerical-linear-algebra", "/linear-algebra/numerical-linear-algebra/1", "Numerical Linear Algebra"],
     ["/probability-statistics/stochastic-processes", "/probability-statistics/stochastic-processes/1", "Stochastic Processes"],
   ];
   for (const [from, to, title] of cases) {

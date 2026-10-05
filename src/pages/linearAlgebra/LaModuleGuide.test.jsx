@@ -5,7 +5,7 @@ import LaModulePart from "./LaModulePart";
 import LinearAlgebraOverview from "./LinearAlgebraOverview";
 import StochasticProcessesGuide from "../probabilityStatistics/StochasticProcessesGuide";
 import { getRequiredSections, isCourseComplete, getMinQuizScore, hasPassedQuiz } from "../../data/courseCompletion";
-import { LA_MODULES, LA_TOPIC_REDIRECTS, LA_MODULE_REDIRECTS, getLaModulePath, getLaModuleTopics } from "../../data/laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES, getLaModuleParts, getLaTopicPath, LA_TOPIC_REDIRECTS, LA_MODULE_REDIRECTS, getLaModulePath, getLaModuleTopics } from "../../data/laModules";
 import { getCourseById } from "../../data/courses";
 import { hasPassedSectionQuizzes } from "../../data/sectionQuizGates";
 import * as quizzes from "../../data/laQuizzes";
@@ -81,9 +81,9 @@ test("all legacy topic URLs land on the correct module part and topic anchor", (
   }
 });
 
-test("all twelve checkpoints contain twenty questions with four distinct options and valid answers", () => {
+test("all thirteen checkpoints contain twenty questions with four distinct options and valid answers", () => {
   const banks = Object.values(quizzes);
-  expect(banks).toHaveLength(12);
+  expect(banks).toHaveLength(13);
   for (const bank of banks) {
     expect(bank).toHaveLength(20);
     expect(new Set(bank.map((question) => question.prompt)).size).toBe(20);
@@ -158,4 +158,43 @@ test("the grouped Markov topic links back to the existing Stochastic Processes r
   const links = screen.getAllByRole("link", { name: /Stochastic Processes/ });
   expect(links.length).toBeGreaterThan(0);
   links.forEach((link) => expect(link).toHaveAttribute("href", "/probability-statistics/stochastic-processes/1"));
+});
+
+
+test("Numerical Linear Algebra publishes only its complete first topic", () => {
+  const module = LA_EXPANSION_MODULES[0];
+  expect(getLaModuleParts(module)).toEqual([1]);
+  expect(getLaModuleTopics(module, 1)).toHaveLength(1);
+  expect(getLaModuleTopics(module, 2)).toEqual([]);
+  expect(getLaTopicPath(module, module.topics[0])).toBe("/linear-algebra/numerical-linear-algebra/1#iterative-solvers");
+  const cards = getCourseById("linear-algebra").modules;
+  expect(cards.filter((card) => card.path === getLaModulePath(module))).toHaveLength(1);
+  const { container } = render(<LaModulePart moduleId={module.id} part={1} />);
+  expect(screen.getAllByTestId("checkpoint")).toHaveLength(1);
+  expect(screen.getByTestId("checkpoint").getAttribute("data-count")).toBe("20");
+  expect(container.querySelectorAll(".box.exm")).toHaveLength(5);
+  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).toBeNull();
+  expect(screen.getByTestId("bookmark").getAttribute("href")).toBe(getLaModulePath(module));
+  expect(screen.getByTestId("completion").getAttribute("data-section")).toBe("la-numerical-linear-algebra-1");
+  const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
+  expect(new Set(ids).size).toBe(ids.length);
+});
+
+test("the iterative checkpoint requires 16 of 20 and saves the matching score", () => {
+  const section = "la-numerical-linear-algebra-1";
+  const key = "guide-mcq-la-iterative-solvers-checkpoint";
+  expect(hasPassedSectionQuizzes(section, {})).toBe(false);
+  expect(hasPassedSectionQuizzes(section, { [key]: { score: 15, total: 20 } })).toBe(false);
+  expect(hasPassedSectionQuizzes(section, { [key]: { score: 16, total: 20 } })).toBe(true);
+  render(<LaModuleGuide moduleId="numerical-linear-algebra" part={1} />);
+  fireEvent.click(screen.getByRole("button", { name: "Pass la-iterative-solvers-checkpoint" }));
+  expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
+});
+
+test("the overview links the available expansion topic without claiming certificate eligibility", () => {
+  const { container } = render(<LinearAlgebraOverview />);
+  expect(screen.getByText("In progress")).toBeTruthy();
+  expect(container.querySelector('#numerical-linear-algebra a').getAttribute("href")).toBe("/linear-algebra/numerical-linear-algebra/1");
+  expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).toBeNull();
+  expect(getRequiredSections("linear-algebra")).not.toContain("la-numerical-linear-algebra-1");
 });
