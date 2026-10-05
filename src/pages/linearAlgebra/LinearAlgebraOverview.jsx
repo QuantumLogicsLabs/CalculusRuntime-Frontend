@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getCourseById } from "../../data/courses";
 import "./LinearAlgebraOverview.css";
-import { LA_MODULES, getLaModulePath, getLaModuleTopics, getLaTopicPath } from "../../data/laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES, getLaModulePath, getLaModuleTopics, getLaTopicPath } from "../../data/laModules";
 
 const CORE_CERT_PATHS = new Set([
   "/linear-algebra/vectors/1",
@@ -23,7 +23,7 @@ const EXCLUDED_FROM_ROADMAP = new Set([
 function LinearAlgebraOverview() {
   const { hash } = useLocation();
   useEffect(() => {
-    if (LA_MODULES.some((module) => hash === `#${module.overviewAnchor}`)) {
+    if ([...LA_MODULES, ...LA_EXPANSION_MODULES].some((module) => hash === `#${module.overviewAnchor}`)) {
       document.getElementById(hash.slice(1))?.scrollIntoView();
     }
   }, [hash]);
@@ -91,7 +91,7 @@ function LinearAlgebraOverview() {
                     <span className="la-roadmap-title">
                       {mod.title}
                       <span className={`la-roadmap-tag${isCore ? " la-roadmap-tag--core" : ""}`}>
-                        {isCore ? "Required for certificate" : "Extra depth"}
+                        {isCore ? "Required for certificate" : LA_EXPANSION_MODULES.some((module) => getLaModulePath(module) === mod.path) ? "In progress" : "Extra depth"}
                       </span>
                     </span>
                     <small>{mod.description}</small>
@@ -132,11 +132,21 @@ function LinearAlgebraOverview() {
         </section>
       ))}
 
+      {LA_EXPANSION_MODULES.map((module) => (
+        <section className="guide-section" id={module.overviewAnchor} key={module.id} aria-labelledby={`${module.id}-heading`}>
+          <h2 id={`${module.id}-heading`}>{module.title}</h2>
+          <p>{module.description}</p>
+          <p><Link to={getLaModulePath(module)}>Part 1 — {module.topics[0].title}</Link></p>
+          <p>The complete topic includes theory, worked examples, and 20 checkpoint questions. Score at least 80% to complete Part 1.</p>
+          <p>Part 2 planned: {module.plannedNextTopic}.</p>
+        </section>
+      ))}
+
       <section className="guide-section" aria-labelledby="structure-heading">
         <div className="section-kicker">How this course works</div>
         <h2 id="structure-heading">Structure &amp; certificate</h2>
         <p className="la-overview-lead">
-          The three advanced modules above each have two parts and four topics. Core topic guides
+          The three four-topic advanced modules each have two parts and four topics. Core topic guides
           retain their existing theory, examples, and quizzes. Score 80%+ on a section's quizzes to unlock "Mark as
           complete" — your progress and quiz scores are saved to your account automatically.
         </p>
@@ -144,7 +154,7 @@ function LinearAlgebraOverview() {
           Complete all 18 required parts: both parts of <strong>Vectors &amp; Vector Spaces</strong>,{" "}
           <strong>Matrices &amp; Determinants</strong>, <strong>Systems of Linear Equations</strong>,{" "}
           <strong>Eigenvalues &amp; Eigenvectors</strong>, <strong>Orthogonality &amp; Least Squares</strong>,{" "}
-          <strong>Singular Value Decomposition</strong>, and the three advanced modules above.
+          <strong>Singular Value Decomposition</strong>, and the three four-topic advanced modules.
           Then pass the 66-question certification quiz with a score of at least 80%.
           <strong> Linear Equations</strong> and <strong>Linear Transformations</strong> remain
           optional additional study.
