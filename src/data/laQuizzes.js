@@ -2908,3 +2908,228 @@ export const LA_ITERATIVE_SOLVERS_QUIZ = [
     "explanation": "A residual criterion addresses the original equations; absolute tolerance handles zero or tiny b, and caps/non-finite checks prevent endless or invalid iterations."
   }
 ];
+
+
+/** Numerical Linear Algebra: Eigenvalue Algorithms checkpoint (20 questions). */
+export const LA_EIGENVALUE_ALGORITHMS_QUIZ = [
+  {
+    "prompt": "Under the standard diagonalizable-matrix assumptions, which eigenvalue does power iteration target?",
+    "options": [
+      "The eigenvalue of largest absolute value",
+      "The smallest positive eigenvalue",
+      "The eigenvalue closest to zero",
+      "The sum of all eigenvalues"
+    ],
+    "answer": "A",
+    "explanation": "A unique dominant magnitude controls repeated multiplication when the starting vector has a nonzero component in its eigenvector direction."
+  },
+  {
+    "prompt": "Why normalize the vector after each power iteration?",
+    "options": [
+      "To change the eigenvalues",
+      "To control scale while preserving the vector direction",
+      "To force the eigenvalue to be positive",
+      "To make every matrix symmetric"
+    ],
+    "answer": "B",
+    "explanation": "Normalization controls growth or decay of the iterate without changing its direction; it does not create a missing spectral gap."
+  },
+  {
+    "prompt": "For $A=\\operatorname{diag}(5,2)$ and starting vector $(1,1)^T$, what is the first unit-length power iterate?",
+    "options": [
+      "$ (1,1)^T/\\sqrt{2}$",
+      "$ (2,5)^T/\\sqrt{29}$",
+      "$ (5,2)^T/\\sqrt{29}$",
+      "$ (5,2)^T/7$"
+    ],
+    "answer": "C",
+    "explanation": "Multiplication gives (5,2). Its Euclidean norm is the square root of 25+4, so divide by sqrt(29)."
+  },
+  {
+    "prompt": "For $A=\\operatorname{diag}(5,2)$ and $x=(5,2)^T$, what is the Rayleigh quotient?",
+    "options": [
+      "$7$",
+      "$29/133$",
+      "$5$",
+      "$133/29$"
+    ],
+    "answer": "D",
+    "explanation": "The numerator x^T A x is 5·25+2·4=133 and x^T x=29. The quotient is unchanged if x is normalized."
+  },
+  {
+    "prompt": "With a unique dominant eigenvalue, the asymptotic directional convergence factor of basic power iteration is typically governed by which ratio?",
+    "options": [
+      "$|\\lambda_2/\\lambda_1|$",
+      "$|\\lambda_1/\\lambda_2|$",
+      "$|\\lambda_1+\\lambda_2|$",
+      "$|\\det A|$"
+    ],
+    "answer": "A",
+    "explanation": "For a diagonalizable matrix ordered by decreasing eigenvalue magnitude, subdominant eigenvector coefficients shrink relative to the dominant coefficient by powers of this ratio."
+  },
+  {
+    "prompt": "For $A=\\operatorname{diag}(5,2)$, what happens in exact arithmetic if the starting vector is $(0,1)^T$?",
+    "options": [
+      "It immediately becomes (1,0)",
+      "It remains in the eigenvalue-2 direction",
+      "It returns the dominant eigenvalue 5 after two steps",
+      "It becomes a zero vector"
+    ],
+    "answer": "B",
+    "explanation": "The starting vector has zero component in the dominant direction; multiplication and normalization cannot create that component in exact arithmetic."
+  },
+  {
+    "prompt": "What can happen to normalized power iterates when the unique dominant eigenvalue is negative?",
+    "options": [
+      "Their norms must diverge",
+      "The eigenvalue becomes positive",
+      "Their signs can alternate while the eigenvector line converges",
+      "The matrix becomes singular"
+    ],
+    "answer": "C",
+    "explanation": "A negative dominant eigenvalue reverses orientation each multiplication. The limiting line and the Rayleigh quotient can converge despite sign alternation."
+  },
+  {
+    "prompt": "Which quantity directly checks a proposed eigenpair $(\\mu,x)$?",
+    "options": [
+      "$\\|x\\|$ alone",
+      "$\\operatorname{tr}(A)$ alone",
+      "$\\|A\\|$ alone",
+      "$\\|Ax-\\mu x\\|$"
+    ],
+    "answer": "D",
+    "explanation": "The eigenpair residual measures the defect in the defining equation. Its magnitude must be interpreted relative to the vector and matrix scale."
+  },
+  {
+    "prompt": "For $A=\\operatorname{diag}(3,-3)$ and $x_0=(1,1)^T$, why can basic power iteration fail to settle to one eigenvector line?",
+    "options": [
+      "The two eigenvalues have equal dominant magnitude",
+      "The matrix has no eigenvectors",
+      "The determinant is zero",
+      "The starting vector has zero norm"
+    ],
+    "answer": "A",
+    "explanation": "The two components retain equal magnitude and their relative sign alternates, so the usual unique-dominant-magnitude condition fails."
+  },
+  {
+    "prompt": "If $Ax_k=0$ during power iteration, what is the correct next action?",
+    "options": [
+      "Divide by its norm anyway",
+      "Handle the zero product explicitly before normalization",
+      "Replace the eigenvalue with infinity",
+      "Report convergence to the largest eigenvalue"
+    ],
+    "answer": "B",
+    "explanation": "Normalizing a zero vector is undefined. A nonzero x_k in the nullspace identifies a zero eigenpair, but not necessarily a dominant one; restart or report that limitation."
+  },
+  {
+    "prompt": "If $A_k=Q_kR_k$ is an unshifted QR factorization, which update is correct?",
+    "options": [
+      "$A_{k+1}=Q_kR_k$",
+      "$A_{k+1}=R_kQ_k^T$",
+      "$A_{k+1}=R_kQ_k$",
+      "$A_{k+1}=Q_k+R_k$"
+    ],
+    "answer": "C",
+    "explanation": "Reversing the factors yields RQ=Q^T A_k Q for real orthogonal Q, a similarity transformation."
+  },
+  {
+    "prompt": "Why does a QR step preserve the eigenvalues in exact arithmetic?",
+    "options": [
+      "It preserves every matrix entry",
+      "R has the same diagonal as A",
+      "Q is always the identity",
+      "The new iterate is orthogonally similar to the old one"
+    ],
+    "answer": "D",
+    "explanation": "The relation A_{k+1}=Q_k^T A_k Q_k is a similarity, so the characteristic polynomial and eigenvalues are unchanged."
+  },
+  {
+    "prompt": "For $A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$ and a QR factorization with positive diagonal entries of R, what is the first unshifted QR iterate?",
+    "options": [
+      "$\\begin{pmatrix}14/5&3/5\\\\3/5&6/5\\end{pmatrix}$",
+      "$\\begin{pmatrix}3&0\\\\0&1\\end{pmatrix}$",
+      "$\\begin{pmatrix}2&-1\\\\-1&2\\end{pmatrix}$",
+      "$\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$"
+    ],
+    "answer": "A",
+    "explanation": "Using Q=[2,-1;1,2]/sqrt(5) and R=[sqrt(5),4/sqrt(5);0,3/sqrt(5)], multiplication RQ gives the stated matrix."
+  },
+  {
+    "prompt": "For that first QR iterate, which trace and determinant provide a consistency check?",
+    "options": [
+      "Trace 3 and determinant 4",
+      "Trace 4 and determinant 3",
+      "Trace 4 and determinant 4",
+      "Trace 3 and determinant 3"
+    ],
+    "answer": "B",
+    "explanation": "Similarity preserves trace and determinant: 14/5+6/5=4, and (84-9)/25=3."
+  },
+  {
+    "prompt": "In shifted QR, after factoring $A_k-\\mu_kI=Q_kR_k$, which update restores the original eigenvalue scale?",
+    "options": [
+      "$A_{k+1}=R_kQ_k-\\mu_kI$",
+      "$A_{k+1}=Q_kR_k+2\\mu_kI$",
+      "$A_{k+1}=R_kQ_k+\\mu_kI$",
+      "$A_{k+1}=R_k+Q_k$"
+    ],
+    "answer": "C",
+    "explanation": "Adding the shift back gives Q_k^T A_k Q_k. Omitting it shifts the spectrum of the iterate."
+  },
+  {
+    "prompt": "What does numerical deflation mean in a symmetric tridiagonal QR computation?",
+    "options": [
+      "Deleting the largest diagonal entry immediately",
+      "Setting every off-diagonal entry to zero at the start",
+      "Subtracting the trace from all entries",
+      "Treating a sufficiently small subdiagonal coupling as zero and splitting the problem"
+    ],
+    "answer": "D",
+    "explanation": "Once the coupling is negligible relative to the local scale and tolerance, the matrix separates into smaller independent blocks up to the accepted perturbation."
+  },
+  {
+    "prompt": "What form can a real nonsymmetric matrix reach in a real Schur computation?",
+    "options": [
+      "Upper quasi-triangular form with 1-by-1 and 2-by-2 diagonal blocks",
+      "A diagonal matrix with only real entries in every case",
+      "A lower triangular matrix with zero diagonal in every case",
+      "The identity matrix in every case"
+    ],
+    "answer": "A",
+    "explanation": "Real 2-by-2 blocks can represent complex conjugate eigenvalue pairs; full real diagonalization is not generally possible."
+  },
+  {
+    "prompt": "For a general real nonsymmetric matrix, what are the columns of the accumulated orthogonal Q in a Schur decomposition?",
+    "options": [
+      "Always all individual eigenvectors",
+      "Schur vectors, not necessarily individual eigenvectors",
+      "The rows of the inverse matrix",
+      "All zero vectors"
+    ],
+    "answer": "B",
+    "explanation": "A=QTQ^T defines Schur vectors. Eigenvectors generally require solving the triangular or block-triangular problem and transforming back."
+  },
+  {
+    "prompt": "Which approach is normally appropriate when only one dominant eigenpair of a very large sparse matrix is needed?",
+    "options": [
+      "Form the dense inverse first",
+      "Expand the characteristic polynomial explicitly",
+      "Use matrix-vector iterations and check residual convergence",
+      "Perform dense QR factorizations without considering sparsity"
+    ],
+    "answer": "C",
+    "explanation": "Power iteration uses sparse matrix-vector products and limited vector storage when its convergence assumptions hold. More advanced Krylov methods are alternatives when needed."
+  },
+  {
+    "prompt": "For real symmetric A and nonzero x, what does the residual guarantee about the Rayleigh estimate $\\mu$?",
+    "options": [
+      "Every eigenvector is close to x",
+      "The largest eigenvalue is exactly mu",
+      "The matrix condition number is one",
+      "Some eigenvalue lies within $\\|Ax-\\mu x\\|_2/\\|x\\|_2$ of mu"
+    ],
+    "answer": "D",
+    "explanation": "Expand x in an orthonormal eigenbasis to bound the distance to the nearest eigenvalue. Closeness to a specific eigenvector additionally depends on spectral separation."
+  }
+];
