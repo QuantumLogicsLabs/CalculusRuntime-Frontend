@@ -3,6 +3,8 @@ import { createRoutesFromChildren, matchRoutes, Navigate, Routes } from "react-r
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import App from "./App";
 import { COURSES } from "./data/courses";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { getRequiredSections, getQuizId } from "./data/courseCompletion";
 
 beforeEach(() => {
   localStorage.clear();
@@ -153,4 +155,150 @@ test("unknown URLs show a recoverable 404 and unknown course IDs return home", a
   render(<App />);
   await waitFor(() => expect(window.location.pathname).toBe("/"));
   expect(screen.queryByRole("heading", { name: /404/ })).not.toBeInTheDocument();
+});
+
+
+describe("authentication and certificate quiz integration", () => {
+  const originalFetch = global.fetch;
+  const session = { id: 73, username: "test-learner", accessToken: "test-token" };
+  const response = (body, status = 200) => Promise.resolve({
+    ok: status >= 200 && status < 300, status, json: async () => body,
+  });
+  afterEach(() => { global.fetch = originalFetch; });
+
+  function SessionProbe() {
+    const { user, isHydrated, logout } = useAuth();
+    return <><output data-testid="session">{isHydrated ? user?.username || "guest" : "loading"}</output>
+      <button onClick={logout}>End session</button></>;
+  }
+
+  test("session hydration rejects malformed and expired storage but retains an offline session", async () => {
+    for (const raw of ['{invalid', JSON.stringify({ username: 'no-token' })]) {
+      localStorage.setItem("calcvoyager_user", raw);
+      const view = render(<AuthProvider><SessionProbe /></AuthProvider>);
+      expect(screen.getByTestId("session")).toHaveTextContent("guest");
+      view.unmount();
+    }
+    for (const status of [401, 404]) {
+      localStorage.setItem("calcvoyager_user", JSON.stringify(session));
+      global.fetch = jest.fn(() => response({}, status));
+      const view = render(<AuthProvider><SessionProbe /></AuthProvider>);
+      await waitFor(() => expect(screen.getByTestId("session")).toHaveTextContent("guest"));
+      expect(localStorage.getItem("calcvoyager_user")).toBeNull();
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/api/auth/me'),
+        expect.objectContaining({ headers: { Authorization: 'Bearer test-token' } }));
+      view.unmount();
+    }
+    localStorage.setItem("calcvoyager_user", JSON.stringify(session));
+    global.fetch = jest.fn(() => Promise.reject(new Error("offline")));
+    render(<AuthProvider><SessionProbe /></AuthProvider>);
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+    expect(screen.getByTestId("session")).toHaveTextContent(session.username);
+    fireEvent.click(screen.getByRole('button', { name: 'End session' }));
+    expect(screen.getByTestId("session")).toHaveTextContent("guest");
+    expect(localStorage.getItem("calcvoyager_user")).toBeNull();
+  });
+
+  test("login validates empty fields, reports rejection and persists a successful session until sign-out", async () => {
+    let accept = false;
+    global.fetch = jest.fn((url) => {
+      if (url.endsWith('/api/auth/login')) return accept
+        ? response({ user: { id: session.id, username: session.username }, access_token: session.accessToken, token_type: 'bearer' })
+        : response({ detail: 'Invalid credentials' }, 401);
+      if (url.endsWith('/api/auth/me') || url.endsWith('/api/progress/')) return response({});
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    window.history.replaceState({}, '', '/login');
+    const { container } = render(<App />);
+    fireEvent.submit(container.querySelector('.auth-form'));
+    expect(screen.getByRole('alert')).toHaveTextContent('Please fill in all fields.');
+    expect(global.fetch).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('Username'), { target: { value: `  ${session.username}  ` } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'test-password' } });
+    fireEvent.submit(container.querySelector('.auth-form'));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Invalid credentials');
+    expect(localStorage.getItem('calcvoyager_user')).toBeNull();
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({ username: session.username, password: 'test-password' });
+    accept = true;
+    fireEvent.submit(container.querySelector('.auth-form'));
+    await waitFor(() => expect(window.location.pathname).toBe('/dashboard'));
+    expect(JSON.parse(localStorage.getItem('calcvoyager_user'))).toMatchObject(session);
+    fireEvent.click(await screen.findByRole('button', { name: 'Toggle navigation' }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Mobile navigation' })).getByRole('button', { name: 'Sign out' }));
+    await waitFor(() => expect(localStorage.getItem('calcvoyager_user')).toBeNull());
+    expect(await screen.findByRole('heading', { name: 'Welcome back' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/login');
+  });
+
+  test("all four certificate quizzes block guests and signed-in learners missing required sections", async () => {
+    for (const course of COURSES) {
+      localStorage.clear();
+      global.fetch = jest.fn((url) => {
+        if (url.endsWith('/api/auth/me') || url.endsWith('/api/progress/')) return response({});
+        throw new Error(`Unexpected request: ${url}`);
+      });
+      window.history.replaceState({}, '', `/quiz/${course.id}`);
+      let view = render(<App />);
+      expect(await screen.findByRole('heading', { name: 'Sign in required' })).toBeInTheDocument();
+      expect(global.fetch).not.toHaveBeenCalled();
+      view.unmount();
+      localStorage.setItem('calcvoyager_user', JSON.stringify(session));
+      view = render(<App />);
+      expect(await screen.findByRole('heading', { name: 'Finish the course first' })).toBeInTheDocument();
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/api/progress/'), expect.anything()));
+      expect(global.fetch.mock.calls.some(([url]) => url.endsWith('/start'))).toBe(false);
+      view.unmount();
+    }
+  });
+
+  test("all courses retry failed starts and submit positional answers using server results", async () => {
+    for (const course of COURSES) {
+      localStorage.clear();
+      localStorage.setItem('calcvoyager_user', JSON.stringify(session));
+      const completedSections = Object.fromEntries(getRequiredSections(course.id).map((id) => [id, true]));
+      const quizId = getQuizId(course.id);
+      let starts = 0;
+      let submissions = 0;
+      global.fetch = jest.fn((url, options = {}) => {
+        if (url.endsWith('/api/auth/me')) return response({});
+        if (url.endsWith('/api/progress/')) return response({ completedSections });
+        if (url.endsWith(`/api/quiz/${quizId}/start`)) {
+          starts += 1;
+          if (starts === 1) return response({ detail: 'Please retry the quiz' }, 503);
+          return response({ attempt_token: `attempt-${starts}`, seconds_per_question: 90,
+            questions: [{ q: 'Server question one', options: ['One', 'Two'] }, { q: 'Server question two', options: ['Three', 'Four'] }] });
+        }
+        if (url.endsWith(`/api/quiz/${quizId}/submit`)) {
+          submissions += 1;
+          expect(options.headers.Authorization).toBe('Bearer test-token');
+          expect(JSON.parse(options.body)).toEqual({ attempt_token: `attempt-${starts}`,
+            answers: submissions === 1 ? [null, 1] : [1, 1] });
+          return response({ score: submissions === 1 ? 1 : 2, total: 2,
+            pct: submissions === 1 ? 50 : 100, passed: submissions > 1, min_pass_percent: 80 });
+        }
+        if (url.endsWith('/api/quiz/')) return response({});
+        throw new Error(`Unexpected request: ${url}`);
+      });
+      window.history.replaceState({}, '', `/quiz/${course.id}`);
+      const view = render(<App />);
+      expect(await screen.findByRole('heading', { name: "Couldn't start the quiz" })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+      await screen.findByText('Server question one');
+      fireEvent.click(screen.getByRole('button', { name: /Skip →/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Four/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Submit Quiz/ }));
+      expect(await screen.findByRole('heading', { name: 'Not quite there yet' })).toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: /Get your certificate/ })).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Retry quiz' }));
+      await screen.findByText('Server question one');
+      fireEvent.click(screen.getByRole('button', { name: /Two/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Submit Answer/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Four/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Submit Quiz/ }));
+      expect(await screen.findByRole('heading', { name: /You passed!/ })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Get your certificate/ })).toHaveAttribute('href', `/certificate/${course.id}`);
+      expect(submissions).toBe(2);
+      view.unmount();
+    }
+  });
 });
