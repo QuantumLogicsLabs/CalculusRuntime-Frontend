@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { COURSES } from "../../data/courses";
+import HeroGraph from "./HeroGraph";
 
 const guideCards = COURSES.map((c) => ({
   title: c.title,
@@ -133,7 +134,7 @@ function Home() {
           </div>
         </div>
         <div className="hero-image-container">
-          <img src="/hero-graph.png" alt="3D Wave Graph" className="hero-graph-img" />
+          <HeroGraph />
         </div>
       </section>
 
