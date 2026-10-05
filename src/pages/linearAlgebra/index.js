@@ -44,3 +44,13 @@ export { default as ChangeOfBasisPart2 } from "./ChangeOfBasisPart2";
 export { default as AffineTransformationsGuide } from "./AffineTransformationsGuide";
 export { default as AffineTransformationsPart1 } from "./AffineTransformationsPart1";
 export { default as AffineTransformationsPart2 } from "./AffineTransformationsPart2";
+
+export { default as PrincipalComponentAnalysisGuide } from "./PrincipalComponentAnalysisGuide";
+export { default as PrincipalComponentAnalysisPart1 } from "./PrincipalComponentAnalysisPart1";
+export { default as PrincipalComponentAnalysisPart2 } from "./PrincipalComponentAnalysisPart2";
+export { default as MarkovChainsGuide } from "./MarkovChainsGuide";
+export { default as MarkovChainsPart1 } from "./MarkovChainsPart1";
+export { default as MarkovChainsPart2 } from "./MarkovChainsPart2";
+export { default as LinearProgrammingGuide } from "./LinearProgrammingGuide";
+export { default as LinearProgrammingPart1 } from "./LinearProgrammingPart1";
+export { default as LinearProgrammingPart2 } from "./LinearProgrammingPart2";

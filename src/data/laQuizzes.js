@@ -1789,3 +1789,897 @@ export const LA_AFFINE_HOMOGENEOUS_QUIZ = [
     "explanation": "An affine point is represented with final coordinate 1; a nonzero w can be normalized by division."
   }
 ];
+
+// Principal Component Analysis checkpoint (20 questions).
+export const LA_PCA_QUIZ = [
+  {
+    "prompt": "Why are feature means subtracted before covariance-based PCA?",
+    "options": [
+      "To measure variation around the feature means rather than around the origin",
+      "To make every covariance equal to one",
+      "To force every principal component to have a positive score",
+      "To remove the need to choose a number of components"
+    ],
+    "answer": "A",
+    "explanation": "Centering makes PCA describe variation about the data's mean. Scaling to unit variance is a separate choice."
+  },
+  {
+    "prompt": "If rows are observations and columns are features, what is the shape of a data matrix with n observations and p features?",
+    "options": [
+      "p by n",
+      "n by p",
+      "n by n regardless of p",
+      "p by p regardless of n"
+    ],
+    "answer": "B",
+    "explanation": "Each of the n observations contributes one row, and each of the p features contributes one column."
+  },
+  {
+    "prompt": "For n centered observations stored as rows of X_c, what is their sample covariance matrix?",
+    "options": [
+      "$X_cX_c^T/(n-1)$",
+      "$X_c^TX_c/n$",
+      "$X_c^TX_c/(n-1)$",
+      "$X_c/(n-1)$"
+    ],
+    "answer": "C",
+    "explanation": "The p by p sample covariance of column features is $X_c^TX_c/(n-1)$."
+  },
+  {
+    "prompt": "Which optimization problem defines the first principal direction for covariance matrix S?",
+    "options": [
+      "Minimize $u^TSu$ subject to $u=0$",
+      "Maximize $\\det(S)$ over all vectors u",
+      "Minimize $\\|Su\\|$ subject to $\\|u\\|=1$",
+      "Maximize $u^TSu$ subject to $\\|u\\|=1$"
+    ],
+    "answer": "D",
+    "explanation": "The unit vector with greatest projected sample variance maximizes the Rayleigh quotient $u^TSu$."
+  },
+  {
+    "prompt": "Which eigenvector of S gives the first principal direction?",
+    "options": [
+      "A unit eigenvector paired with the largest eigenvalue",
+      "An eigenvector paired with the smallest eigenvalue",
+      "Any vector parallel to the feature-mean vector",
+      "A vector whose entries sum to one"
+    ],
+    "answer": "A",
+    "explanation": "The largest covariance eigenvalue is the greatest variance attainable along a unit direction."
+  },
+  {
+    "prompt": "What does an eigenvalue $\\lambda_j$ of the sample covariance represent for its unit eigenvector $v_j$?",
+    "options": [
+      "The number of observations",
+      "The sample variance of the data projected onto $v_j$",
+      "The mean of the original feature columns",
+      "The reconstruction error for every observation"
+    ],
+    "answer": "B",
+    "explanation": "Projection onto a covariance eigenvector has sample variance equal to its eigenvalue."
+  },
+  {
+    "prompt": "How are the scores on the first k principal directions computed from centered rows X_c and loading matrix V_k?",
+    "options": [
+      "$V_k^TX_c$",
+      "$X_c+V_k$",
+      "$X_cV_k$",
+      "$X_cV_k^{-1}$"
+    ],
+    "answer": "C",
+    "explanation": "Each centered observation row is projected onto the loading columns by the matrix product $X_cV_k$."
+  },
+  {
+    "prompt": "If the ordered covariance eigenvalues are $\\lambda_1,\\ldots,\\lambda_p$, what fraction of total variance is explained by the first component?",
+    "options": [
+      "$\\lambda_1-\\sum_j\\lambda_j$",
+      "$\\sum_j\\lambda_j/\\lambda_1$",
+      "$\\lambda_1^2/\\sum_j\\lambda_j$",
+      "$\\lambda_1/\\sum_j\\lambda_j$"
+    ],
+    "answer": "D",
+    "explanation": "Divide the first component's variance by total variance, the sum of all covariance eigenvalues."
+  },
+  {
+    "prompt": "How are distinct principal directions selected in standard covariance PCA?",
+    "options": [
+      "As an orthonormal set of covariance eigenvectors",
+      "As parallel vectors so each score has the same sign",
+      "As the original feature axes in every data set",
+      "As eigenvectors of the feature-mean vector"
+    ],
+    "answer": "A",
+    "explanation": "The covariance matrix is symmetric, so its eigenvectors can be chosen orthonormal."
+  },
+  {
+    "prompt": "When is standardizing features to unit variance often appropriate before PCA?",
+    "options": [
+      "Whenever the covariance matrix is already diagonal",
+      "When feature units or scales differ and comparable influence is intended",
+      "Only when every feature has zero variance",
+      "Whenever the observations have already been centered"
+    ],
+    "answer": "B",
+    "explanation": "Standardization prevents measurement units alone from dominating, but it should match the analysis goal."
+  },
+  {
+    "prompt": "If a covariance matrix has a repeated eigenvalue, what is true about its principal directions in that eigenspace?",
+    "options": [
+      "They must equal the standard coordinate axes",
+      "They are uniquely fixed including their signs",
+      "An orthonormal basis can be chosen, but individual directions in the tied eigenspace are not unique",
+      "The repeated eigenvalue must be zero"
+    ],
+    "answer": "C",
+    "explanation": "Any orthonormal basis of a repeated-eigenvalue eigenspace spans the same PCA subspace."
+  },
+  {
+    "prompt": "For an SVD $X_c=U\\Sigma V^T$, which vectors give the principal directions?",
+    "options": [
+      "Columns of U only",
+      "Rows of U",
+      "Columns of $\\Sigma$",
+      "Columns of V"
+    ],
+    "answer": "D",
+    "explanation": "The right singular vectors in V are eigenvectors of $X_c^TX_c$ and therefore are feature-space principal directions."
+  },
+  {
+    "prompt": "After centering n observations, what is an upper bound on the number of nonzero principal components?",
+    "options": [
+      "$\\min(n-1,p)$",
+      "$n+p$",
+      "$np$",
+      "Exactly n, even if p is smaller"
+    ],
+    "answer": "A",
+    "explanation": "The centered matrix has rank at most $\\min(n-1,p)$, so its covariance has no more nonzero eigenvalues."
+  },
+  {
+    "prompt": "For centered row data X_c and loading matrix V_k, what is the rank-k reconstruction before restoring the feature means?",
+    "options": [
+      "$V_kX_cV_k^T$",
+      "$X_cV_kV_k^T$",
+      "$X_c+V_kV_k^T$",
+      "$V_k^TX_cV_k$"
+    ],
+    "answer": "B",
+    "explanation": "First compute the scores $X_cV_k$, then map them back to feature space by multiplying by $V_k^T$."
+  },
+  {
+    "prompt": "To avoid data leakage when evaluating a predictive model that uses PCA, what should be done?",
+    "options": [
+      "Fit PCA once using training and test rows together",
+      "Recompute a different PCA basis for every test row",
+      "Fit means, scales, and loadings on training data, then reuse them on held-out data",
+      "Use outcome labels to center each test feature"
+    ],
+    "answer": "C",
+    "explanation": "All preprocessing and PCA parameters must be learned from training data only and then applied unchanged to held-out observations."
+  },
+  {
+    "prompt": "Does ordinary PCA require outcome labels?",
+    "options": [
+      "Yes, it needs one class label for every component",
+      "Only when the covariance matrix is symmetric",
+      "Yes, labels determine the feature means",
+      "No; ordinary PCA is an unsupervised transformation of the feature data"
+    ],
+    "answer": "D",
+    "explanation": "Ordinary PCA uses the feature matrix and its variance structure, not response labels."
+  },
+  {
+    "prompt": "What can be concluded from PCA scores having zero sample covariance?",
+    "options": [
+      "The scores are uncorrelated, but they need not be statistically independent",
+      "The scores are always statistically independent",
+      "Every score has unit variance",
+      "The original features were independent"
+    ],
+    "answer": "A",
+    "explanation": "Orthogonal covariance directions give uncorrelated scores; independence requires additional assumptions, such as a suitable joint Gaussian model."
+  },
+  {
+    "prompt": "A centered data set has ordered covariance eigenvalues 7, 2, and 1. How many components reach at least 90% cumulative explained variance?",
+    "options": [
+      "One, because the largest eigenvalue is 7",
+      "Two, because $(7+2)/(7+2+1)=90\\%$",
+      "Three, because cumulative variance cannot be computed from eigenvalues",
+      "Zero, because PCA requires equal eigenvalues"
+    ],
+    "answer": "B",
+    "explanation": "The total is 10; the first two eigenvalues sum to 9, giving exactly 90%."
+  },
+  {
+    "prompt": "Which objective does ordinary PCA optimize directly?",
+    "options": [
+      "Classification accuracy",
+      "The number of available labels",
+      "Variance retained in the projected feature data",
+      "The number of original features"
+    ],
+    "answer": "C",
+    "explanation": "PCA preserves directions of large input variance; high variance does not guarantee usefulness for a prediction target."
+  },
+  {
+    "prompt": "Why can a few extreme observations substantially change PCA directions?",
+    "options": [
+      "PCA discards the covariance matrix when outliers appear",
+      "Every eigenvector must contain a zero",
+      "Extreme observations always have zero centered scores",
+      "They can strongly shift the mean and covariance used to find the directions"
+    ],
+    "answer": "D",
+    "explanation": "The mean and covariance are sensitive to extreme values, which can rotate the leading eigendirections."
+  }
+];
+
+export const LA_MARKOV_QUIZ = [
+  {
+    "prompt": "With column probability vectors and the update $p_{n+1}=Pp_n$, what condition makes $P$ column-stochastic?",
+    "options": [
+      "Each column has nonnegative entries summing to one",
+      "Each row has nonnegative entries summing to zero",
+      "The matrix is symmetric",
+      "Every diagonal entry equals one"
+    ],
+    "answer": "A",
+    "explanation": "Column $j$ gives the probabilities of leaving state $j$ for each destination, so it must be nonnegative and sum to one."
+  },
+  {
+    "prompt": "For $P=\\begin{pmatrix}0.8&0.3\\\\0.2&0.7\\end{pmatrix}$ and $p_0=(1,0)^T$, what is $p_1=Pp_0$?",
+    "options": [
+      "$(0.2,0.8)^T$",
+      "$(0.8,0.2)^T$",
+      "$(0.3,0.7)^T$",
+      "$(1,1)^T$"
+    ],
+    "answer": "B",
+    "explanation": "Multiplication by $p_0=e_1$ selects the first column of $P$, giving $(0.8,0.2)^T$."
+  },
+  {
+    "prompt": "Under the column-vector convention, which equation defines a stationary distribution $\\pi$?",
+    "options": [
+      "$P\\pi=0$",
+      "$P^T\\pi=-\\pi$",
+      "$P\\pi=\\pi$",
+      "$\\pi^T\\pi=1$"
+    ],
+    "answer": "C",
+    "explanation": "A stationary distribution is unchanged by one transition, so it is a fixed vector of $P$."
+  },
+  {
+    "prompt": "Which eigenvalue is associated with a nonzero stationary vector of a stochastic matrix?",
+    "options": [
+      "$0$",
+      "$-1$",
+      "$\\det(P)$",
+      "$1$"
+    ],
+    "answer": "D",
+    "explanation": "The equation $P\\pi=\\pi$ is the eigenvector equation with eigenvalue $1$."
+  },
+  {
+    "prompt": "For $P=\\begin{pmatrix}0.8&0.3\\\\0.2&0.7\\end{pmatrix}$, what is its stationary distribution?",
+    "options": [
+      "$(0.6,0.4)^T$",
+      "$(0.5,0.5)^T$",
+      "$(0.4,0.6)^T$",
+      "$(0.8,0.2)^T$"
+    ],
+    "answer": "A",
+    "explanation": "Solving $0.2x=0.3y$ with $x+y=1$ gives $x=0.6$ and $y=0.4$."
+  },
+  {
+    "prompt": "For a row-stochastic matrix $Q$ and row probability vector $r_n^T$, how is the next distribution written?",
+    "options": [
+      "$r_{n+1}^T=Qr_n^T$",
+      "$r_{n+1}^T=r_n^TQ$",
+      "$r_{n+1}^T=Q^Tr_n^TQ$",
+      "$r_{n+1}^T=r_n^T+Q$"
+    ],
+    "answer": "B",
+    "explanation": "The row-vector convention multiplies the row distribution on the right by the row-stochastic transition matrix."
+  },
+  {
+    "prompt": "Besides satisfying $P\\pi=\\pi$, what makes $\\pi$ a probability distribution?",
+    "options": [
+      "Its entries are all distinct",
+      "It is an eigenvector of $P^T$ for eigenvalue $0$",
+      "Its entries are nonnegative and sum to one",
+      "Its Euclidean norm must exceed one"
+    ],
+    "answer": "C",
+    "explanation": "A stationary probability vector must be nonnegative and normalized to total probability one."
+  },
+  {
+    "prompt": "Why does a column-stochastic matrix preserve the total sum of a column distribution?",
+    "options": [
+      "Because $P$ is always invertible",
+      "Because $P$ has trace one",
+      "Because every row of $P$ is identical",
+      "Because $\\mathbf{1}^TP=\\mathbf{1}^T$"
+    ],
+    "answer": "D",
+    "explanation": "Then $\\mathbf{1}^TPp=\\mathbf{1}^Tp$, so the entries of the distribution keep the same total."
+  },
+  {
+    "prompt": "What does $P^np_0$ represent in the column-vector model?",
+    "options": [
+      "The state distribution after $n$ transitions",
+      "The eigenvalues of the initial distribution",
+      "The transition matrix after deleting transient states",
+      "The stationary distribution for every possible chain"
+    ],
+    "answer": "A",
+    "explanation": "Applying the same one-step transition $n$ times gives $p_n=P^np_0$."
+  },
+  {
+    "prompt": "For a finite irreducible Markov chain, which statement is guaranteed?",
+    "options": [
+      "Every state is absorbing",
+      "There is a unique stationary distribution",
+      "Every eigenvalue is positive",
+      "The transition matrix is symmetric"
+    ],
+    "answer": "B",
+    "explanation": "Irreducibility guarantees a unique stationary distribution for a finite chain, though convergence also needs aperiodicity."
+  },
+  {
+    "prompt": "For a finite irreducible and aperiodic chain, what happens to $P^np_0$?",
+    "options": [
+      "It becomes the zero vector",
+      "It is unchanged for every $p_0$",
+      "It converges to the unique stationary distribution",
+      "It must alternate between two states"
+    ],
+    "answer": "C",
+    "explanation": "Irreducibility and aperiodicity together imply convergence to the unique stationary distribution from any initial distribution."
+  },
+  {
+    "prompt": "For $P=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ and $p_0=(1,0)^T$, which statement is correct?",
+    "options": [
+      "No stationary distribution exists",
+      "The unique stationary distribution is $(1,0)^T$",
+      "$P^np_0$ converges to $(1/2,1/2)^T$ at every step",
+      "$(1/2,1/2)^T$ is stationary, but the iterates alternate"
+    ],
+    "answer": "D",
+    "explanation": "The equal mixture is fixed, but starting from the first state the distributions switch between $(1,0)^T$ and $(0,1)^T$."
+  },
+  {
+    "prompt": "If $P=I_2$, which vectors are stationary probability distributions?",
+    "options": [
+      "Every vector $(t,1-t)^T$ with $0\\le t\\le1$",
+      "Only $(1/2,1/2)^T$",
+      "Only $(1,0)^T$",
+      "No probability vector"
+    ],
+    "answer": "A",
+    "explanation": "Since $I_2\\pi=\\pi$, every probability vector is fixed; the stationary distribution is not unique."
+  },
+  {
+    "prompt": "A numerical method returns a nonzero vector $v$ satisfying $Pv=v$. What must be done before treating it as a stationary distribution?",
+    "options": [
+      "Set its largest entry to zero",
+      "Normalize it to sum to one and verify nonnegativity",
+      "Square every entry",
+      "Subtract the mean of its entries"
+    ],
+    "answer": "B",
+    "explanation": "An eigenvector can be scaled arbitrarily; a stationary probability vector must be normalized and nonnegative."
+  },
+  {
+    "prompt": "For $P=\\begin{pmatrix}0.6&0.2\\\\0.4&0.8\\end{pmatrix}$, find the stationary distribution.",
+    "options": [
+      "$(0.2,0.8)^T$",
+      "$(0.5,0.5)^T$",
+      "$(1/3,2/3)^T$",
+      "$(2/3,1/3)^T$"
+    ],
+    "answer": "C",
+    "explanation": "The first stationary equation gives $0.4x=0.2y$, so $y=2x$; normalization gives $(x,y)=(1/3,2/3)$."
+  },
+  {
+    "prompt": "What is true about every eigenvalue $\\lambda$ of a finite stochastic matrix?",
+    "options": [
+      "$\\lambda$ must equal one",
+      "$\\lambda$ must be an integer",
+      "$\\lambda$ must be negative",
+      "$|\\lambda|\\le1$"
+    ],
+    "answer": "D",
+    "explanation": "A stochastic matrix is nonexpansive in the appropriate probability norm, so its eigenvalues lie in the closed unit disk."
+  },
+  {
+    "prompt": "When solving $(P-I)\\pi=0$ with $\\mathbf{1}^T\\pi=1$, why can one equation from $(P-I)\\pi=0$ be replaced?",
+    "options": [
+      "The stationary equations are linearly dependent",
+      "The normalization equation is always redundant",
+      "$P-I$ is always the identity matrix",
+      "The stationary vector must have a zero entry"
+    ],
+    "answer": "A",
+    "explanation": "Because $1$ is an eigenvalue, $P-I$ is singular; its stationary equations contain a dependency, while normalization fixes the scale."
+  },
+  {
+    "prompt": "If $p_0=\\pi$ is stationary, what is the distribution after any number $n$ of transitions?",
+    "options": [
+      "$P^n\\pi=0$",
+      "$P^n\\pi=\\pi$",
+      "$P^n\\pi=n\\pi$",
+      "$P^n\\pi=P$"
+    ],
+    "answer": "B",
+    "explanation": "Since $P\\pi=\\pi$, repeated multiplication leaves the same vector unchanged."
+  },
+  {
+    "prompt": "If $P$ is column-stochastic and $Q=P^T$, which row-vector equation corresponds to $P\\pi=\\pi$?",
+    "options": [
+      "$\\pi^TQ=0$",
+      "$Q\\pi^T=\\pi^T$",
+      "$\\pi^TQ=\\pi^T$",
+      "$Q^T\\pi^T=0$"
+    ],
+    "answer": "C",
+    "explanation": "Transposing $P\\pi=\\pi$ gives $\\pi^TP^T=\\pi^T$, and $Q=P^T$."
+  },
+  {
+    "prompt": "Which condition is sufficient to guarantee a unique stationary distribution and convergence for a finite chain?",
+    "options": [
+      "The matrix has at least one zero entry",
+      "The matrix is diagonal",
+      "The matrix has determinant one",
+      "Every entry of the transition matrix is strictly positive"
+    ],
+    "answer": "D",
+    "explanation": "A strictly positive finite stochastic matrix is irreducible and aperiodic, so it has a unique stationary distribution and its iterates converge to it."
+  }
+];
+
+export const LA_LINEAR_PROGRAMMING_QUIZ = [
+  {
+    "prompt": "In a linear-programming model, what should a decision variable represent?",
+    "options": [
+      "The quantity of an activity the model chooses",
+      "A constraint that must always be zero",
+      "The final objective value before optimization",
+      "A label for a tableau row"
+    ],
+    "answer": "A",
+    "explanation": "Decision variables encode controllable quantities; the objective and constraints are written in terms of them."
+  },
+  {
+    "prompt": "For $x_1+2x_2\\leq8$, which equation uses a slack variable for unused capacity?",
+    "options": [
+      "$x_1+2x_2-s=8$, $s\\geq0$",
+      "$x_1+2x_2+s=8$, $s\\geq0$",
+      "$x_1+2x_2=8+s$, $s\\geq0$",
+      "$x_1+2x_2+s\\leq8$, $s=0$"
+    ],
+    "answer": "B",
+    "explanation": "Add a nonnegative slack variable to a ≤ constraint to make an equality."
+  },
+  {
+    "prompt": "A point is feasible for a linear program when it:",
+    "options": [
+      "maximizes the objective, even if a constraint fails",
+      "satisfies only the tightest constraint",
+      "satisfies every constraint and variable bound",
+      "makes every inequality strict"
+    ],
+    "answer": "C",
+    "explanation": "Feasibility means all constraints and bounds hold at once; it does not require optimality."
+  },
+  {
+    "prompt": "For $\\max z=3x+2y$ with $x+y\\leq4$, $x\\leq2$, $y\\leq3$, $x,y\\geq0$, what is $z$ at $(2,2)$?",
+    "options": [
+      "$5$",
+      "$8$",
+      "$9$",
+      "$10$"
+    ],
+    "answer": "D",
+    "explanation": "Substitution gives $3(2)+2(2)=10$, and the point satisfies all constraints."
+  },
+  {
+    "prompt": "For a nonempty bounded feasible polyhedron, which statement is true?",
+    "options": [
+      "At least one optimum occurs at an extreme point (vertex)",
+      "Every feasible point has the same objective value",
+      "The optimum must lie strictly inside the region",
+      "An optimum exists only if simplex is run"
+    ],
+    "answer": "A",
+    "explanation": "A linear objective on a nonempty bounded polyhedron attains an optimum at an extreme point."
+  },
+  {
+    "prompt": "How do you convert $2x_1+x_2\\leq9$ to equality for simplex?",
+    "options": [
+      "Subtract a nonnegative slack variable",
+      "Add $s\\geq0$: $2x_1+x_2+s=9$",
+      "Add an unrestricted variable to the RHS",
+      "Replace it with $2x_1+x_2=0$"
+    ],
+    "answer": "B",
+    "explanation": "Adding $s\\geq0$ gives equality and records unused capacity."
+  },
+  {
+    "prompt": "For $x_1+x_2\\geq5$, what is the usual surplus conversion?",
+    "options": [
+      "Add $s\\geq0$ to the left",
+      "Add $s\\leq0$ to the right",
+      "Subtract $s\\geq0$ from the left",
+      "Replace with $x_1+x_2+s=0$"
+    ],
+    "answer": "C",
+    "explanation": "A ≥ constraint becomes $x_1+x_2-s=5$ with $s\\geq0$."
+  },
+  {
+    "prompt": "Under tableau convention $z-c^Tx=0$ for maximization, which nonbasic variable is a common entering choice?",
+    "options": [
+      "One with a positive objective-row coefficient",
+      "The variable with the largest RHS",
+      "A variable whose column is already basic",
+      "One with a negative objective-row reduced-cost coefficient"
+    ],
+    "answer": "D",
+    "explanation": "Under this convention, a negative coefficient gives an improving direction."
+  },
+  {
+    "prompt": "In the minimum-ratio test, which rows are eligible?",
+    "options": [
+      "Rows with positive entering-column entries; compare RHS divided by entry",
+      "Rows with negative entries; compare entry divided by RHS",
+      "Every row, including zero entries",
+      "Only the row with the largest RHS"
+    ],
+    "answer": "A",
+    "explanation": "Positive pivot-column entries limit the increase; choose the smallest nonnegative RHS-to-entry ratio."
+  },
+  {
+    "prompt": "An improving entering column has no positive entries in the constraint rows. What does this indicate?",
+    "options": [
+      "The current point is necessarily infeasible",
+      "The objective can increase without bound along that direction",
+      "The problem has a unique finite optimum",
+      "An artificial variable must be removed"
+    ],
+    "answer": "B",
+    "explanation": "No positive entries means the ratio test cannot limit the improving variable, so the objective is unbounded."
+  },
+  {
+    "prompt": "What characterizes a basic-variable column in a canonical tableau?",
+    "options": [
+      "It contains only negative entries",
+      "Its entries sum to the RHS",
+      "It is a unit column: one 1 and otherwise 0",
+      "It contains zeros in every constraint row"
+    ],
+    "answer": "C",
+    "explanation": "A basic variable has a unit vector column in canonical form."
+  },
+  {
+    "prompt": "A basic feasible solution is degenerate when:",
+    "options": [
+      "There are multiple optimal vertices",
+      "The feasible region is unbounded",
+      "All decision variables are positive",
+      "At least one basic variable is zero"
+    ],
+    "answer": "D",
+    "explanation": "A zero-valued basic variable is degeneracy; a pivot may keep the same vertex."
+  },
+  {
+    "prompt": "Which description defines the feasible set?",
+    "options": [
+      "The intersection of constraint regions and variable bounds",
+      "Only points with the largest objective value",
+      "The collection of basic variables",
+      "Constraints that have zero slack"
+    ],
+    "answer": "A",
+    "explanation": "Intersect all half-spaces and hyperplanes with the variable bounds."
+  },
+  {
+    "prompt": "Why might simplex need an artificial variable for a $\\geq$ row?",
+    "options": [
+      "To make the objective linear",
+      "A surplus column alone may not provide an initial basic unit column",
+      "To turn maximization into minimization",
+      "To force the constraint to be redundant"
+    ],
+    "answer": "B",
+    "explanation": "Subtracting a surplus variable produces a negative column entry, not a basic unit column."
+  },
+  {
+    "prompt": "In two-phase simplex, a positive optimal Phase I objective (minimum artificial-variable sum) proves:",
+    "options": [
+      "The original objective is unbounded",
+      "The original problem has infinitely many optima",
+      "The original constraints are infeasible",
+      "The original objective value is zero"
+    ],
+    "answer": "C",
+    "explanation": "If the minimum artificial-variable sum stays positive, no point satisfies all original constraints."
+  },
+  {
+    "prompt": "With $z-c^Tx=0$ in a maximization tableau, when is a feasible tableau optimal for its nonbasic variables?",
+    "options": [
+      "When every RHS is negative",
+      "When every objective coefficient is negative",
+      "When at least one objective coefficient is negative",
+      "When no nonbasic objective-row coefficient is negative"
+    ],
+    "answer": "D",
+    "explanation": "A negative reduced cost offers an improving pivot under this convention; none remaining certifies optimality."
+  },
+  {
+    "prompt": "At an optimal tableau, a zero reduced cost for a nonbasic variable can mean:",
+    "options": [
+      "There may be another optimum on an adjacent feasible edge",
+      "The current solution is infeasible",
+      "The objective is unbounded",
+      "The constraints are inconsistent"
+    ],
+    "answer": "A",
+    "explanation": "A feasible pivot with zero reduced cost can produce another solution with the same objective."
+  },
+  {
+    "prompt": "What is Bland's rule designed to do?",
+    "options": [
+      "Choose the largest objective coefficient as the leaving variable",
+      "Break ties by a fixed variable order to prevent cycling",
+      "Make every LP bounded",
+      "Avoid all slack variables"
+    ],
+    "answer": "B",
+    "explanation": "A consistent index ordering for eligible pivots prevents cycling, including in degenerate cases."
+  },
+  {
+    "prompt": "A shadow price commonly measures:",
+    "options": [
+      "The number of pivots needed",
+      "Slack at every feasible point",
+      "Local change in optimum per unit change of a constraint RHS",
+      "The entering variable's objective coefficient"
+    ],
+    "answer": "C",
+    "explanation": "While the current basis remains optimal, the dual value estimates marginal objective change per RHS unit."
+  },
+  {
+    "prompt": "What is the central geometric idea behind simplex?",
+    "options": [
+      "Search every feasible point simultaneously",
+      "Replace inequalities with equalities and stop",
+      "Move randomly through the interior",
+      "Move between adjacent basic feasible solutions while improving the objective"
+    ],
+    "answer": "D",
+    "explanation": "Simplex traverses neighboring vertices, pivoting until no improving move remains."
+  }
+];
+
+
+export const LA_VECTOR_APPLICATIONS_QUIZ = [
+  {
+    "prompt": "A mesh stores $n$ vertices as columns of $V\\in\\mathbb R^{3\\times n}$. Which product applies a $3\\times3$ linear map $A$ to every vertex?",
+    "options": [
+      "$AV$",
+      "$VA$",
+      "$V^TA$",
+      "$A+V$"
+    ],
+    "answer": "A",
+    "explanation": "Left multiplication transforms each column of $V$ and preserves the $3\\times n$ storage shape."
+  },
+  {
+    "prompt": "Which homogeneous coordinate convention distinguishes a finite point from a direction in affine 3D geometry?",
+    "options": [
+      "Point: $0$; direction: $1$",
+      "Point: last coordinate $1$; direction: last coordinate $0$",
+      "Both must end in $1$",
+      "Both must end in $0$"
+    ],
+    "answer": "B",
+    "explanation": "The translation column is multiplied by the last coordinate, so it affects points but not directions."
+  },
+  {
+    "prompt": "With column vectors, first applying $H_1$ and then $H_2$ is represented by which matrix?",
+    "options": [
+      "$H_1H_2$",
+      "$H_1+H_2$",
+      "$H_2H_1$",
+      "$H_1-H_2$"
+    ],
+    "answer": "C",
+    "explanation": "The rightmost matrix acts first: $H_2(H_1x)=(H_2H_1)x$."
+  },
+  {
+    "prompt": "For an invertible linear transformation $A$, which expression correctly transforms a surface normal before renormalization?",
+    "options": [
+      "$An$ for every invertible $A$",
+      "$A^Tn$ for every invertible $A$",
+      "$n+A(1,1,1)^T$",
+      "$A^{-T}n$"
+    ],
+    "answer": "D",
+    "explanation": "For a tangent $v$, $(A^{-T}n)^TAv=n^Tv=0$, preserving perpendicularity."
+  },
+  {
+    "prompt": "An ideal pinhole camera has $f=2$ and views $(X,Y,Z)=(3,1,2)$ with identity pose. What are its image coordinates?",
+    "options": [
+      "$(3,1)$",
+      "$(6,2)$",
+      "$(3/2,1/2)$",
+      "$(6,4)$"
+    ],
+    "answer": "A",
+    "explanation": "Use $(u,v)=(fX/Z,fY/Z)=(3,1)$."
+  },
+  {
+    "prompt": "Which condition on barycentric weights makes $p=\\alpha a+\\beta b+\\gamma c$ an affine combination?",
+    "options": [
+      "$\\alpha+\\beta+\\gamma=0$",
+      "$\\alpha+\\beta+\\gamma=1$",
+      "$\\alpha\\beta\\gamma=1$",
+      "$\\alpha^2+\\beta^2+\\gamma^2=1$"
+    ],
+    "answer": "B",
+    "explanation": "The sum-to-one condition makes the combination transform consistently when the origin is translated."
+  },
+  {
+    "prompt": "If $Q$ has orthonormal columns, which matrix is the orthogonal projection onto its column space?",
+    "options": [
+      "$Q^TQ$ as a map on the ambient space in every dimension",
+      "$Q+Q^T$ in every dimension",
+      "$QQ^T$",
+      "$2QQ^T$"
+    ],
+    "answer": "C",
+    "explanation": "The projection is $QQ^T$; $Q^TQ$ is the identity on the smaller coordinate space."
+  },
+  {
+    "prompt": "A matrix has singular values $4,3,1$. What is the Frobenius error norm of its best rank-one approximation?",
+    "options": [
+      "$1$",
+      "$3$",
+      "$10$",
+      "$\\sqrt{10}$"
+    ],
+    "answer": "D",
+    "explanation": "Discarded singular values give squared error $3^2+1^2=10$, so the error norm is $\\sqrt{10}$."
+  },
+  {
+    "prompt": "How many numbers are stored in $U_k$, the $k$ singular values, and $V_k$ for an $8\\times6$ matrix with $k=2$?",
+    "options": [
+      "$30$",
+      "$16$",
+      "$28$",
+      "$48$"
+    ],
+    "answer": "A",
+    "explanation": "The storage count is $k(m+n+1)=2(8+6+1)=30$."
+  },
+  {
+    "prompt": "For $X\\in\\mathbb R^{20\\times3}$ and weights $w\\in\\mathbb R^3$, what is the dimension of the prediction vector $Xw$?",
+    "options": [
+      "$3$",
+      "$20$",
+      "$60$",
+      "$23$"
+    ],
+    "answer": "B",
+    "explanation": "Each of the twenty observations produces one prediction."
+  },
+  {
+    "prompt": "Least squares fits $y\\approx a+bt$ to $(0,1),(1,2),(2,2)$. Which coefficients solve the normal equations?",
+    "options": [
+      "$a=1,\\ b=1$",
+      "$a=5/3,\\ b=0$",
+      "$a=7/6,\\ b=1/2$",
+      "$a=1/2,\\ b=7/6$"
+    ],
+    "answer": "C",
+    "explanation": "The equations are $3a+3b=5$ and $3a+5b=6$; subtraction gives $b=1/2$ and then $a=7/6$."
+  },
+  {
+    "prompt": "If nonzero $z\\in\\ker X$, what can be concluded about weights $w$ and $w+z$?",
+    "options": [
+      "They must be equal",
+      "Their predictions differ by $z$",
+      "Only $w+z$ can minimize squared error",
+      "They give identical predictions under $X$"
+    ],
+    "answer": "D",
+    "explanation": "Because $Xz=0$, $X(w+z)=Xw$."
+  },
+  {
+    "prompt": "When all weights are penalized, why does ridge regression with $\\lambda>0$ have unique weights even for rank-deficient $X$?",
+    "options": [
+      "$X^TX+\\lambda I$ is positive definite",
+      "$X$ automatically becomes square",
+      "Every residual becomes zero",
+      "The penalty removes all data dependence"
+    ],
+    "answer": "A",
+    "explanation": "For nonzero $v$, $v^T(X^TX+\\lambda I)v=\\|Xv\\|^2+\\lambda\\|v\\|^2>0$."
+  },
+  {
+    "prompt": "Two dense layers have biases but no nonlinear activations. What kind of map is their composition?",
+    "options": [
+      "An arbitrary nonlinear map",
+      "A single affine map",
+      "Always an orthogonal map",
+      "Always a constant map"
+    ],
+    "answer": "B",
+    "explanation": "$W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)$."
+  },
+  {
+    "prompt": "For $W=\\begin{pmatrix}1&-1\\\\2&1\\end{pmatrix}$, $x=(1,2)^T$, and $b=(0,-1)^T$, what is $\\operatorname{ReLU}(Wx+b)$?",
+    "options": [
+      "$(-1,3)^T$",
+      "$(0,4)^T$",
+      "$(0,3)^T",
+      "$(1,3)^T$"
+    ],
+    "answer": "C",
+    "explanation": "$Wx+b=(-1,3)^T$, and ReLU replaces each negative component by zero."
+  },
+  {
+    "prompt": "What is the cosine similarity of $x=(1,0)^T$ and $y=(2,2)^T$?",
+    "options": [
+      "$0$",
+      "$1$",
+      "$\\sqrt2$",
+      "$1/\\sqrt2$"
+    ],
+    "answer": "D",
+    "explanation": "The dot product is $2$, while the product of norms is $2\\sqrt2$."
+  },
+  {
+    "prompt": "Which square change of coordinates preserves Euclidean dot products of all vector pairs?",
+    "options": [
+      "An orthogonal matrix $Q$ with $Q^TQ=I$",
+      "Every invertible matrix",
+      "Every diagonal matrix",
+      "Every symmetric matrix"
+    ],
+    "answer": "A",
+    "explanation": "$(Qx)^T(Qy)=x^TQ^TQy=x^Ty$."
+  },
+  {
+    "prompt": "Project $(3,4)^T$ orthogonally onto the horizontal axis. What is the residual norm?",
+    "options": [
+      "$3$",
+      "$4$",
+      "$5$",
+      "$7$"
+    ],
+    "answer": "B",
+    "explanation": "The projection is $(3,0)^T$, leaving residual $(0,4)^T$."
+  },
+  {
+    "prompt": "A linear network maps $\\mathbb R^3$ to $\\mathbb R^2$ and then to $\\mathbb R^4$. What upper bound follows for the rank of its composite matrix?",
+    "options": [
+      "$3$",
+      "$4$",
+      "$2$",
+      "$6$"
+    ],
+    "answer": "C",
+    "explanation": "The intermediate two-dimensional space bounds the rank of the product by two."
+  },
+  {
+    "prompt": "When using centered features in a train/test evaluation, which procedure avoids using test information to fit preprocessing?",
+    "options": [
+      "Fit the mean on all training and test observations",
+      "Choose the mean that minimizes test prediction error",
+      "Refit the training mean after reading test labels",
+      "Fit the mean on training data and reuse it for test data"
+    ],
+    "answer": "D",
+    "explanation": "Preprocessing is fitted using the training set; the same fitted transformation is then applied to held-out observations."
+  }
+];
