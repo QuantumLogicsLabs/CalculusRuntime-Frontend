@@ -91,6 +91,17 @@ const TOPICS = [
  *   → one or more practice banks are searched
  */
 const PRACTICE_SELECTIONS = {
+  ...Object.fromEntries([
+    "Vectors & Vector Spaces",
+    "Matrices & Determinants",
+    "Systems of Linear Equations",
+    "Fundamental Subspaces & Rank-Nullity",
+    "Eigenvalues & Eigenvectors",
+    "Linear Transformations",
+    "Orthogonality & Least Squares",
+    "Singular Value Decomposition",
+  ].map((topic) => [topic, { type: "topic", banks: ["la"] }])),
+
   // ============================================================
   // LINEAR ALGEBRA — preserve dynamic existing modules
   // ============================================================
@@ -257,13 +268,15 @@ const PRACTICE_SELECTIONS = {
   },
 
   "Taylor & Maclaurin Series": {
-    type: "topic",
+    type: "topicAlias",
     banks: ["calcAg"],
+    canonicalTopic: "Taylor Series for Multivariable Functions",
   },
 
   "Maclaurin Series": {
-    type: "topic",
+    type: "topicAlias",
     banks: ["calcAg"],
+    canonicalTopic: "Taylor Series for Multivariable Functions",
   },
 
   // ============================================================
