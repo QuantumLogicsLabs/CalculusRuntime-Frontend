@@ -1,4 +1,4 @@
-import { LA_MODULES, getLaModulePath } from "./laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES, getLaModulePath } from "./laModules";
 /** Top-level subject paths shown on Home ("Choose a path"). */
 export const COURSES = [
   {
@@ -661,6 +661,14 @@ export const COURSES = [
         meta: "2 parts · 4 topics · 80 checkpoint MCQs",
         icon: module.logo,
         logo: <span className="math-logo">{module.logo}</span>,
+      })),
+      ...LA_EXPANSION_MODULES.map((module) => ({
+        title: module.title,
+        description: module.description,
+        path: getLaModulePath(module),
+        icon: module.logo,
+        logo: <span className="math-logo">{module.logo}</span>,
+        meta: "Part 1 available · 20 checkpoint MCQs",
       })),
       {
         title: "Practice Arena",
