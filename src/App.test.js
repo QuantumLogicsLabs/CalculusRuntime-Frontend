@@ -1,5 +1,6 @@
 import React from "react";
-import { createRoutesFromChildren, matchRoutes, Navigate, Routes } from "react-router-dom";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { MemoryRouter, createRoutesFromChildren, matchRoutes, Navigate, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import App from "./App";
 import { COURSES } from "./data/courses";
@@ -65,6 +66,20 @@ describe("shared interface regressions", () => {
     expect(document.getElementById('mobile-nav')).toHaveAttribute('aria-hidden', 'true');
   });
 
+  test("render failures show error details and recovery actions instead of a blank page", () => {
+    function BrokenPage() { throw new Error('Intentional test render failure'); }
+    const errors = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      render(<MemoryRouter><ErrorBoundary><BrokenPage /></ErrorBoundary></MemoryRouter>);
+      expect(screen.getByRole('heading', { name: 'Oops — something went wrong' })).toBeInTheDocument();
+      expect(screen.getByText('Error: Intentional test render failure')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Reload page' })).toBeEnabled();
+      expect(screen.getByRole('link', { name: 'Go home' })).toHaveAttribute('href', '/');
+      expect(errors).toHaveBeenCalled();
+    } finally {
+      errors.mockRestore();
+    }
+  });
 });
 
 test('renders the main app shell', () => {
