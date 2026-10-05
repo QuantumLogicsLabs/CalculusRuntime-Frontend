@@ -28,7 +28,7 @@ export default function HeroSurface({ fallback }) {
         { onUserOrbit: () => setSpinning(false) },
         // No wheel zoom or point probe here, so scrolling the home page is never hijacked.
         // The z-axis is trimmed to the surface's height so the graph can fill the hero.
-        { wheelZoom: false, probe: false, spinSpeed: 0.22, home: HOME_VIEW, distance: 2.9, zAxis: 0.62 },
+        { wheelZoom: false, probe: false, spinSpeed: 0.22, home: HOME_VIEW, distance: 2.8, zAxis: 0.62, gridToDomain: true },
       );
     } catch {
       setFailed(true);

@@ -188,12 +188,12 @@ function buildAxes({ len, step, theme, zScale = 1 }) {
 function buildGridMesh(size, major, minor, color) {
   const half = size / 2;
   const count = Math.round(size / minor);
-  const every = Math.round(major / minor);
   const majorPoints = [];
   const minorPoints = [];
   for (let i = 0; i <= count; i++) {
     const v = -half + i * minor;
-    (i % every === 0 ? majorPoints : minorPoints).push(v, 0, -half, v, 0, half, -half, 0, v, half, 0, v);
+    const isMajor = Math.abs(v / major - Math.round(v / major)) < 1e-6;
+    (isMajor ? majorPoints : minorPoints).push(v, 0, -half, v, 0, half, -half, 0, v, half, 0, v);
   }
   const lines = (points, opacity) => {
     const geometry = new THREE.BufferGeometry();
@@ -208,11 +208,12 @@ function buildGridMesh(size, major, minor, color) {
   return mesh;
 }
 
-function buildPlanes({ len, step, theme }) {
-  const cells = Math.max(1, Math.floor(len / step + 1e-9));
-  const size = cells * step * 2;
+function buildPlanes({ len, step, theme, domain = null }) {
   const leadingDigit = Math.round(step / 10 ** Math.floor(Math.log10(step)));
   const minor = step / (leadingDigit === 5 ? 5 : 4);
+  // Out to the last whole tick inside the axes, or just past the plotted domain when one is given.
+  const half = domain ? Math.ceil(domain / minor - 1e-9) * minor : Math.max(1, Math.floor(len / step + 1e-9)) * step;
+  const size = half * 2;
   const make = (tint, orient) => {
     const group = new THREE.Group();
     const grid = buildGridMesh(size, step, minor, theme.grid);
@@ -239,9 +240,10 @@ function buildPlanes({ len, step, theme }) {
  * options.home        – { theta, phi } the view that Reset / double-click returns to
  * options.distance    – camera distance as a multiple of the axis length
  * options.zAxis       – length of the z-axis relative to the x- and y-axes
+ * options.gridToDomain – size the coordinate-plane meshes to the plotted domain instead of the axes
  */
 export function createSurfaceScene(container, handlers = {}, options = {}) {
-  const { wheelZoom = true, probe: probeEnabled = true, spinSpeed = 0.3, home = CAMERA_VIEWS.iso, distance = 4.1, zAxis = 1 } = options;
+  const { wheelZoom = true, probe: probeEnabled = true, spinSpeed = 0.3, home = CAMERA_VIEWS.iso, distance = 4.1, zAxis = 1, gridToDomain = false } = options;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
@@ -511,7 +513,7 @@ export function createSurfaceScene(container, handlers = {}, options = {}) {
     if (axes) { scene.remove(axes.group); disposeObject(axes.group); }
     if (planes) { Object.values(planes).forEach((plane) => { scene.remove(plane); disposeObject(plane); }); }
     axes = buildAxes({ len: state.len, step: state.step, theme: state.theme, zScale: zAxis });
-    planes = buildPlanes({ len: state.len, step: state.step, theme: state.theme });
+    planes = buildPlanes({ len: state.len, step: state.step, theme: state.theme, domain: gridToDomain ? state.range : null });
     scene.add(axes.group, planes.xy, planes.xz, planes.yz);
     applyVisibility();
     sizeMarkers();
@@ -925,7 +927,7 @@ export function createSurfaceScene(container, handlers = {}, options = {}) {
       } else if (!state.len) {
         orbit.radius = len * distance;
       }
-      if (len !== state.len) state.needsAxes = true;
+      if (len !== state.len || (gridToDomain && range !== state.range)) state.needsAxes = true;
       state.range = range;
       state.len = len;
       state.step = niceStep(len / 4);
