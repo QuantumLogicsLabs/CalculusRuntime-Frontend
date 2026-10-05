@@ -18,7 +18,10 @@ import "./LaModuleGuide.css";
 
 import IterativeSolversGuide from "./IterativeSolversGuide";
 
+import EigenvalueAlgorithmsGuide from "./EigenvalueAlgorithmsGuide";
+
 const TOPIC_GUIDES = {
+  "eigenvalue-algorithms": EigenvalueAlgorithmsGuide,
   "iterative-solvers": IterativeSolversGuide,
   "lu-decomposition": LUDecompositionGuide,
   "cholesky-decomposition": CholeskyDecompositionGuide,
