@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getCourseById } from "../../data/courses";
 import "./LinearAlgebraOverview.css";
-import { LA_MODULES, LA_EXPANSION_MODULES, getLaModulePath, getLaModuleTopics, getLaTopicPath } from "../../data/laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES, getLaModuleParts, getLaModulePath, getLaModuleTopics, getLaTopicPath } from "../../data/laModules";
 
 const CORE_CERT_PATHS = new Set([
   "/linear-algebra/vectors/1",
@@ -91,7 +91,7 @@ function LinearAlgebraOverview() {
                     <span className="la-roadmap-title">
                       {mod.title}
                       <span className={`la-roadmap-tag${isCore ? " la-roadmap-tag--core" : ""}`}>
-                        {isCore ? "Required for certificate" : LA_EXPANSION_MODULES.some((module) => getLaModulePath(module) === mod.path) ? "In progress" : "Extra depth"}
+                        {isCore ? "Required for certificate" : LA_EXPANSION_MODULES.some((module) => getLaModulePath(module) === mod.path) ? "New topics" : "Extra depth"}
                       </span>
                     </span>
                     <small>{mod.description}</small>
@@ -136,9 +136,11 @@ function LinearAlgebraOverview() {
         <section className="guide-section" id={module.overviewAnchor} key={module.id} aria-labelledby={`${module.id}-heading`}>
           <h2 id={`${module.id}-heading`}>{module.title}</h2>
           <p>{module.description}</p>
-          <p><Link to={getLaModulePath(module)}>Part 1 — {module.topics[0].title}</Link></p>
-          <p>The complete topic includes theory, worked examples, and 20 checkpoint questions. Score at least 80% to complete Part 1.</p>
-          <p>Part 2 planned: {module.plannedNextTopic}.</p>
+          {getLaModuleParts(module).map((part) => (
+            <p key={part}><Link to={getLaModulePath(module, part)}>Part {part} — {getLaModuleTopics(module, part).map((topic) => topic.title).join(" · ")}</Link></p>
+          ))}
+          <p>Each part includes one complete topic with theory, worked examples, and 20 checkpoint questions. Score at least 80% on its checkpoint to complete that part.</p>
+          {module.plannedNextTopic && <p>Part 2 planned: {module.plannedNextTopic}.</p>}
         </section>
       ))}
 
