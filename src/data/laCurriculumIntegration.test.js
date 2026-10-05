@@ -1,3 +1,6 @@
+import { CALC_AG_PRACTICE_BANK } from './calcAgPracticeBank';
+import { MV_PRACTICE_BANK } from './mvPracticeBank';
+import { PS_PRACTICE_BANK } from './psPracticeBank';
 import { LA_MODULES } from './laModules';
 import { LA_PRACTICE_BANK, LA_TOPICS } from './laPracticeBank';
 
@@ -26,6 +29,56 @@ test.each(LA_MODULES)('$title has 300 questions and 25 per topic per difficulty'
     expect(LA_TOPICS).toContain(topic);
     for (const difficulty of ['Easy', 'Medium', 'Hard']) {
       expect(added.filter((q) => q.topic === topic && q.difficulty === difficulty)).toHaveLength(25);
+    }
+  }
+});
+
+
+const allCourseBanks = {
+  calculus: CALC_AG_PRACTICE_BANK,
+  multivariable: MV_PRACTICE_BANK,
+  linearAlgebra: LA_PRACTICE_BANK,
+  probability: PS_PRACTICE_BANK,
+};
+
+test('every course bank has unique integer question IDs within its own bank', () => {
+  for (const [course, bank] of Object.entries(allCourseBanks)) {
+    expect(bank.length).toBeGreaterThan(0);
+    const seen = new Set();
+    for (const q of bank) {
+      expect({ course, id: q.id, integer: Number.isInteger(q.id), duplicate: seen.has(q.id) })
+        .toEqual({ course, id: q.id, integer: true, duplicate: false });
+      seen.add(q.id);
+    }
+  }
+});
+
+test('every practice question has renderable text, a supported difficulty and an in-range answer key', () => {
+  for (const [course, bank] of Object.entries(allCourseBanks)) {
+    for (const q of bank) {
+      const label = `${course}: ${q.id}`;
+      for (const field of ['topic', 'question', 'explanation']) {
+        expect({ label, field, valid: typeof q[field] === 'string' && q[field].trim().length > 0 })
+          .toEqual({ label, field, valid: true });
+      }
+      expect(['Easy', 'Medium', 'Hard']).toContain(q.difficulty);
+      // Legacy questions intentionally have three choices; the UI supports variable option counts.
+      expect({ label, options: Array.isArray(q.options) && q.options.length >= 3 })
+        .toEqual({ label, options: true });
+      expect({ label, key: Number.isInteger(q.correctAnswer) && q.correctAnswer >= 0 && q.correctAnswer < q.options.length })
+        .toEqual({ label, key: true });
+    }
+  }
+});
+
+test('all practice choices are nonempty and distinct so identical text cannot be both right and wrong', () => {
+  for (const [course, bank] of Object.entries(allCourseBanks)) {
+    for (const q of bank) {
+      const label = `${course}: ${q.id}`;
+      expect({ label, valid: q.options.every((o) => typeof o === 'string' && o.trim().length > 0) })
+        .toEqual({ label, valid: true });
+      expect({ label, count: new Set(q.options.map((o) => o.trim())).size })
+        .toEqual({ label, count: q.options.length });
     }
   }
 });
