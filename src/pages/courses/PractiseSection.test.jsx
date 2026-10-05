@@ -51,7 +51,13 @@ async function openPractice(topic, difficulty) {
 }
 
 function displayedQuestion(bank, container) {
-  return bank.find((q) => q.question === container.querySelector('.practice-question').textContent);
+  const prompt = container.querySelector('.practice-question').textContent;
+  const displayedOptions = [...container.querySelectorAll('.practice-option__text')]
+    .map((node) => node.textContent).sort();
+  return bank.find((q) =>
+    q.question === prompt &&
+    JSON.stringify([...q.options].sort()) === JSON.stringify(displayedOptions)
+  );
 }
 
 function chooseText(container, text) {
