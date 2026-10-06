@@ -22,7 +22,10 @@ import EigenvalueAlgorithmsGuide from "./EigenvalueAlgorithmsGuide";
 
 import DualSpacesGuide from "./DualSpacesGuide";
 
+import TensorProductsGuide from "./TensorProductsGuide";
+
 const TOPIC_GUIDES = {
+  "tensor-products": TensorProductsGuide,
   "dual-spaces": DualSpacesGuide,
   "eigenvalue-algorithms": EigenvalueAlgorithmsGuide,
   "iterative-solvers": IterativeSolversGuide,

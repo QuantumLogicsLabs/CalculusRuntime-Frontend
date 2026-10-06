@@ -56,12 +56,12 @@ export const LA_EXPANSION_MODULES = [{
   id: "abstract-linear-algebra",
   overviewAnchor: "abstract-linear-algebra",
   title: "Abstract Linear Algebra",
-  description: "Dual spaces, linear functionals, dual bases, pullbacks and annihilators, with worked examples and a topic checkpoint.",
+  description: "Dual spaces and linear functionals, tensor products and Kronecker products, with coordinate conventions, worked examples and independent checkpoints.",
   logo: "V*",
   topicsPerPart: 1,
   plannedTopicCount: 2,
-  plannedNextTopic: "Tensor Products & Kronecker Products",
-  topics: [{ id: "dual-spaces", title: "Dual Spaces & Linear Functionals", quizKey: "la-dual-spaces-checkpoint", singlePage: true }],
+  topics: [{ id: "dual-spaces", title: "Dual Spaces & Linear Functionals", quizKey: "la-dual-spaces-checkpoint", singlePage: true },
+    { id: "tensor-products", title: "Tensor Products & Kronecker Products", quizKey: "la-tensor-products-checkpoint", singlePage: true }],
 }];
 
 export function getLaModuleParts(module) {
