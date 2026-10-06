@@ -57,3 +57,4 @@ export { default as LinearProgrammingPart2 } from "./LinearProgrammingPart2";
 
 export { default as IterativeSolversGuide } from "./IterativeSolversGuide";
 export { default as EigenvalueAlgorithmsGuide } from "./EigenvalueAlgorithmsGuide";
+export { default as DualSpacesGuide } from "./DualSpacesGuide";
