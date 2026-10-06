@@ -389,3 +389,14 @@ test("Abstract Linear Algebra redirects to the dual-spaces guide", async () => {
   expect(await screen.findByRole("heading", { level: 2, name: "Dual Spaces & Linear Functionals" })).toBeInTheDocument();
   expect(view.container.querySelector(".katex-error")).toBeNull();
 });
+
+
+test("Abstract Linear Algebra Part 2 loads directly and returns to dual spaces", async () => {
+  window.history.replaceState({}, "", "/linear-algebra/abstract-linear-algebra/2");
+  const view = render(<App />);
+  expect(await screen.findByRole("heading", { level: 2, name: "Tensor Products & Kronecker Products" })).toBeInTheDocument();
+  expect(view.container.querySelector(".katex-error")).toBeNull();
+  fireEvent.click(screen.getByRole("link", { name: "Open Part 1" }));
+  await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/abstract-linear-algebra/1"));
+  expect(await screen.findByRole("heading", { level: 2, name: "Dual Spaces & Linear Functionals" })).toBeInTheDocument();
+});
