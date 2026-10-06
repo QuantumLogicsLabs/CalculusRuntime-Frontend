@@ -1,4 +1,4 @@
-import { LA_MODULES, LA_EXPANSION_MODULES, getLaModulePath } from "./laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES, getLaModuleParts, getLaModulePath } from "./laModules";
 /** Top-level subject paths shown on Home ("Choose a path"). */
 export const COURSES = [
   {
@@ -668,7 +668,7 @@ export const COURSES = [
         path: getLaModulePath(module),
         icon: module.logo,
         logo: <span className="math-logo">{module.logo}</span>,
-        meta: "2 parts · 2 topics · 40 checkpoint MCQs",
+        meta: `${getLaModuleParts(module).length} available part${getLaModuleParts(module).length === 1 ? "" : "s"} · ${module.topics.length} topic${module.topics.length === 1 ? "" : "s"} · ${module.topics.length * 20} checkpoint MCQs`,
       })),
       {
         title: "Practice Arena",

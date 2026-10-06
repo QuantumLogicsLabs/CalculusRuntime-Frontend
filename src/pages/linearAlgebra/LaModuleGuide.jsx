@@ -20,7 +20,10 @@ import IterativeSolversGuide from "./IterativeSolversGuide";
 
 import EigenvalueAlgorithmsGuide from "./EigenvalueAlgorithmsGuide";
 
+import DualSpacesGuide from "./DualSpacesGuide";
+
 const TOPIC_GUIDES = {
+  "dual-spaces": DualSpacesGuide,
   "eigenvalue-algorithms": EigenvalueAlgorithmsGuide,
   "iterative-solvers": IterativeSolversGuide,
   "lu-decomposition": LUDecompositionGuide,

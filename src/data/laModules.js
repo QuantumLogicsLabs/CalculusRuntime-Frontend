@@ -52,6 +52,16 @@ export const LA_EXPANSION_MODULES = [{
   plannedTopicCount: 2,
   topics: [{ id: "iterative-solvers", title: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)", quizKey: "la-iterative-solvers-checkpoint", singlePage: true },
     { id: "eigenvalue-algorithms", title: "Eigenvalue Algorithms (Power Iteration & QR)", quizKey: "la-eigenvalue-algorithms-checkpoint", singlePage: true }],
+}, {
+  id: "abstract-linear-algebra",
+  overviewAnchor: "abstract-linear-algebra",
+  title: "Abstract Linear Algebra",
+  description: "Dual spaces, linear functionals, dual bases, pullbacks and annihilators, with worked examples and a topic checkpoint.",
+  logo: "V*",
+  topicsPerPart: 1,
+  plannedTopicCount: 2,
+  plannedNextTopic: "Tensor Products & Kronecker Products",
+  topics: [{ id: "dual-spaces", title: "Dual Spaces & Linear Functionals", quizKey: "la-dual-spaces-checkpoint", singlePage: true }],
 }];
 
 export function getLaModuleParts(module) {

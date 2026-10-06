@@ -380,3 +380,12 @@ test("Numerical Linear Algebra Part 2 loads directly and links back to Part 1", 
   await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/numerical-linear-algebra/1"));
   expect(await screen.findByRole("heading", { level: 2, name: "Iterative Solvers (Jacobi, Gauss–Seidel, SOR)" })).toBeInTheDocument();
 });
+
+
+test("Abstract Linear Algebra redirects to the dual-spaces guide", async () => {
+  window.history.replaceState({}, "", "/linear-algebra/abstract-linear-algebra");
+  const view = render(<App />);
+  await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/abstract-linear-algebra/1"));
+  expect(await screen.findByRole("heading", { level: 2, name: "Dual Spaces & Linear Functionals" })).toBeInTheDocument();
+  expect(view.container.querySelector(".katex-error")).toBeNull();
+});
