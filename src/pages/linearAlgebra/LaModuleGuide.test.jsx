@@ -117,10 +117,10 @@ test("all nine earlier grouped URLs redirect to the corresponding curriculum par
 });
 
 
-test("certificate completion requires all 18 parts including each advanced part", () => {
+test("certificate completion requires all 24 parts including each advanced part", () => {
   const required = getRequiredSections("linear-algebra");
-  expect(required).toHaveLength(18);
-  expect(new Set(required).size).toBe(18);
+  expect(required).toHaveLength(24);
+  expect(new Set(required).size).toBe(24);
   const complete = Object.fromEntries(required.map((id) => [id, true]));
   expect(isCourseComplete("linear-algebra", complete)).toBe(true);
   for (const module of LA_MODULES) for (const part of [1, 2]) {
@@ -135,14 +135,14 @@ test("certificate completion requires all 18 parts including each advanced part"
   expect(hasPassedQuiz("linear-algebra", { "quiz-linear-algebra": { score: 53, total: 66 } })).toBe(true);
 });
 
-test("certificate card and rendered overview agree on 66 questions and 18 parts", () => {
+test("certificate card and rendered overview agree on 99 questions and 24 parts", () => {
   const card = getCourseById("linear-algebra").modules.find((item) => item.path === "/quiz/linear-algebra");
-  expect(card.description).toContain("66 MCQs");
-  expect(card.meta).toBe("66 questions · 80% to pass");
+  expect(card.description).toContain("99 MCQs");
+  expect(card.meta).toBe("99 questions · 80% to pass");
   const { container } = render(<LinearAlgebraOverview />);
-  expect(container.textContent).toContain("Complete all 18 required parts");
-  expect(container.textContent).toContain("66-question certification quiz");
-  expect(screen.getAllByText("Required for certificate")).toHaveLength(9);
+  expect(container.textContent).toContain("Complete all 24 required parts");
+  expect(container.textContent).toContain("99-question certification quiz");
+  expect(screen.getAllByText("Required for certificate")).toHaveLength(12);
   expect(screen.getAllByText("Extra depth")).toHaveLength(2);
   expect(container.textContent).not.toContain("30-question");
 });
@@ -192,12 +192,12 @@ test("the iterative checkpoint requires 16 of 20 and saves the matching score", 
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
 });
 
-test("the overview links the available expansion topic without claiming certificate eligibility", () => {
+test("the overview links the available expansion topic as required for certificate eligibility", () => {
   const { container } = render(<LinearAlgebraOverview />);
-  expect(screen.getAllByText("New topics")).toHaveLength(3);
+  expect(screen.queryByText("New topics")).not.toBeInTheDocument();
   expect(container.querySelector('#numerical-linear-algebra a').getAttribute("href")).toBe("/linear-algebra/numerical-linear-algebra/1");
   expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).not.toBeNull();
-  expect(getRequiredSections("linear-algebra")).not.toContain("la-numerical-linear-algebra-1");
+  expect(getRequiredSections("linear-algebra")).toContain("la-numerical-linear-algebra-1");
 });
 
 
@@ -223,7 +223,7 @@ test("the eigenvalue part renders once with independent completion and a return 
   fireEvent.click(screen.getByRole("button", { name: "Pass la-eigenvalue-algorithms-checkpoint" }));
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
-  expect(getRequiredSections("linear-algebra")).not.toContain(section);
+  expect(getRequiredSections("linear-algebra")).toContain(section);
 });
 
 
@@ -255,7 +255,7 @@ test("Abstract Linear Algebra publishes a complete dual-spaces part and independ
   fireEvent.click(screen.getByRole("button", { name: "Pass la-dual-spaces-checkpoint" }));
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
-  expect(getRequiredSections("linear-algebra")).not.toContain(section);
+  expect(getRequiredSections("linear-algebra")).toContain(section);
 });
 
 test("the overview links both complete Abstract Linear Algebra parts", () => {
@@ -289,7 +289,7 @@ test("the tensor-products part renders once and requires its own checkpoint", ()
   fireEvent.click(screen.getByRole("button", { name: "Pass la-tensor-products-checkpoint" }));
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
-  expect(getRequiredSections("linear-algebra")).not.toContain(section);
+  expect(getRequiredSections("linear-algebra")).toContain(section);
 });
 
 
