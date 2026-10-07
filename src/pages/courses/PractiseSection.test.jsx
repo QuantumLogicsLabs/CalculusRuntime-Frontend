@@ -7,7 +7,7 @@ import { CALC_AG_PRACTICE_BANK } from '../../data/calcAgPracticeBank';
 import { MV_PRACTICE_BANK } from '../../data/mvPracticeBank';
 import { LA_PRACTICE_BANK } from '../../data/laPracticeBank';
 import { PS_PRACTICE_BANK } from '../../data/psPracticeBank';
-import { LA_MODULES } from '../../data/laModules';
+import { LA_MODULES, LA_EXPANSION_MODULES } from '../../data/laModules';
 jest.mock('../../components/SubmitToLeaderboard', () => () => null);
 jest.mock('../../context/AuthContext', () => ({ useAuth: jest.fn(() => null) }));
 beforeEach(() => useAuth.mockReturnValue(null));
@@ -143,3 +143,16 @@ test('signed-in practice records the displayed shuffled option and course', asyn
     prompt: question.question, options: displayed, correct: true,
     selectedIndex: displayed.indexOf(question.options[question.correctAnswer]) });
 });
+
+
+test.each(LA_EXPANSION_MODULES.flatMap((module) => module.topics.flatMap((topic) =>
+  ['Easy', 'Medium', 'Hard'].map((difficulty) => [topic.title, difficulty]))))(
+  'expansion topic %s / %s loads only its allocated questions', async (topic, difficulty) => {
+    const expected = LA_PRACTICE_BANK.filter((q) => q.topic === topic && q.difficulty === difficulty);
+    expect([8,9]).toContain(expected.length);
+    const { container } = render(<PractiseSection />);
+    await openPractice(topic, difficulty);
+    expect(screen.getByText(`Question 1 of ${expected.length}`)).toBeInTheDocument();
+    expect(displayedQuestion(expected, container)).toBeDefined();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  });

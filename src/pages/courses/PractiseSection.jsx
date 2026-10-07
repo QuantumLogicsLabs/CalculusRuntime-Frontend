@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import useQuizAttempts from "../../hooks/useQuizAttempts";
-import { LA_MODULES } from "../../data/laModules";
+import { LA_MODULES, LA_EXPANSION_MODULES } from "../../data/laModules";
 import SubmitToLeaderboard from "../../components/SubmitToLeaderboard";
 import "../dashboard/Leaderboard.css";
 import "./PractiseSection.css";
@@ -66,7 +66,7 @@ const TOPICS = [
   "Linear Transformations",
   "Orthogonality & Least Squares",
   "Singular Value Decomposition",
-  ...LA_MODULES.flatMap((module) => module.topics.map((topic) => topic.title)),
+  ...[...LA_MODULES, ...LA_EXPANSION_MODULES].flatMap((module) => module.topics.map((topic) => topic.title)),
   "Probability Basics",
   "Random Variables & Distributions",
   "Descriptive Statistics",
@@ -108,7 +108,7 @@ const PRACTICE_SELECTIONS = {
   // ============================================================
 
   ...Object.fromEntries(
-    LA_MODULES.flatMap((module) =>
+    [...LA_MODULES, ...LA_EXPANSION_MODULES].flatMap((module) =>
       module.topics.map((topic) => [
         topic.title,
         {
