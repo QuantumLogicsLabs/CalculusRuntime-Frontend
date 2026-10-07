@@ -24,7 +24,10 @@ import DualSpacesGuide from "./DualSpacesGuide";
 
 import TensorProductsGuide from "./TensorProductsGuide";
 
+import SpectralGraphTheoryGuide from "./SpectralGraphTheoryGuide";
+
 const TOPIC_GUIDES = {
+  "spectral-graph": SpectralGraphTheoryGuide,
   "tensor-products": TensorProductsGuide,
   "dual-spaces": DualSpacesGuide,
   "eigenvalue-algorithms": EigenvalueAlgorithmsGuide,

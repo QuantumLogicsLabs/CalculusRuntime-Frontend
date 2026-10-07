@@ -62,6 +62,16 @@ export const LA_EXPANSION_MODULES = [{
   plannedTopicCount: 2,
   topics: [{ id: "dual-spaces", title: "Dual Spaces & Linear Functionals", quizKey: "la-dual-spaces-checkpoint", singlePage: true },
     { id: "tensor-products", title: "Tensor Products & Kronecker Products", quizKey: "la-tensor-products-checkpoint", singlePage: true }],
+}, {
+  id: "modern-applications",
+  overviewAnchor: "modern-applications",
+  title: "Modern Applications",
+  description: "Graph Laplacians, connectivity and spectral graph methods, with worked examples and an independent checkpoint.",
+  logo: "L = D − A",
+  topicsPerPart: 1,
+  plannedTopicCount: 2,
+  plannedNextTopic: "Matrix Calculus",
+  topics: [{ id: "spectral-graph", title: "Spectral Graph Theory", quizKey: "la-spectral-graph-checkpoint", singlePage: true }],
 }];
 
 export function getLaModuleParts(module) {

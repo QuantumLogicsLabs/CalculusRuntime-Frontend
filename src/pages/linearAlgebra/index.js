@@ -59,3 +59,4 @@ export { default as IterativeSolversGuide } from "./IterativeSolversGuide";
 export { default as EigenvalueAlgorithmsGuide } from "./EigenvalueAlgorithmsGuide";
 export { default as DualSpacesGuide } from "./DualSpacesGuide";
 export { default as TensorProductsGuide } from "./TensorProductsGuide";
+export { default as SpectralGraphTheoryGuide } from "./SpectralGraphTheoryGuide";
