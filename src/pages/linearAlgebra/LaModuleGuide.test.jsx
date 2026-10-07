@@ -81,9 +81,9 @@ test("all legacy topic URLs land on the correct module part and topic anchor", (
   }
 });
 
-test("all sixteen checkpoints contain twenty questions with four distinct options and valid answers", () => {
+test("all seventeen checkpoints contain twenty questions with four distinct options and valid answers", () => {
   const banks = Object.values(quizzes);
-  expect(banks).toHaveLength(16);
+  expect(banks).toHaveLength(17);
   for (const bank of banks) {
     expect(bank).toHaveLength(20);
     expect(new Set(bank.map((question) => question.prompt)).size).toBe(20);
@@ -194,7 +194,7 @@ test("the iterative checkpoint requires 16 of 20 and saves the matching score", 
 
 test("the overview links the available expansion topic without claiming certificate eligibility", () => {
   const { container } = render(<LinearAlgebraOverview />);
-  expect(screen.getAllByText("New topics")).toHaveLength(2);
+  expect(screen.getAllByText("New topics")).toHaveLength(3);
   expect(container.querySelector('#numerical-linear-algebra a').getAttribute("href")).toBe("/linear-algebra/numerical-linear-algebra/1");
   expect(container.querySelector('a[href="/linear-algebra/numerical-linear-algebra/2"]')).not.toBeNull();
   expect(getRequiredSections("linear-algebra")).not.toContain("la-numerical-linear-algebra-1");
@@ -290,4 +290,31 @@ test("the tensor-products part renders once and requires its own checkpoint", ()
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
   expect(getRequiredSections("linear-algebra")).not.toContain(section);
+});
+
+
+test("Modern Applications publishes Spectral Graph Theory with its own gate", () => {
+  const module = LA_EXPANSION_MODULES.find((item) => item.id === "modern-applications");
+  expect(getLaModuleParts(module)).toEqual([1]);
+  expect(getLaModuleTopics(module, 1)).toHaveLength(1);
+  const cards = getCourseById("linear-algebra").modules;
+  expect(cards.filter((card) => card.path === getLaModulePath(module))).toHaveLength(1);
+  const scores = {};
+  const section = "la-modern-applications-1";
+  const key = "guide-mcq-la-spectral-graph-checkpoint";
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  scores[key] = { score: 15, total: 20 };
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  mockSaveQuizScore.mockImplementation((id, score, total) => { scores[id] = { score, total }; });
+  const { container } = render(<LaModulePart moduleId={module.id} part={1} />);
+  expect(container.querySelectorAll(".la-module-topic")).toHaveLength(1);
+  expect(container.querySelectorAll(".box.exm")).toHaveLength(5);
+  expect(screen.getAllByTestId("checkpoint")).toHaveLength(1);
+  expect(screen.getByTestId("checkpoint")).toHaveAttribute("data-count", "20");
+  expect(screen.getByTestId("completion")).toHaveAttribute("data-section", section);
+  const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
+  expect(new Set(ids).size).toBe(ids.length);
+  fireEvent.click(screen.getByRole("button", { name: "Pass la-spectral-graph-checkpoint" }));
+  expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
 });
