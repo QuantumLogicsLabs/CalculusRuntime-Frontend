@@ -1,3 +1,5 @@
+import StudyNotes from "./pages/study/StudyNotes";
+import GuideNotesLayer from "./pages/study/GuideNotesLayer";
 import Flashcards from "./pages/study/Flashcards";
 import MistakeNotebook from "./pages/study/MistakeNotebook";
 import { lazy, Suspense } from "react";
@@ -198,9 +200,11 @@ function App() {
             <ErrorBoundary>
               <ScrollToTop />
               <SiteThemeManager />
+              <GuideNotesLayer />
               <Routes>
                 {/* Home */}
                 <Route path="/" element={<Layout body={<Home />} />} />
+                <Route path="/notes" element={<Layout body={<StudyNotes />} />} />
                 <Route path="/flashcards" element={<Layout body={<Flashcards />} />} />
                 <Route path="/mistakes" element={<Layout body={<MistakeNotebook />} />} />
 
