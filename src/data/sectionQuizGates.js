@@ -104,6 +104,7 @@ export const SECTION_GUIDE_QUIZ_KEYS = {
 
   // Linear Algebra
   "la-abstract-linear-algebra-2": ["la-tensor-products-checkpoint"],
+  "la-modern-applications-1": ["la-spectral-graph-checkpoint"],
   "la-abstract-linear-algebra-1": ["la-dual-spaces-checkpoint"],
   "la-numerical-linear-algebra-1": ["la-iterative-solvers-checkpoint"],
   "la-numerical-linear-algebra-2": ["la-eigenvalue-algorithms-checkpoint"],
