@@ -1,3 +1,4 @@
+import Flashcards from "./pages/study/Flashcards";
 import MistakeNotebook from "./pages/study/MistakeNotebook";
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -200,6 +201,7 @@ function App() {
               <Routes>
                 {/* Home */}
                 <Route path="/" element={<Layout body={<Home />} />} />
+                <Route path="/flashcards" element={<Layout body={<Flashcards />} />} />
                 <Route path="/mistakes" element={<Layout body={<MistakeNotebook />} />} />
 
                 {/* Auth */}
