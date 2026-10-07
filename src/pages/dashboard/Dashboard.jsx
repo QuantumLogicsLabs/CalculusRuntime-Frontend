@@ -562,6 +562,7 @@ function Dashboard() {
 
   return (
     <main className="dashboard">
+      <p><Link to="/mistakes">Review your Mistake Notebook</Link></p>
       {/* ── Hero Welcome Banner ── */}
       <section className="db-hero-banner">
         <div className="db-hero-user">
