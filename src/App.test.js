@@ -400,3 +400,12 @@ test("Abstract Linear Algebra Part 2 loads directly and returns to dual spaces",
   await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/abstract-linear-algebra/1"));
   expect(await screen.findByRole("heading", { level: 2, name: "Dual Spaces & Linear Functionals" })).toBeInTheDocument();
 });
+
+
+test("Modern Applications opens the spectral graph guide", async () => {
+  window.history.replaceState({}, "", "/linear-algebra/modern-applications");
+  const view = render(<App />);
+  await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/modern-applications/1"));
+  expect(await screen.findByRole("heading", { level: 2, name: "Spectral Graph Theory" })).toBeInTheDocument();
+  expect(view.container.querySelector(".katex-error")).toBeNull();
+});
