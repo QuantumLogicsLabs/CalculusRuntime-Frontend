@@ -409,3 +409,14 @@ test("Modern Applications opens the spectral graph guide", async () => {
   expect(await screen.findByRole("heading", { level: 2, name: "Spectral Graph Theory" })).toBeInTheDocument();
   expect(view.container.querySelector(".katex-error")).toBeNull();
 });
+
+
+test("Modern Applications Part 2 loads Matrix Calculus and returns to spectral graphs", async () => {
+  window.history.replaceState({}, "", "/linear-algebra/modern-applications/2");
+  const view = render(<App />);
+  expect(await screen.findByRole("heading", { level: 2, name: "Matrix Calculus" })).toBeInTheDocument();
+  expect(view.container.querySelector(".katex-error")).toBeNull();
+  fireEvent.click(screen.getByRole("link", { name: "Open Part 1" }));
+  await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/modern-applications/1"));
+  expect(await screen.findByRole("heading", { level: 2, name: "Spectral Graph Theory" })).toBeInTheDocument();
+});

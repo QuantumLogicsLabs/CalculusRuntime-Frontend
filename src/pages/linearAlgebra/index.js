@@ -60,3 +60,4 @@ export { default as EigenvalueAlgorithmsGuide } from "./EigenvalueAlgorithmsGuid
 export { default as DualSpacesGuide } from "./DualSpacesGuide";
 export { default as TensorProductsGuide } from "./TensorProductsGuide";
 export { default as SpectralGraphTheoryGuide } from "./SpectralGraphTheoryGuide";
+export { default as MatrixCalculusGuide } from "./MatrixCalculusGuide";

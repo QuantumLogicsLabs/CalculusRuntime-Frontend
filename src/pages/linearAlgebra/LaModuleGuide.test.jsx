@@ -81,9 +81,9 @@ test("all legacy topic URLs land on the correct module part and topic anchor", (
   }
 });
 
-test("all seventeen checkpoints contain twenty questions with four distinct options and valid answers", () => {
+test("all eighteen checkpoints contain twenty questions with four distinct options and valid answers", () => {
   const banks = Object.values(quizzes);
-  expect(banks).toHaveLength(17);
+  expect(banks).toHaveLength(18);
   for (const bank of banks) {
     expect(bank).toHaveLength(20);
     expect(new Set(bank.map((question) => question.prompt)).size).toBe(20);
@@ -295,7 +295,7 @@ test("the tensor-products part renders once and requires its own checkpoint", ()
 
 test("Modern Applications publishes Spectral Graph Theory with its own gate", () => {
   const module = LA_EXPANSION_MODULES.find((item) => item.id === "modern-applications");
-  expect(getLaModuleParts(module)).toEqual([1]);
+  expect(getLaModuleParts(module)).toEqual([1, 2]);
   expect(getLaModuleTopics(module, 1)).toHaveLength(1);
   const cards = getCourseById("linear-algebra").modules;
   expect(cards.filter((card) => card.path === getLaModulePath(module))).toHaveLength(1);
@@ -315,6 +315,32 @@ test("Modern Applications publishes Spectral Graph Theory with its own gate", ()
   const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
   expect(new Set(ids).size).toBe(ids.length);
   fireEvent.click(screen.getByRole("button", { name: "Pass la-spectral-graph-checkpoint" }));
+  expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
+});
+
+test("Modern Applications publishes Matrix Calculus with its own gate", () => {
+  const module = LA_EXPANSION_MODULES.find((item) => item.id === "modern-applications");
+  expect(getLaModuleParts(module)).toEqual([1, 2]);
+  expect(getLaModuleTopics(module, 2)).toHaveLength(1);
+  const cards = getCourseById("linear-algebra").modules;
+  expect(cards.filter((card) => card.path === getLaModulePath(module))).toHaveLength(1);
+  const scores = {};
+  const section = "la-modern-applications-2";
+  const key = "guide-mcq-la-matrix-calculus-checkpoint";
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  scores[key] = { score: 15, total: 20 };
+  expect(hasPassedSectionQuizzes(section, scores)).toBe(false);
+  mockSaveQuizScore.mockImplementation((id, score, total) => { scores[id] = { score, total }; });
+  const { container } = render(<LaModulePart moduleId={module.id} part={2} />);
+  expect(container.querySelectorAll(".la-module-topic")).toHaveLength(1);
+  expect(container.querySelectorAll(".box.exm")).toHaveLength(5);
+  expect(screen.getAllByTestId("checkpoint")).toHaveLength(1);
+  expect(screen.getByTestId("checkpoint")).toHaveAttribute("data-count", "20");
+  expect(screen.getByTestId("completion")).toHaveAttribute("data-section", section);
+  const ids = Array.from(container.querySelectorAll("[id]"), (element) => element.id);
+  expect(new Set(ids).size).toBe(ids.length);
+  fireEvent.click(screen.getByRole("button", { name: "Pass la-matrix-calculus-checkpoint" }));
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
 });
