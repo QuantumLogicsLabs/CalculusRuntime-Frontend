@@ -1,3 +1,4 @@
+jest.mock("../../utils/learningEvents", () => ({ queueLearningEvents: jest.fn(() => true) }));
 import { useAuth } from '../../context/AuthContext';
 import { readQuizAttempts } from '../../utils/quizAttempts';
 import React from 'react';

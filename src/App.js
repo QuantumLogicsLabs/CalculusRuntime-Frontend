@@ -1,3 +1,4 @@
+import MistakeNotebook from "./pages/study/MistakeNotebook";
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
@@ -199,6 +200,7 @@ function App() {
               <Routes>
                 {/* Home */}
                 <Route path="/" element={<Layout body={<Home />} />} />
+                <Route path="/mistakes" element={<Layout body={<MistakeNotebook />} />} />
 
                 {/* Auth */}
                 <Route path="/login" element={<Login />} />

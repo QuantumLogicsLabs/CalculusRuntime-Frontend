@@ -273,7 +273,7 @@ function CourseQuiz() {
         recordAnswer({ source: "certificate", courseId, quizId,
           questionId: String(review.index), responseId: String(review.index),
           prompt: question.q, options: question.options, selectedIndex: review.your_answer,
-          correctIndex: review.correct_option, grading: "server-review" });
+          correctIndex: review.correct_option, topic: question.topic, difficulty: question.difficulty, grading: "server-review" });
       });
       setResult(data);
       setSubmitted(true);
