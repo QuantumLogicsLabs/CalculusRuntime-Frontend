@@ -66,12 +66,12 @@ export const LA_EXPANSION_MODULES = [{
   id: "modern-applications",
   overviewAnchor: "modern-applications",
   title: "Modern Applications",
-  description: "Graph Laplacians, connectivity and spectral graph methods, with worked examples and an independent checkpoint.",
+  description: "Spectral graph theory and matrix calculus, with graph Laplacians, vector and matrix derivatives, worked examples and independent checkpoints.",
   logo: "L = D − A",
   topicsPerPart: 1,
   plannedTopicCount: 2,
-  plannedNextTopic: "Matrix Calculus",
-  topics: [{ id: "spectral-graph", title: "Spectral Graph Theory", quizKey: "la-spectral-graph-checkpoint", singlePage: true }],
+  topics: [{ id: "spectral-graph", title: "Spectral Graph Theory", quizKey: "la-spectral-graph-checkpoint", singlePage: true },
+    { id: "matrix-calculus", title: "Matrix Calculus", quizKey: "la-matrix-calculus-checkpoint", singlePage: true }],
 }];
 
 export function getLaModuleParts(module) {
