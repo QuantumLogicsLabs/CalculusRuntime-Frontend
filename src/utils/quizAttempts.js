@@ -1,3 +1,4 @@
+import { queueLearningEvents } from "./learningEvents";
 // Proposed shared v1 contract. Dev 2 sign-off is required before consumers ship.
 export const ATTEMPT_SCHEMA_VERSION = 1;
 const PREFIX = "calcvoyager_question_attempts_v1:";
@@ -50,6 +51,7 @@ export function recordQuizAttempt(user, input = {}) {
       return { saved: true, duplicate: true };
     }
     localStorage.setItem(key, JSON.stringify([...records, record]));
+    queueLearningEvents(user, [{ eventId: `${record.attemptId}:${record.responseId}`, kind: "question", data: record }]);
     return { saved: true, duplicate: false };
   } catch { return { saved: false, reason: "storage-unavailable" }; }
 }
