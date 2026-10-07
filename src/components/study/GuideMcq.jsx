@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { mixedMathToHtml } from "../../utils/mixedMath";
 
+import { inferGuideCourse } from "../../utils/mistakeNotebook";
 import useQuizAttempts from "../../hooks/useQuizAttempts";
 
 export function GuideMcqSection({ id, badge, title, scoreId, section, questions, onComplete }) {
@@ -86,6 +87,7 @@ export function GuideMcqSection({ id, badge, title, scoreId, section, questions,
     
     if (checkpointMode && attemptsRef.current[currentIndex]) return;
     recordAnswer({ source: "guide", quizId: section || scoreId || id,
+      courseId: inferGuideCourse(section || scoreId || id, window.location.pathname),
       questionId: currentQ.id ?? currentIndex, responseId: String(++responseNumber.current),
       prompt: currentQ.prompt, options: currentQ.options, selectedIndex: selectedOption,
       correctIndex: letterLabels.indexOf(currentQ.answer), topic: title || badge || null });
