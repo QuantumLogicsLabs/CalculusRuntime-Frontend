@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import useQuizAttempts from "../../hooks/useQuizAttempts";
 import { LA_MODULES } from "../../data/laModules";
 import SubmitToLeaderboard from "../../components/SubmitToLeaderboard";
 import "../dashboard/Leaderboard.css";
@@ -429,6 +430,7 @@ function shuffleQuestionOptions(question) {
 }
 
 export default function PractiseSection() {
+  const { record: recordAnswer, restart: restartRecording } = useQuizAttempts();
   // ============================================================
   // LAYER 1: DIFFICULTY SELECTION
   // ============================================================
@@ -494,7 +496,8 @@ export default function PractiseSection() {
     resetQuizTurn();
 
     const selectedLoaders = (selection.banks || [])
-      .map((bankName) => BANK_LOADERS[bankName])
+      .map((bankName) => BANK_LOADERS[bankName] && (() => BANK_LOADERS[bankName]().then((questions) =>
+        questions.map((question) => ({ ...question, bankName })))))
       .filter(Boolean);
 
     Promise.all(selectedLoaders.map((loader) => loader()))
@@ -543,13 +546,14 @@ export default function PractiseSection() {
         // ========================================================
 
         const uniqueQuestions = Array.from(
-          new Map(filtered.map((question) => [question.id, question])).values(),
+          new Map(filtered.map((question) => [`${question.bankName}:${question.id}`, question])).values(),
         );
 
         // ========================================================
         // SHUFFLE QUESTIONS + OPTIONS
         // ========================================================
 
+        restartRecording();
         setPoolProblems(shuffled(uniqueQuestions).map(shuffleQuestionOptions));
       })
       .catch((error) => {
@@ -568,7 +572,7 @@ export default function PractiseSection() {
     return () => {
       cancelled = true;
     };
-  }, [chosenDifficulty, chosenTopic]);
+  }, [restartRecording, chosenDifficulty, chosenTopic]);
 
   // ============================================================
   // AUTO-ADVANCE TIMER
@@ -634,6 +638,16 @@ export default function PractiseSection() {
   // OPTION CLICK
   // ============================================================
 
+  const recordPracticeAnswer = (question, selectedIndex) => {
+    const courseIds = { la: "linear-algebra", calcAg: "calculus-analytical-geometry",
+      mv: "multivariable-calculus", ps: "probability-statistics" };
+    recordAnswer({ source: "practice", courseId: courseIds[question.bankName] || null,
+      quizId: `practice:${chosenTopic}:${chosenDifficulty}`,
+      questionId: question.id, responseId: `${question.bankName}:${question.id}`,
+      prompt: question.question, options: question.options, selectedIndex,
+      correctIndex: question.correctAnswer, topic: question.topic, difficulty: question.difficulty });
+  };
+
   const handleAnswerClick = (index) => {
     if (isSubmitted) {
       return;
@@ -647,6 +661,7 @@ export default function PractiseSection() {
       return;
     }
 
+    recordPracticeAnswer(currentProblem, index);
     const correct = index === currentProblem.correctAnswer;
 
     setScore((prev) => ({
@@ -684,6 +699,7 @@ export default function PractiseSection() {
       return;
     }
 
+    recordPracticeAnswer(currentProblem, selectedAnswer);
     const correct = selectedAnswer === currentProblem.correctAnswer;
 
     setScore((prev) => ({
