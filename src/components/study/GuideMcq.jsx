@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { mixedMathToHtml } from "../../utils/mixedMath";
 
+import useQuizAttempts from "../../hooks/useQuizAttempts";
+
 export function GuideMcqSection({ id, badge, title, scoreId, section, questions, onComplete }) {
+  const { record: recordAnswer, restart: restartRecording } = useQuizAttempts();
+  const responseNumber = useRef(0);
   const count = questions.length;
   // Opt-in assessed attempts: existing callers retain their mastery-style behavior.
   const checkpointMode = typeof onComplete === "function";
@@ -62,6 +66,8 @@ export function GuideMcqSection({ id, badge, title, scoreId, section, questions,
   };
 
   const restartAttempt = () => {
+    restartRecording();
+    responseNumber.current = 0;
     attemptsRef.current = {};
     setCurrentIndex(0);
     setSelectedOption(null);
@@ -78,8 +84,12 @@ export function GuideMcqSection({ id, badge, title, scoreId, section, questions,
     
     const isCorrect = letterLabels[selectedOption] === currentQ.answer;
     
+    if (checkpointMode && attemptsRef.current[currentIndex]) return;
+    recordAnswer({ source: "guide", quizId: section || scoreId || id,
+      questionId: currentQ.id ?? currentIndex, responseId: String(++responseNumber.current),
+      prompt: currentQ.prompt, options: currentQ.options, selectedIndex: selectedOption,
+      correctIndex: letterLabels.indexOf(currentQ.answer), topic: title || badge || null });
     if (checkpointMode) {
-      if (attemptsRef.current[currentIndex]) return;
       const next = { ...attemptsRef.current, [currentIndex]: { selected: selectedOption, correct: isCorrect } };
       attemptsRef.current = next;
       const result = Object.values(next).filter((answer) => answer.correct).length;
