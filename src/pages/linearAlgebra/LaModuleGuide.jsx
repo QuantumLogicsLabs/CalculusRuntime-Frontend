@@ -26,7 +26,10 @@ import TensorProductsGuide from "./TensorProductsGuide";
 
 import SpectralGraphTheoryGuide from "./SpectralGraphTheoryGuide";
 
+import MatrixCalculusGuide from "./MatrixCalculusGuide";
+
 const TOPIC_GUIDES = {
+  "matrix-calculus": MatrixCalculusGuide,
   "spectral-graph": SpectralGraphTheoryGuide,
   "tensor-products": TensorProductsGuide,
   "dual-spaces": DualSpacesGuide,
