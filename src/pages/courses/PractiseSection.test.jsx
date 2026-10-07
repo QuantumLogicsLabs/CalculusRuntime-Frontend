@@ -1,3 +1,5 @@
+import { useAuth } from '../../context/AuthContext';
+import { readQuizAttempts } from '../../utils/quizAttempts';
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import PractiseSection from './PractiseSection';
@@ -7,6 +9,8 @@ import { LA_PRACTICE_BANK } from '../../data/laPracticeBank';
 import { PS_PRACTICE_BANK } from '../../data/psPracticeBank';
 import { LA_MODULES } from '../../data/laModules';
 jest.mock('../../components/SubmitToLeaderboard', () => () => null);
+jest.mock('../../context/AuthContext', () => ({ useAuth: jest.fn(() => null) }));
+beforeEach(() => useAuth.mockReturnValue(null));
 afterEach(() => { cleanup(); localStorage.clear(); jest.restoreAllMocks(); });
 const cases = LA_MODULES.flatMap((module) => module.topics.flatMap((topic) => ['Easy','Medium','Hard'].map((difficulty) => [topic.title,difficulty])));
 test.each(cases)('%s / %s loads 25 real questions through individual topic buttons', async (topic,difficulty) => {
@@ -123,4 +127,19 @@ test('shuffled answer keys score once, explain mistakes and persist across topic
   render(<PractiseSection />);
   expect(JSON.parse(localStorage.getItem('arena_score_tracker'))).toEqual({ correct: 1, total: 2 });
   expect(screen.getByRole('button', { name: 'Easy Mode' })).toBeInTheDocument();
+});
+
+
+test('signed-in practice records the displayed shuffled option and course', async () => {
+  const user = { username: 'practice-tester', accessToken: 'token' };
+  useAuth.mockReturnValue({ user });
+  const { container } = render(<PractiseSection />);
+  await openPractice('Vectors & Vector Spaces', 'Easy');
+  const question = displayedQuestion(LA_PRACTICE_BANK, container);
+  const displayed = [...container.querySelectorAll('.practice-option__text')].map((node) => node.textContent);
+  chooseText(container, question.options[question.correctAnswer]);
+  const [record] = readQuizAttempts(user);
+  expect(record).toMatchObject({ source: 'practice', courseId: 'linear-algebra',
+    prompt: question.question, options: displayed, correct: true,
+    selectedIndex: displayed.indexOf(question.options[question.correctAnswer]) });
 });
