@@ -420,3 +420,40 @@ test("Modern Applications Part 2 loads Matrix Calculus and returns to spectral g
   await waitFor(() => expect(window.location.pathname).toBe("/linear-algebra/modern-applications/1"));
   expect(await screen.findByRole("heading", { level: 2, name: "Spectral Graph Theory" })).toBeInTheDocument();
 });
+
+describe("Green's theorem completion", () => {
+  test("Part 2 exposes the proof, exceptional cases, worked applications and existing checkpoint", async () => {
+    window.history.replaceState({}, "", "/vector-calculus/2");
+    const { container } = render(<App />);
+    expect(await screen.findByText("Green's Theorem in the Plane", { selector: 'h2' })).toBeInTheDocument();
+    for (const title of [
+      'Why the theorem works: a proof for a rectangle',
+      'Regions with holes: add the oriented boundaries',
+      'How to choose and check your method',
+    ]) expect(screen.getByText(title, { selector: 'h3' })).toBeInTheDocument();
+    const lesson = container.querySelector('#ch16-4');
+    expect(lesson).toHaveTextContent('piecewise-smooth');
+    expect(lesson).toHaveTextContent('open set containing');
+    expect(lesson).toHaveTextContent('Variable curl over a triangle');
+    expect(lesson).toHaveTextContent('A singularity: when zero curl is not enough');
+    expect(lesson).toHaveTextContent('Outward flux with a nonconstant divergence');
+    expect(lesson).not.toHaveTextContent('spinning energy');
+    expect(container.querySelector('#quiz-ch16-4')).toHaveTextContent('Question 1 / 20');
+  });
+
+  test("the revised checkpoint accepts all twenty reviewed answers and advances to the end", async () => {
+    window.history.replaceState({}, "", "/vector-calculus/2");
+    const { container } = render(<App />);
+    await screen.findByText("Green's Theorem in the Plane", { selector: 'h2' });
+    const quiz = within(container.querySelector('#quiz-ch16-4'));
+    const reviewedAnswers = 'ABCABCABCABCABCABCAB';
+    for (let i = 0; i < reviewedAnswers.length; i += 1) {
+      fireEvent.click(container.querySelectorAll('#quiz-ch16-4 .la-option-card')['ABC'.indexOf(reviewedAnswers[i])]);
+      fireEvent.click(quiz.getByText('Submit Answer', { selector: 'button' }));
+      expect(quiz.getByText('Correct!')).toBeInTheDocument();
+      if (i < 19) fireEvent.click(quiz.getByText(/NEXT/, { selector: 'button' }));
+    }
+    expect(container.querySelector('#quiz-ch16-4')).toHaveTextContent('Score 20 / 20');
+    expect(quiz.getByText(/NEXT/, { selector: 'button' })).toBeDisabled();
+  });
+});
