@@ -3,6 +3,9 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 import { MemoryRouter, createRoutesFromChildren, matchRoutes, Navigate, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import App from "./App";
+import StudyGuideShell from "./pages/courses/StudyGuideShell";
+import { GuideMcqSection } from "./components/study/GuideMcq";
+import { ProgressProvider } from "./context/ProgressContext";
 import { COURSES } from "./data/courses";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { getRequiredSections, getQuizId } from "./data/courseCompletion";
@@ -448,6 +451,7 @@ describe("Green's theorem completion", () => {
     const quiz = within(container.querySelector('#quiz-ch16-4'));
     const reviewedAnswers = 'ABCABCABCABCABCABCAB';
     for (let i = 0; i < reviewedAnswers.length; i += 1) {
+      expect(container.querySelector('#quiz-ch16-4 .la-footer-tracker')).toHaveTextContent(`Question ${i + 1} / 20`);
       fireEvent.click(container.querySelectorAll('#quiz-ch16-4 .la-option-card')['ABC'.indexOf(reviewedAnswers[i])]);
       fireEvent.click(quiz.getByText('Submit Answer', { selector: 'button' }));
       expect(quiz.getByText('Correct!')).toBeInTheDocument();
@@ -456,4 +460,41 @@ describe("Green's theorem completion", () => {
     expect(container.querySelector('#quiz-ch16-4')).toHaveTextContent('Score 20 / 20');
     expect(quiz.getByText(/NEXT/, { selector: 'button' })).toBeDisabled();
   });
+});
+
+
+test.each([false, true])("quiz counters survive the real math shell (checkpoint=%s)", (checkpoint) => {
+  const questions = Array.from({ length: 3 }, (_, i) => ({
+    prompt: `Item ${i + 1}: $x^2$`, options: ["$1$", "$2$", "$3$", "$4$"],
+    answer: "A", explanation: "Because $x=1$.",
+  }));
+  const saved = jest.fn();
+  const page = (title) => <MemoryRouter><AuthProvider><ProgressProvider>
+    <StudyGuideShell title={title}>
+      <p data-testid="lesson-math">{"Theory: $x^2$"}</p>
+      <GuideMcqSection id="shell-quiz" section="shell-quiz" questions={questions}
+        onComplete={checkpoint ? saved : undefined} />
+    </StudyGuideShell>
+  </ProgressProvider></AuthProvider></MemoryRouter>;
+  const view = render(page("Initial"));
+  const quiz = within(view.container.querySelector('#shell-quiz'));
+  expect(screen.getByTestId('lesson-math').querySelector('.katex')).not.toBeNull();
+  for (let i = 0; i < 3; i += 1) {
+    expect(view.container.querySelector('.la-footer-tracker')).toHaveTextContent(`Question ${i + 1} / 3`);
+    expect(view.container.querySelector('.la-q-prompt .katex')).not.toBeNull();
+    fireEvent.click(view.container.querySelectorAll('.la-option-card')[i === 0 ? 1 : 0]);
+    fireEvent.click(quiz.getByText('Submit Answer', { selector: 'button' }));
+    expect(view.container.querySelector('progress')).toHaveAttribute('value', String(i + 1));
+    expect(view.container.querySelector('.la-quiz-score')).toHaveTextContent(`Score ${i} / 3`);
+    expect(view.container.querySelector('.la-explanation-text .katex')).not.toBeNull();
+    view.rerender(page(`Updated ${i}`));
+    if (i < 2) fireEvent.click(quiz.getByText(/NEXT/, { selector: 'button' }));
+  }
+  fireEvent.click(quiz.getByText(/PREVIOUS/, { selector: 'button' }));
+  expect(view.container.querySelector('.la-footer-tracker')).toHaveTextContent('Question 2 / 3');
+  expect(view.container.querySelector('progress')).toHaveAttribute('value', '3');
+  expect(view.container.querySelector('.la-quiz-score')).toHaveTextContent('Score 2 / 3');
+  expect(quiz.queryByText('Submit Answer', { selector: 'button' })).toBeNull();
+  fireEvent.click(quiz.getByText(/NEXT/, { selector: 'button' }));
+  expect(view.container.querySelector('.la-footer-tracker')).toHaveTextContent('Question 3 / 3');
 });
