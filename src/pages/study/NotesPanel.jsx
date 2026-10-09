@@ -32,6 +32,9 @@ export default function NotesPanel({ metadata, section, history }) {
   return <aside className="notes-panel" aria-label={`Notes for ${metadata.title}`}>
     <details><summary>Notes & highlights for this section</summary>
       <p>Select text in this section, then choose “Capture highlight”, or write your own note below.</p>
+      <p>{window.CSS?.highlights && typeof window.Highlight === "function"
+        ? "Saved excerpts are highlighted wherever the same text appears in this section. Edit or delete them in Notes & Highlights."
+        : "This browser can save excerpts, but cannot display coloured lesson highlights. Use a browser with CSS Custom Highlight support."}</p>
       <p role="status">{pending.length ? `${pending.length} changes waiting to sync.` : ""}</p>
       {error && <p role="alert">{error}</p>}
       <NoteEditor section={section} onSave={(text, excerpt) => {

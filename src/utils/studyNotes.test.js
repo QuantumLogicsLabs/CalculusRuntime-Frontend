@@ -23,3 +23,26 @@ test('highlights must come from the same section and exclude note controls',()=>
  const privateText=section.querySelector('div').firstChild;
  expect(selectedQuote(section,{rangeCount:1,anchorNode:privateText,focusNode:privateText,toString:()=>privateText.textContent})).toBe('');
 });
+
+test('saved highlights span inline text and whitespace without changing the DOM',()=>{
+ const {highlightRanges}=require('./studyNotes');
+ const section=document.createElement('section');
+ section.innerHTML='<p>A <strong>linearly independent</strong>\n basis.</p><p>Second paragraph.</p>';
+ const html=section.innerHTML, nodes=[...section.querySelector('p').childNodes];
+ const ranges=highlightRanges(section,'linearly independent basis.');
+ expect(ranges).toHaveLength(1);
+ expect(ranges[0].toString().replace(/\s+/g,' ')).toBe('linearly independent basis.');
+ expect(highlightRanges(section,'basis. Second paragraph.')).toHaveLength(1);
+ expect(section.innerHTML).toBe(html);
+ expect([...section.querySelector('p').childNodes]).toEqual(nodes);
+});
+test('highlight matching excludes quiz controls, note editors and duplicated math accessibility text',()=>{
+ const {highlightRanges}=require('./studyNotes');
+ const section=document.createElement('section');
+ section.innerHTML='<p>Basis</p><p>Basis</p><div class="notes-panel">Basis Private</div><div class="la-quiz-container">Basis Quiz</div><span class="katex-mathml">Basis</span>';
+ expect(highlightRanges(section,'Basis')).toHaveLength(2);
+ expect(highlightRanges(section,'Private')).toHaveLength(0);
+ expect(highlightRanges(section,'Quiz')).toHaveLength(0);
+ expect(highlightRanges(section,'Changed lesson text')).toHaveLength(0);
+ expect(highlightRanges(section,'')).toHaveLength(0);
+});

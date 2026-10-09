@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import useLearningHistory from "../../hooks/useLearningHistory";
-import { sectionMetadata } from "../../utils/studyNotes";
+import { sectionMetadata, latestNotes, highlightRanges } from "../../utils/studyNotes";
 import NotesPanel from "./NotesPanel";
 
 export default function GuideNotesLayer() {
@@ -31,6 +31,31 @@ export default function GuideNotesLayer() {
     const observer=new MutationObserver(scan);observer.observe(document.body,{childList:true,subtree:true});
     return () => {active=false;observer.disconnect();for(const host of hosts.values())host.remove();};
   }, [pathname,hash]);
+  useEffect(() => {
+    if (!window.CSS?.highlights || typeof window.Highlight !== "function") return;
+    const registry = window.CSS.highlights;
+    const name = "saved-study-notes";
+    let frame;
+    const paint = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const notes = history.user?.accessToken ? latestNotes(history.events) : [];
+        const ranges = panels.filter(p => p.section.isConnected).flatMap(({ section, metadata }) =>
+          notes.filter(note => note.sectionId === metadata.sectionId && note.quote.trim())
+            .flatMap(note => highlightRanges(section, note.quote)));
+        if (ranges.length) registry.set(name, new window.Highlight(...ranges));
+        else registry.delete(name);
+      });
+    };
+    paint();
+    // Re-anchor after lesson/math rendering without wrapping or replacing text.
+    const observer = new MutationObserver((changes) => {
+      if (changes.some(change => !(change.target.nodeType === 1 ? change.target : change.target.parentElement)
+        ?.closest('.notes-panel, .guide-notes-host'))) paint();
+    });
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    return () => { observer.disconnect(); cancelAnimationFrame(frame); registry.delete(name); };
+  }, [panels, history.events, history.user?.username, history.user?.accessToken]);
   return panels.filter((p)=>p.host.isConnected).map(({host,section,metadata}) => createPortal(
     <NotesPanel key={`${metadata.sectionId}:${history.user?.username || "guest"}`} metadata={metadata} section={section} history={history}/>,host,metadata.sectionId));
 }
