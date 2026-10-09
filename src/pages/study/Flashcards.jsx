@@ -8,19 +8,24 @@ import "./Flashcards.css";
 export default function Flashcards() {
   const { user, events, pending, error, append, retry } = useLearningHistory();
   const [course, setCourse] = useState("linear-algebra");
+  const [topic, setTopic] = useState("");
   const [revealed, setRevealed] = useState(false);
   const [message, setMessage] = useState("");
   const [now, setNow] = useState(Date.now());
   useEffect(() => { const id = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(id); }, []);
   const progress = useMemo(() => flashcardProgress(events), [events]);
-  const cards = FLASHCARDS.filter((c) => c.courseId === course);
+  const courseCards = FLASHCARDS.filter((c) => c.courseId === course);
+  const topics = [...new Set(courseCards.map((c) => c.topic))];
+  const cards = courseCards.filter((c) => !topic || c.topic === topic);
   const counts = dueCounts(cards, progress, now);
   const card = cards.find((c) => !progress[c.id] || progress[c.id].dueAt <= now);
   useEffect(() => { setRevealed(false); setMessage(""); }, [card?.id, user?.username]);
   if (!user?.accessToken) return <main className="flashcards-page"><h1>Flashcards</h1><p>Sign in to save your review schedule.</p><Link to="/login">Log in</Link></main>;
   return <main className="flashcards-page"><h1>Flashcards</h1><p>Recall a formula or definition, reveal it, then rate your answer.</p>
-    <div className="flashcards-controls"><label>Course<select value={course} onChange={(e) => { setCourse(e.target.value); setRevealed(false); }}>
+    <div className="flashcards-controls"><label>Course<select value={course} onChange={(e) => { setCourse(e.target.value); setTopic(""); setRevealed(false); }}>
       {Object.entries(FLASHCARD_COURSES).map(([name,id]) => <option key={id} value={id}>{name}</option>)}
+    </select></label><label>Topic<select value={topic} onChange={(e) => { setTopic(e.target.value); setRevealed(false); }}>
+      <option value="">All topics</option>{topics.map((name) => <option key={name}>{name}</option>)}
     </select></label><button onClick={retry}>Sync reviews</button></div>
     <p role="status">{counts.today} due today · {counts.now} ready now · {cards.length} cards. {pending.length ? `${pending.length} changes waiting to sync.` : ""}</p>
     {error && <p role="alert">{error}</p>}

@@ -31,3 +31,20 @@ test('course selection and account switching keep schedules separate',async()=>{
  await act(async()=>{await syncLearningEvents(mockUser);});
  expect(readLearningState(mockUser).events).toHaveLength(0);
 });
+
+test.each(['LU Decomposition','Complex Vector Spaces (Hermitian & Unitary Matrices)','Principal Component Analysis (PCA)','Iterative Solvers (Jacobi, Gauss–Seidel, SOR)','Dual Spaces & Linear Functionals','Spectral Graph Theory'])('new topic %s can be selected, revealed and reviewed',async(topic)=>{
+ render(<MemoryRouter><Flashcards/></MemoryRouter>);
+ await act(async()=>{await syncLearningEvents(mockUser);});
+ fireEvent.change(screen.getByLabelText('Topic'),{target:{value:topic}});
+ expect(screen.getByLabelText('Topic')).toHaveValue(topic);
+ expect(screen.getByText(/4 due today · 4 ready now · 4 cards/)).toBeInTheDocument();
+ const title=screen.getByRole('heading',{level:2}).textContent;
+ fireEvent.click(screen.getByRole('button',{name:'Reveal answer'}));
+ fireEvent.click(screen.getByRole('button',{name:'Good'}));
+ await waitFor(()=>expect(screen.getByRole('heading',{level:2}).textContent).not.toBe(title));
+ const review=readLearningState(mockUser).events.find(e=>e.kind==='flashcard');
+ expect(review.data.cardId).toContain(title);
+ fireEvent.change(screen.getByLabelText('Course'),{target:{value:'probability-statistics'}});
+ expect(screen.getByLabelText('Topic')).toHaveValue('');
+ expect(screen.getByRole('button',{name:'Reveal answer'})).toBeInTheDocument();
+});

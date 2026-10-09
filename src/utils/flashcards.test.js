@@ -1,5 +1,19 @@
 import { FLASHCARDS, FLASHCARD_COURSES, rateCard, flashcardProgress, dueCounts } from './flashcards';
+import { LA_MODULES, LA_EXPANSION_MODULES } from '../data/laModules';
 const at='2026-10-07T10:00:00Z', time=Date.parse(at);
+test('every published additional LA topic has four dedicated cards without replacing the original decks',()=>{
+ const la=FLASHCARDS.filter(c=>c.courseId==='linear-algebra');
+ expect(la).toHaveLength(119);
+ for(const module of [...LA_MODULES,...LA_EXPANSION_MODULES]) {
+  for(const topic of module.topics) {
+   const cards=la.filter(c=>c.id.startsWith(`la-${topic.id}:`));
+   expect(cards).toHaveLength(4);
+   expect(cards.every(c=>c.topic===topic.title && c.note)).toBe(true);
+  }
+ }
+ expect(la.filter(c=>c.id.startsWith('la-equations:'))).toHaveLength(4);
+
+});
 test('all four courses have populated formula decks and stable unique IDs',()=>{
  expect(new Set(FLASHCARDS.map(c=>c.id)).size).toBe(FLASHCARDS.length);
  for(const id of Object.values(FLASHCARD_COURSES)) expect(FLASHCARDS.filter(c=>c.courseId===id).length).toBeGreaterThan(0);
