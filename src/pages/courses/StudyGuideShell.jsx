@@ -58,7 +58,7 @@ const saveForLaterStyles = `
 `;
 
 function renderLatex(root) {
-  root.normalize();
+  // React owns quiz counters and answer state. Never merge its text nodes.
   renderMathInElement(root, {
     delimiters: [
       { left: "$$", right: "$$", display: true },
@@ -69,6 +69,7 @@ function renderLatex(root) {
     throwOnError: false,
     strict: false,
     ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+    ignoredClasses: ["la-quiz-container"],
   });
 }
 
