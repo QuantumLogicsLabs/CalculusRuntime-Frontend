@@ -544,3 +544,15 @@ test("page titles update when leaving a guide and navigating public pages", asyn
   fireEvent.click(screen.getByRole('link', { name: 'Home', exact: true }));
   await waitFor(() => expect(document.title).toBe("Calculus, Linear Algebra & Statistics · CalcVoyager"));
 });
+
+
+test("homepage counts match its published course paths and resource links", () => {
+  const { container } = render(<App />);
+  const courseStat = screen.getByText('Course paths').closest('.stat-item');
+  const resourceStat = screen.getByText('Tools & resources', { selector: '.stat-label' }).closest('.stat-item');
+  expect(courseStat.querySelector('.stat-num')).toHaveTextContent(String(COURSES.length));
+  const resources = container.querySelectorAll('.tool-links a');
+  expect(resourceStat.querySelector('.stat-num')).toHaveTextContent(String(resources.length));
+  expect(screen.queryByText('∞')).not.toBeInTheDocument();
+  expect(screen.getByText('Practice difficulty levels').closest('.stat-item')).toHaveTextContent('3');
+});
