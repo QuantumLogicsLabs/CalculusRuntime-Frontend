@@ -21,6 +21,13 @@ const BANK_LOADERS = {
 };
 
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
+const COURSE_FILTERS = [
+  ["all", "All courses"],
+  ["calcAg", "Calculus & Geometry"],
+  ["mv", "Multivariable Calculus"],
+  ["la", "Linear Algebra"],
+  ["ps", "Probability & Statistics"],
+];
 
 const TOPICS = [
   "Lagrange Multipliers",
@@ -442,6 +449,12 @@ export default function PractiseSection() {
   // ============================================================
 
   const [chosenTopic, setChosenTopic] = useState(null);
+  const [topicQuery, setTopicQuery] = useState("");
+  const [courseFilter, setCourseFilter] = useState("all");
+  const visibleTopics = TOPICS.filter((topic) =>
+    topic.toLowerCase().includes(topicQuery.trim().toLowerCase()) &&
+    (courseFilter === "all" || PRACTICE_SELECTIONS[topic]?.banks.includes(courseFilter))
+  );
 
   // ============================================================
   // CORE GAMEPLAY STATE
@@ -609,6 +622,8 @@ export default function PractiseSection() {
     }
 
     setChosenDifficulty(null);
+    setTopicQuery("");
+    setCourseFilter("all");
     setChosenTopic(null);
     setPoolProblems([]);
     setCurrentIndex(0);
@@ -826,8 +841,24 @@ export default function PractiseSection() {
 
           <h3>Select Practice Topic</h3>
 
+          <div className="practice-topic-filters">
+            <label htmlFor="practice-topic-search">Search practice topics</label>
+            <input id="practice-topic-search" type="search" value={topicQuery}
+              onChange={(event) => setTopicQuery(event.target.value)} placeholder="For example: PCA or vectors" />
+            <div role="group" aria-label="Filter topics by course" className="practice-course-filters">
+              {COURSE_FILTERS.map(([value, label]) => (
+                <button key={value} type="button" className="practice-tool-btn"
+                  aria-pressed={courseFilter === value} onClick={() => setCourseFilter(value)}>{label}</button>
+              ))}
+            </div>
+            <p role="status">{visibleTopics.length} topics available</p>
+            {visibleTopics.length === 0 && <p>No topics match. Clear the search or choose another course.</p>}
+            {(topicQuery || courseFilter !== "all") && (
+              <button type="button" className="practice-tool-btn" onClick={() => { setTopicQuery(""); setCourseFilter("all"); }}>Clear topic filters</button>
+            )}
+          </div>
           <div className="practice-topic-grid">
-            {TOPICS.map((topic) => (
+            {visibleTopics.map((topic) => (
               <button
                 key={topic}
                 type="button"

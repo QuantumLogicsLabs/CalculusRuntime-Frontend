@@ -157,3 +157,30 @@ test.each(LA_EXPANSION_MODULES.flatMap((module) => module.topics.flatMap((topic)
     expect(displayedQuestion(expected, container)).toBeDefined();
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
+
+
+test('course and text filters retain individual topic selection and question loading', async () => {
+  render(<PractiseSection />);
+  fireEvent.click(screen.getByRole('button', { name: 'Easy Mode' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Linear Algebra', exact: true }));
+  expect(screen.queryByRole('button', { name: 'Limits and Continuity', exact: true })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Cholesky Decomposition', exact: true })).toBeInTheDocument();
+  fireEvent.change(screen.getByRole('searchbox', { name: 'Search practice topics' }), { target: { value: ' pCa ' } });
+  expect(screen.getByRole('status')).toHaveTextContent('1 topics available');
+  fireEvent.click(screen.getByRole('button', { name: 'Principal Component Analysis (PCA)', exact: true }));
+  await screen.findByText('Question 1 of 25');
+  fireEvent.click(screen.getByRole('button', { name: 'Change Topic' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Medium Mode' }));
+  expect(screen.getByRole('searchbox')).toHaveValue('');
+  expect(screen.getByRole('button', { name: 'All courses' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('empty topic filters recover without changing scores or hiding topics permanently', () => {
+  render(<PractiseSection />);
+  fireEvent.click(screen.getByRole('button', { name: 'Hard Mode' }));
+  fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'no-such-topic-xyz' } });
+  expect(screen.getByText(/No topics match/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Clear topic filters' }));
+  expect(screen.getByRole('button', { name: 'Vectors & Vector Spaces', exact: true })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Probability Basics', exact: true })).toBeInTheDocument();
+});
