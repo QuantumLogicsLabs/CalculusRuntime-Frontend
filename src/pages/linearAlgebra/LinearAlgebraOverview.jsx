@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getCourseById } from "../../data/courses";
 import "./LinearAlgebraOverview.css";
+import { getRequiredSections, getMinQuizScore } from "../../data/courseCompletion";
 import { LA_MODULES, LA_EXPANSION_MODULES, getLaModuleParts, getLaModulePath, getLaModuleTopics, getLaTopicPath } from "../../data/laModules";
 
 const CORE_CERT_PATHS = new Set([
@@ -153,11 +154,11 @@ function LinearAlgebraOverview() {
           complete" — your progress and quiz scores are saved to your account automatically.
         </p>
         <p className="la-overview-lead">
-          Complete all 24 required parts: both parts of <strong>Vectors &amp; Vector Spaces</strong>,{" "}
+          Complete all {getRequiredSections("linear-algebra").length} required parts: both parts of <strong>Vectors &amp; Vector Spaces</strong>,{" "}
           <strong>Matrices &amp; Determinants</strong>, <strong>Systems of Linear Equations</strong>,{" "}
           <strong>Eigenvalues &amp; Eigenvectors</strong>, <strong>Orthogonality &amp; Least Squares</strong>,{" "}
           <strong>Singular Value Decomposition</strong>, the three four-topic advanced modules, and the three two-topic expansion modules.
-          Then pass the 99-question certification quiz with a score of at least 80%.
+          Then pass the certification quiz with a score of at least {getMinQuizScore("linear-algebra")}%.
           <strong> Linear Equations</strong> and <strong>Linear Transformations</strong> remain
           optional additional study.
         </p>
