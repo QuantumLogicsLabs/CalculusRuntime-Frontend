@@ -10,6 +10,9 @@ import { COURSES } from "./data/courses";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { getRequiredSections, getQuizId } from "./data/courseCompletion";
 
+// JSDOM has no scrolling implementation; anchor navigation is verified by URL.
+beforeAll(() => { Element.prototype.scrollIntoView = jest.fn(); });
+
 beforeEach(() => {
   localStorage.clear();
   window.history.replaceState({}, "", "/");
@@ -497,4 +500,31 @@ test.each([false, true])("quiz counters survive the real math shell (checkpoint=
   expect(quiz.queryByText('Submit Answer', { selector: 'button' })).toBeNull();
   fireEvent.click(quiz.getByText(/NEXT/, { selector: 'button' }));
   expect(view.container.querySelector('.la-footer-tracker')).toHaveTextContent('Question 3 / 3');
+});
+
+
+describe("homepage topic discovery", () => {
+  test.each([
+    ["PCA", "Principal Component Analysis (PCA)", "/linear-algebra/applied-linear-algebra/1#principal-component-analysis"],
+    ["Cholesky", "Cholesky Decomposition", "/linear-algebra/matrix-decompositions/1#cholesky-decomposition"],
+  ])("searching %s opens the existing topic anchor", async (query, title, path) => {
+    render(<App />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Search topics and tools" }), { target: { value: query } });
+    const results = screen.getByRole("listbox", { name: "Search results" });
+    const option = within(results).getAllByRole("option").find((item) => item.getAttribute("href") === path);
+    expect(option).toHaveTextContent(title);
+    expect(option).toHaveAttribute("href", path);
+    fireEvent.click(option);
+    await waitFor(() => expect(window.location.pathname + window.location.hash).toBe(path));
+  });
+
+  test("search can be cleared after an unmatched query without hiding course navigation", () => {
+    render(<App />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Search topics and tools" }), { target: { value: "no-such-topic-xyz" } });
+    expect(screen.getByText(/No topics or tools match/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Choose a path" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Clear search" }));
+    expect(screen.getByRole("combobox", { name: "Search topics and tools" })).toHaveValue("");
+    expect(screen.queryByRole("listbox", { name: "Search results" })).not.toBeInTheDocument();
+  });
 });
