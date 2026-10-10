@@ -528,3 +528,19 @@ describe("homepage topic discovery", () => {
     expect(screen.queryByRole("listbox", { name: "Search results" })).not.toBeInTheDocument();
   });
 });
+
+
+test("page titles update when leaving a guide and navigating public pages", async () => {
+  render(<App />);
+  expect(document.title).toBe("Calculus, Linear Algebra & Statistics · CalcVoyager");
+  fireEvent.click(screen.getByRole('link', { name: /^Linear Algebra$/ }));
+  await waitFor(() => expect(document.title).toBe("Linear Algebra · CalcVoyager"));
+  fireEvent.click(screen.getByRole('link', { name: /A = LU Matrix Decompositions/ }));
+  await waitFor(() => expect(document.title).toBe("Matrix Decompositions & Factorizations (Part 1) · CalcVoyager"));
+  fireEvent.click(within(screen.getByRole('navigation', { name: 'Footer navigation' })).getByRole('link', { name: 'Practice', exact: true }));
+  await waitFor(() => expect(document.title).toBe("Practice Arena · CalcVoyager"));
+  fireEvent.click(screen.getByRole('link', { name: 'Certificates', exact: true }));
+  await waitFor(() => expect(document.title).toBe("My Certificates · CalcVoyager"));
+  fireEvent.click(screen.getByRole('link', { name: 'Home', exact: true }));
+  await waitFor(() => expect(document.title).toBe("Calculus, Linear Algebra & Statistics · CalcVoyager"));
+});
