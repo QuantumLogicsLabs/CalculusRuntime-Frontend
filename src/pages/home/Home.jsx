@@ -278,13 +278,13 @@ function Home() {
       {/* Stats strip */}
       <div className="home-stats">
         <div className="stat-item">
-          <span className="stat-num">3</span>
-          <span className="stat-label">Study Guides</span>
+          <span className="stat-num">{guideCards.length}</span>
+          <span className="stat-label">Course paths</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="stat-num">4</span>
-          <span className="stat-label">Interactive Tools</span>
+          <span className="stat-num">{toolLinks.length}</span>
+          <span className="stat-label">Tools &amp; resources</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
@@ -293,8 +293,8 @@ function Home() {
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="stat-num">∞</span>
-          <span className="stat-label">Practice Problems</span>
+          <span className="stat-num">3</span>
+          <span className="stat-label">Practice difficulty levels</span>
         </div>
       </div>
     </main>
