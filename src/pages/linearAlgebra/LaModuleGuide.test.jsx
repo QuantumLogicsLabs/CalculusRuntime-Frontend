@@ -4,7 +4,7 @@ import LaModuleGuide from "./LaModuleGuide";
 import LaModulePart from "./LaModulePart";
 import LinearAlgebraOverview from "./LinearAlgebraOverview";
 import StochasticProcessesGuide from "../probabilityStatistics/StochasticProcessesGuide";
-import { getRequiredSections, isCourseComplete, getMinQuizScore, hasPassedQuiz } from "../../data/courseCompletion";
+import { COURSE_CERTIFICATE_REQUIREMENTS, getRequiredSections, isCourseComplete, getMinQuizScore, hasPassedQuiz } from "../../data/courseCompletion";
 import { LA_MODULES, LA_EXPANSION_MODULES, getLaModuleParts, getLaTopicPath, LA_TOPIC_REDIRECTS, LA_MODULE_REDIRECTS, getLaModulePath, getLaModuleTopics } from "../../data/laModules";
 import { getCourseById } from "../../data/courses";
 import { hasPassedSectionQuizzes } from "../../data/sectionQuizGates";
@@ -135,13 +135,13 @@ test("certificate completion requires all 24 parts including each advanced part"
   expect(hasPassedQuiz("linear-algebra", { "quiz-linear-algebra": { score: 53, total: 66 } })).toBe(true);
 });
 
-test("certificate card and rendered overview agree on 99 questions and 24 parts", () => {
+test("certificate card retains its question reference and overview reports required parts", () => {
   const card = getCourseById("linear-algebra").modules.find((item) => item.path === "/quiz/linear-algebra");
   expect(card.description).toContain("99 MCQs");
   expect(card.meta).toBe("99 questions · 80% to pass");
   const { container } = render(<LinearAlgebraOverview />);
   expect(container.textContent).toContain("Complete all 24 required parts");
-  expect(container.textContent).toContain("99-question certification quiz");
+  expect(container.textContent).toContain("pass the certification quiz with a score of at least 80%");
   expect(screen.getAllByText("Required for certificate")).toHaveLength(12);
   expect(screen.getAllByText("Extra depth")).toHaveLength(2);
   expect(container.textContent).not.toContain("30-question");
@@ -343,4 +343,21 @@ test("Modern Applications publishes Matrix Calculus with its own gate", () => {
   fireEvent.click(screen.getByRole("button", { name: "Pass la-matrix-calculus-checkpoint" }));
   expect(mockSaveQuizScore).toHaveBeenCalledWith(key, 16, 20);
   expect(hasPassedSectionQuizzes(section, scores)).toBe(true);
+});
+
+
+test("overview certificate count and pass mark follow the eligibility configuration", () => {
+  const requirement = COURSE_CERTIFICATE_REQUIREMENTS["linear-algebra"];
+  const original = { ...requirement };
+  try {
+    requirement.requiredSections = [...original.requiredSections, "test-required-section"];
+    requirement.minQuizScore = 85;
+    const { container } = render(<LinearAlgebraOverview />);
+    const text = container.querySelector('[aria-labelledby="structure-heading"]').textContent;
+    expect(text).toContain(`Complete all ${requirement.requiredSections.length} required parts`);
+    expect(text).toContain("at least 85%");
+    expect(text).not.toContain("99-question");
+  } finally {
+    Object.assign(requirement, original);
+  }
 });
